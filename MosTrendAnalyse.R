@@ -19,7 +19,7 @@ head(Basistabel)
 str(Basistabel)
 
 #Basistabel2 <- Basistabel[complete.cases(Basistabel), ]
-Basistabel2 <- Basistabel2[Basistabel2$TaxonGroep != "hornworts", ]
+Basistabel2 <- Basistabel[Basistabel$TaxonGroep != "hornworts", ]
 str(Basistabel2)
 
 Basistabel2$TaxonGroep <- factor(Basistabel2$TaxonGroep)
@@ -31,42 +31,42 @@ Basistabel2$EllenbergF <- factor(Basistabel2$EllenbergF)
 ggplot (Basistabel2, aes(x=AantalKmGO_1980_1999, y= AantalKmGO_2000_2019)) + geom_point () + geom_smooth (method=lm)
 ggplot (Basistabel2, aes(x=AantalUurhokGO_1980_1999, y= AantalUurhokGO_2000_2019)) + geom_point () + geom_smooth (method=lm)
 ggplot (Basistabel2, aes(x=CIKmhok,y=  CIUurhok)) + geom_point () + geom_smooth (method=lm)
-ggplot (Basistabel2, aes(x=TaxonGroep,y=  CIKmhok)) + geom_boxplot ()
-ggplot (Basistabel2, aes(x=EllenbergN,y=  CIKmhok)) + geom_boxplot () + facet_wrap(~TaxonGroep)
-ggplot (Basistabel2, aes(x=EllenbergL,y=  CIKmhok)) + geom_boxplot () + facet_wrap(~TaxonGroep)
-ggplot (Basistabel2, aes(x=EllenbergF,y=  CIKmhok)) + geom_boxplot () + facet_wrap(~TaxonGroep)
-ggplot (Basistabel2, aes(x=EllenbergT,y=  CIKmhok)) + geom_boxplot () + facet_wrap(~TaxonGroep)
-ggplot (Basistabel2, aes(x=Substraat,y=  CIKmhok)) + geom_boxplot () + facet_wrap(~TaxonGroep) + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=0))
-ggplot (Basistabel2, aes(x=Biotoop,y=  CIKmhok)) + geom_boxplot () + facet_wrap(~TaxonGroep) + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=0))
+ggplot (Basistabel2, aes(x=TaxonGroep,y=  CIUurhok)) + geom_boxplot ()
+ggplot (Basistabel2, aes(x=EllenbergN,y= CIUurhok)) + geom_boxplot () + facet_wrap(~TaxonGroep)
+ggplot (Basistabel2, aes(x=EllenbergL,y=  CIUurhok)) + geom_boxplot () + facet_wrap(~TaxonGroep)
+ggplot (Basistabel2, aes(x=EllenbergF,y=  CIUurhok)) + geom_boxplot () + facet_wrap(~TaxonGroep)
+ggplot (Basistabel2, aes(x=EllenbergT,y=  CIUurhok)) + geom_boxplot () + facet_wrap(~TaxonGroep)
+ggplot (Basistabel2, aes(x=Substraat,y=  CIUurhok)) + geom_boxplot () + facet_wrap(~TaxonGroep) + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=0))
+ggplot (Basistabel2, aes(x=Biotoop,y=  CIUurhok)) + geom_boxplot () + facet_wrap(~TaxonGroep) + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=0))
 
-ModelCIKmhok <- lm(CIKmhok ~  TaxonGroep + Substraat + Biotoop + EllenbergN + EllenbergL + 
+ModelCIUurhok <- lm(CIUurhok ~  TaxonGroep + Substraat + Biotoop + EllenbergN + EllenbergL + 
                      EllenbergR + EllenbergF + EllenbergT,data = Basistabel2 )
-anova(ModelCIKmhok, test  = "F")
-plot(ModelCIKmhok)
-stepAIC(ModelCIKmhok)
-ModelCIKmhok2 <-stepAIC(ModelCIKmhok)
-summary(ModelCIKmhok2)
+anova(ModelCIUurhok, test  = "F")
+plot(ModelCIUurhok)
+stepAIC(ModelCIUurhok)
+ModelCIUurhok2 <-stepAIC(ModelCIUurhok)
+summary(ModelCIUurhok2)
 
-ModelCIKmhokI <- aov(CIKmhok ~  TaxonGroep * (Substraat + Biotoop + EllenbergN + EllenbergL + 
+ModelCIUurhokI <- aov(CIUurhok ~  TaxonGroep * (Substraat + Biotoop + EllenbergN + EllenbergL + 
                      EllenbergR + EllenbergF + EllenbergT),data = Basistabel2 )
 
-summary(ModelCIKmhokI)
-anova(ModelCIKmhokI, test  = "F")
-ModelCIKmhokI2 <- stepAIC(ModelCIKmhokI)
-summary(ModelCIKmhokI2)
+summary(ModelCIUurhokI)
+anova(ModelCIUurhokI, test  = "F")
+ModelCIUurhokI2 <- stepAIC(ModelCIUurhokI)
+summary(ModelCIUurhokI2)
 
-Tuk <- TukeyHSD(ModelCIKmhokI2, "Substraat", ordered = TRUE)
+Tuk <- TukeyHSD(ModelCIUurhokI2, "Substraat", ordered = TRUE)
 Tuk
 plot(Tuk)
-summary(ModelCIKmhok)
+summary(ModelCIUurhok)
 
 
 Basistabel3 <- Basistabel2[Basistabel2$TaxonGroep != "liverworts", ]
-ModelCIKmhokMosses <- lm(CIKmhok ~  Substraat + Biotoop + EllenbergN + EllenbergL + 
+ModelCIUurhokMosses <- lm(CIUurhok ~  Substraat + Biotoop + EllenbergN + EllenbergL + 
                      EllenbergR + EllenbergF + EllenbergT,data = Basistabel3 )
-summary(ModelCIKmhokMosses)
-anova(ModelCIKmhokMosses, test  = "F")
-plot(ModelCIKmhokMosses)
+summary(ModelCIUurhokMosses)
+anova(ModelCIUurhokMosses, test  = "F")
+plot(ModelCIUurhokMosses)
 
 
 #verder uit te werken
