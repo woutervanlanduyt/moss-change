@@ -12,17 +12,15 @@ source('C:/Users/wouter_vanlanduyt/Google Drive/Scriptjes_R/connect_to_access.R'
 db_file_name <- "C:/Users/wouter_vanlanduyt/Google Drive/mossen en lichenen/RodeLijstMossen/MosTrendAnalyse/MosTrendAnalyse.accdb"
 connection <- connect_to_access_rodbc(db_file_name)
 
-sqlCode <-"SELECT Basistabel.*  from Basistabel;"
+sqlCode <-"SELECT qryBasistabel.*  from qryBasistabel;"
 Basistabel <- sqlQuery(channel = connection, sqlCode)
 
 head(Basistabel)
 str(Basistabel)
 
-#Basistabel2 <- Basistabel[complete.cases(Basistabel), ]
 Basistabel2 <- Basistabel[Basistabel$TaxonGroep != "hornworts", ]
 str(Basistabel2)
 
-Basistabel2$TaxonGroep <- factor(Basistabel2$TaxonGroep)
 Basistabel2$EllenbergN <- factor(Basistabel2$EllenbergN)
 Basistabel2$EllenbergL <- factor(Basistabel2$EllenbergL)
 Basistabel2$EllenbergR <- factor(Basistabel2$EllenbergR)
