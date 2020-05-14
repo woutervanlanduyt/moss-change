@@ -10,9 +10,11 @@ library(MASS)
 library(readxl)
 library(rprojroot)
 library(tidyverse)
-git_root <- find_root(is_git_root)
 
-Basistabel2 <- read_excel(path = file.path(git_root, "data/qryBasistabel.xlsx"))
+Basistabel2 <- read_excel(
+  path = find_root_file("data/qryBasistabel.xlsx",
+                        criterion = is_git_root)
+  )
 
 # source('C:/Users/wouter_vanlanduyt/Google Drive/Scriptjes_R/connect_to_access.R')
 # 
