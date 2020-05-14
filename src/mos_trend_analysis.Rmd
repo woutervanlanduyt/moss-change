@@ -1,0 +1,625 @@
+---
+title: "Analysis of moss change"
+author: "Wouter Van Landuyt, Hans Van Calster"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(
+  echo = FALSE)
+
+#library(RODBC)
+library(ggplot2)
+#library(nlme)
+#library(mgcv)
+#library(lme4)
+library(MASS)
+#library(splines)
+#library(stats)
+library(vegan)
+library(readxl)
+library(rprojroot)
+library(tidyverse)
+library(janitor)
+library(inborutils)
+library(inbodb) #remotes::install_github("inbo/inbodb", build_vignettes = TRUE)
+```
+
+```{r}
+
+con <- connect_inbo_dbase("D0021_00_userFlora")
+mosdata <- get_florabank_taxon_ifbl_year(
+  connection = con,
+  starting_year = 1980, 
+  ifbl_resolution = "4km-by-4km", 
+  taxongroup = "Mossen", 
+  collect = TRUE
+)
+
+korstmosdata <- get_florabank_taxon_ifbl_year(
+  connection = con,
+  starting_year = 1980, 
+  ifbl_resolution = "4km-by-4km", 
+  taxongroup = "Lichenen (korstmossen)", 
+  collect = TRUE
+)
+
+
+ellenberg <- get_florabank_traits(
+  connection = con, 
+  trait_name = "Ellenb", 
+  collect = TRUE)
+
+taxa <- tbl(src = con, "tblTaxon")
+rel_groep <- tbl(src = con, "relTaxonTaxonGroep")
+taxongroep <- tbl(src = con, "tblTaxonGroep")
+
+taxa <- taxa %>%
+  inner_join(rel_groep %>%
+               select(-ID),
+             by = c("ID" = "TaxonID")) %>%
+  inner_join(taxongroep %>%
+               filter(Naam %in% c("Mossen",
+                                  "Lichenen (korstmossen)")
+                      ) %>%
+               select(-Code),
+             by =  c("TaxonGroepID" = "ID")
+             ) %>%
+  collect()
+
+dbDisconnect(con)
+rm(con)
+```
+
+
+```{r}
+korstmosdata <- korstmosdata %>%
+  inner_join(taxa %>%
+               select(ID, taxongroep = Naam), 
+             by = c("TaxonIDParent" = "ID"))
+
+mosdata <- mosdata %>%
+  inner_join(taxa %>%
+               select(ID, taxongroep = Naam), 
+             by = c("TaxonIDParent" = "ID"))
+
+alle_data <- bind_rows(mosdata, korstmosdata)
+```
+
+```{r}
+ellenberg <- ellenberg %>%
+  inner_join(alle_data %>%
+               distinct(TaxonIDParent, taxongroep),
+             by = c("TaxonID" = "TaxonIDParent"))
+```
+
+
+```{r}
+alle_data <- alle_data %>%
+  clean_names()
+ellenberg <- ellenberg %>%
+  clean_names()
+taxa <- taxa %>%
+  clean_names()
+```
+
+```{r}
+taxa <- taxa %>%
+  select(id, code, naam_nederlands, naam_wetenschappelijk,
+         taxn_vrs_key, taxongroep = naam) %>%
+  gbif_species_name_match(name = "naam_wetenschappelijk")
+```
+
+```{r}
+geobserveerde_taxa <- taxa %>%
+  semi_join(alle_data %>%
+               distinct(taxon_id_parent),
+             by = c("id" = "taxon_id_parent"))
+```
+
+```{r}
+alle_data <- alle_data %>%
+  left_join(geobserveerde_taxa %>%
+              select(id, phylum),
+            by = c("taxon_id_parent" = "id"))
+```
+
+
+## Exploratory data analysis
+
+```{r}
+geobserveerde_taxa %>%
+  count(taxongroep, phylum, name = "aantal soorten") %>%
+  kable()
+```
+
+- Anthocerotophyta = hornworth = hauwmossen
+- Bryophyta = bryophytes = bladmossen
+- Marchantiophyta = liverworths = levermossen
+
+```{r}
+alle_data %>%
+  group_by(taxongroep, phylum) %>%
+  summarize(n_obs = n(),
+            n_soorten = n_distinct(taxon_id_parent),
+            n_hokken = n_distinct(ifbl_4by4)) %>%
+  kable()
+```
+
+
+
+
+```{r}
+alle_data %>%
+  count(ifbl_4by4, jaar) %>%
+  ggplot() + 
+  geom_histogram(aes(x = n))
+```
+
+```{r}
+alle_data %>%
+  ggplot() + 
+  geom_bar(aes(x = jaar, fill = phylum))
+```
+
+
+
+
+```{r}
+Basistabel2 <- read_excel(
+  path = find_root_file("data/qryBasistabel.xlsx",
+                        criterion = is_git_root)
+  )
+
+Basistabel2$EllenbergN <- factor(Basistabel2$EllenbergN)
+Basistabel2$EllenbergL <- factor(Basistabel2$EllenbergL)
+Basistabel2$EllenbergR <- factor(Basistabel2$EllenbergR)
+Basistabel2$EllenbergF <- factor(Basistabel2$EllenbergF)
+```
+
+
+
+```{r}
+ggplot(Basistabel2, aes(x=AantalKmGO_1980_1999, 
+                        y= AantalKmGO_2000_2019)) + 
+  geom_point() + 
+  geom_smooth(method=lm)
+```
+
+
+
+```{r}
+ggplot(Basistabel2, aes(x=AantalUurhokGO_1980_1999, 
+                        y= AantalUurhokGO_2000_2019)) + 
+  geom_point() + 
+  geom_smooth(method=lm)
+```
+
+
+## Telfer methode 
+
+<!--
+Telfer methode op uurhok??
+hoe is totaal aantal hokken bepaald?
+hoe gevallen proportie 0 en 1 aangepakt?
+waar is de analyse waarmee CIuurhok (= residuals van de Telfer analyse?) bepaald werd?
+-->
+
+
+```{r}
+ggplot(Basistabel2, aes(x = CIKmhok,
+                        y =  CIUurhok)) + 
+  geom_point () + 
+  geom_smooth (method = lm)
+```
+
+
+```{r}
+ggplot(Basistabel2, aes(x = TaxonGroep, 
+                        y =  CIUurhok)) + 
+  geom_boxplot ()
+```
+
+
+
+```{r}
+ggplot(Basistabel2, aes(x = EllenbergN, 
+                        y = CIUurhok)) + 
+  geom_boxplot () + 
+  facet_wrap(~TaxonGroep)
+```
+
+
+
+```{r}
+ggplot(Basistabel2, aes(x=EllenbergL, y =  CIUurhok)) + 
+  geom_boxplot() + 
+  facet_wrap(~TaxonGroep)
+```
+
+
+
+```{r}
+ggplot(Basistabel2, aes(x=EllenbergF, y =  CIUurhok)) + 
+  geom_boxplot() + 
+  facet_wrap(~TaxonGroep)
+```
+
+
+
+```{r}
+ggplot(Basistabel2, aes(x=EllenbergT, y =  CIUurhok)) + 
+  geom_boxplot() + 
+  facet_wrap(~TaxonGroep)
+```
+
+
+
+```{r}
+ggplot(Basistabel2, aes(x=Substraat,y=  CIUurhok)) + 
+  geom_boxplot () + 
+  facet_wrap(~TaxonGroep) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=0))
+```
+
+
+
+```{r}
+ggplot(Basistabel2, aes(x=Biotoop,y=  CIUurhok)) + 
+  geom_boxplot () + 
+  facet_wrap(~TaxonGroep) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=0))
+```
+
+
+
+```{r}
+ModelCIUurhok <- lm(CIUurhok ~  
+                      TaxonGroep 
+                    + Substraat 
+                    + Biotoop 
+                    + EllenbergN 
+                    + EllenbergL 
+                    + EllenbergR
+                    + EllenbergF 
+                    + EllenbergT
+                    ,
+                    data = Basistabel2 )
+```
+
+
+
+```{r}
+n_parameters <- Basistabel2 %>%
+  select(TaxonGroep, Substraat, Biotoop, starts_with("Ellen")) %>%
+  summarise_all(n_distinct) %>%
+  mutate(total =  rowSums(.))
+
+nrow(Basistabel2) / n_parameters$total # veel te weinig => overfitting
+# oplossing: fit Ellenbergwaarden als continue variabele (indifferent wordt dan NA)
+```
+
+
+
+```{r}
+Basistabel2 <- Basistabel2 %>%
+  mutate_if(is.factor, as.character) %>%
+  mutate_at(.vars = vars(starts_with("Ellen")), 
+            .funs = parse_number)
+# de "indifferenten" :
+problems(x = Basistabel2$EllenbergF) # te weinig om iets zinnig over te zeggen
+problems(x = Basistabel2$EllenbergN) # geen problemen
+problems(x = Basistabel2$EllenbergR) # te weinig
+problems(x = Basistabel2$EllenbergT) # 32 gevallen 
+problems(x = Basistabel2$EllenbergL) # 10 gevallen
+
+#remove missing values
+
+Analyseset <- Basistabel2 %>%
+  select(CIUurhok,
+         TaxonGroep, 
+         Substraat,
+         Biotoop, 
+         starts_with("Ellenb")) %>%
+  filter(complete.cases(.))
+
+```
+
+
+
+```{r}
+table(Analyseset$TaxonGroep)
+# verwijder de hornworths
+```
+
+
+
+```{r}
+Analyseset <- Analyseset %>%
+  filter(TaxonGroep != "hornworts")
+```
+
+
+
+```{r}
+biotopen <- Analyseset %>% count(Biotoop)
+substraten <- Analyseset %>% count(Substraat)
+```
+
+
+
+```{r}
+# remove all biotopes/substrates that have few species
+# alternatively consider fitting these as random effects
+few <- 5
+biotopen <- biotopen %>%
+  filter(n > few)
+substraten <- substraten %>%
+  filter(n > few)
+
+Analyseset <- Analyseset %>%
+  semi_join(biotopen) %>%
+  semi_join(substraten)
+
+```
+
+
+
+```{r}
+Analyseset %>%
+  count(Substraat, Biotoop) %>%
+  arrange(n) %>%
+  View()
+```
+
+
+
+```{r}
+# collineariteit
+panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...)
+{
+  usr <- par("usr"); on.exit(par(usr))
+  par(usr = c(0, 1, 0, 1))
+  r <- cor(x, y)
+  txt <- format(c(r, 0.123456789), digits = digits)[1]
+  txt <- paste0(prefix, txt)
+  if(missing(cex.cor)) cex.cor <- 0.8/strwidth(txt)
+  text(0.5, 0.5, txt, cex = cex.cor * r)
+}
+Analyseset %>%
+  select(starts_with("Ellenb")) %>%
+  pairs(upper.panel = panel.cor)
+# possibly between R and N
+```
+
+
+
+```{r}
+#run the model again
+
+ModelCIUurhok <- lm(CIUurhok ~  
+                      TaxonGroep 
+                    + Substraat 
+                    + Biotoop 
+                    + EllenbergN 
+                    + EllenbergL 
+                    + EllenbergR
+                    + EllenbergF 
+                    + EllenbergT
+                    ,
+                    data = Analyseset )
+
+```
+
+
+
+```{r}
+
+anova(ModelCIUurhok, test  = "F")
+```
+
+
+
+```{r}
+plot(ModelCIUurhok)
+```
+
+
+
+```{r}
+stepAIC(ModelCIUurhok)
+
+ModelCIUurhok2 <- stepAIC(ModelCIUurhok)
+```
+
+
+
+```{r}
+summary(ModelCIUurhok2)
+```
+
+
+
+```{r}
+# interaction with TaxonGroep
+TGxS <- Analyseset %>%
+  count(TaxonGroep, Substraat) %>%
+  arrange(n) %>%
+  filter(n > few)
+```
+
+
+
+```{r}
+TGxB <- Analyseset %>%
+  count(TaxonGroep, Biotoop) %>%
+  arrange(n) %>%
+  filter(n > few)
+```
+
+
+
+```{r}
+
+Analyseset2 <- Analyseset %>%
+  semi_join(TGxS) %>%
+  semi_join(TGxB)
+
+```
+
+
+
+```{r}
+
+ModelCIUurhokI <- lm(CIUurhok ~  TaxonGroep * (
+  Substraat 
+  + Biotoop 
+  + EllenbergN 
+  + EllenbergL 
+  + EllenbergR 
+  + EllenbergF 
+  + EllenbergT
+),
+data = Analyseset )
+```
+
+
+
+```{r}
+summary(ModelCIUurhokI)
+anova(ModelCIUurhokI, test  = "F")
+```
+
+
+
+```{r}
+ModelCIUurhokI2 <- stepAIC(ModelCIUurhokI)
+summary(ModelCIUurhokI2)
+anova(ModelCIUurhokI2)
+```
+
+
+
+```{r}
+Tuk <- TukeyHSD(aov(ModelCIUurhokI), 
+                "Substraat", ordered = TRUE)
+```
+
+
+
+```{r}
+Tuk
+```
+
+
+
+```{r}
+plot(Tuk)
+```
+
+
+
+```{r}
+
+Analyseset3 <- Analyseset[Analyseset$TaxonGroep != "liverworts", ]
+```
+
+
+
+```{r}
+ModelCIUurhokMosses <- lm(CIUurhok ~  Substraat + Biotoop + EllenbergN + EllenbergL + 
+                     EllenbergR + EllenbergF + EllenbergT,data = Analyseset3)
+```
+
+
+
+```{r}
+summary(ModelCIUurhokMosses)
+```
+
+
+
+```{r}
+anova(ModelCIUurhokMosses, test  = "F")
+```
+
+
+
+```{r}
+plot(ModelCIUurhokMosses)
+```
+
+
+
+```{r}
+# random effects model
+library(lme4)
+library(ggeffects)
+m_full <- lmer(CIUurhok ~
+                 (EllenbergF
+               + EllenbergR
+               + EllenbergL
+               + EllenbergN
+               + EllenbergT)
+               * TaxonGroep
+               + (1|Substraat)
+               + (1|Biotoop)
+               ,
+               data = Analyseset)
+
+```
+
+
+
+```{r}
+summary(m_full)
+predictions <- ggpredict(m_full, terms = "EllenbergF")
+```
+
+
+
+```{r}
+#verder uit te werken
+sqlCode2 <-"SELECT qryCCA.*  from qryCCA;"
+SubstraatCI <- sqlQuery(channel = connection, sqlCode2)
+
+head(SubstraatCI)
+str(SubstraatCI)
+```
+
+
+
+```{r}
+ggplot(SubstraatCI, aes(x=Substraat,y=  CIKmhok)) +
+  geom_boxplot ()
+```
+
+
+
+```{r}
+Substraat # species (rows) by substrate ; cells = 0 1 2 3 
+
+modca <- cca(SubstraatCI ~ 1)
+```
+
+
+
+```{r}
+scores(modca, ) #extract row scores
+```
+
+
+
+```{r}
+biplot(modca)
+```
+
+
+
+```{r}
+plot(modca)
+```
+
+
