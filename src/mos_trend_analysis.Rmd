@@ -208,7 +208,7 @@ species_freqs %>%
 ```
 
 
-## Telfer methode 
+## Alternative Telfer method
 
 <!--
 Telfer methode op uurhok??
