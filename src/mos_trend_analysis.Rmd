@@ -21,6 +21,7 @@ library(MASS)
 library(vegan)
 library(readxl)
 library(rprojroot)
+library(DHARMa)
 library(tidyverse)
 library(janitor)
 library(inborutils)
@@ -51,6 +52,10 @@ ellenberg <- get_florabank_traits(
   connection = con, 
   trait_name = "Ellenb", 
   collect = TRUE)
+
+substraat <- get_florabank_traits(con, 
+                     trait_name = "Substraat klassen mossen", 
+                     collect = TRUE)
 
 taxa <- tbl(src = con, "tblTaxon")
 rel_groep <- tbl(src = con, "relTaxonTaxonGroep")
@@ -105,15 +110,23 @@ taxa <- taxa %>%
   clean_names()
 ```
 
-```{r}
-taxa <- taxa %>%
+```{r eval=!file.exists(find_root_file("data/taxa_gbif.csv", criterion = is_git_root))}
+taxa_gbif <- taxa %>%
   select(id, code, naam_nederlands, naam_wetenschappelijk,
          taxn_vrs_key, taxongroep = naam) %>%
   gbif_species_name_match(name = "naam_wetenschappelijk")
+write_tsv(x = taxa_gbif, 
+          path = find_root_file("data/taxa_gbif.csv", criterion = is_git_root))
 ```
 
+```{r eval=file.exists(find_root_file("data/taxa_gbif.csv", criterion = is_git_root))}
+taxa_gbif <- read_tsv(file = find_root_file("data/taxa_gbif.csv", criterion = is_git_root))
+```
+
+
+
 ```{r}
-geobserveerde_taxa <- taxa %>%
+geobserveerde_taxa <- taxa_gbif %>%
   semi_join(alle_data %>%
                distinct(taxon_id_parent),
              by = c("id" = "taxon_id_parent"))
@@ -129,11 +142,6 @@ alle_data <- alle_data %>%
 
 ## Exploratory data analysis
 
-```{r}
-geobserveerde_taxa %>%
-  count(taxongroep, phylum, name = "aantal soorten") %>%
-  kable()
-```
 
 - Anthocerotophyta = hornworth = hauwmossen
 - Bryophyta = bryophytes = bladmossen
@@ -149,13 +157,13 @@ alle_data %>%
 ```
 
 
-
-
 ```{r}
 alle_data %>%
-  count(ifbl_4by4, jaar) %>%
+  count(ifbl_4by4, jaar, name = "number of species") %>%
   ggplot() + 
-  geom_histogram(aes(x = n))
+  geom_density(aes(x = `number of species`, 
+                     colour = factor(jaar))) + 
+  ylab("density of ifbl 4 km x 4 km squares")
 ```
 
 ```{r}
@@ -165,36 +173,38 @@ alle_data %>%
 ```
 
 
+```{r}
+species_freqs <- alle_data %>%
+  filter(phylum != "Basidiomycota", 
+         phylum != "Anthocerotophyta",
+         !is.na(phylum)) %>%
+  group_by(taxongroep, phylum) %>%
+  mutate(n = n()) %>%
+  group_by(taxongroep, phylum, taxon_id_parent) %>%
+  summarise(
+    n_obs = n(),
+    prop_n_obs = n_obs/n[1],
+    n_jaren = n_distinct(jaar),
+    n_hokken = n_distinct(ifbl_4by4))
+```
 
 
 ```{r}
-Basistabel2 <- read_excel(
-  path = find_root_file("data/qryBasistabel.xlsx",
-                        criterion = is_git_root)
-  )
-
-Basistabel2$EllenbergN <- factor(Basistabel2$EllenbergN)
-Basistabel2$EllenbergL <- factor(Basistabel2$EllenbergL)
-Basistabel2$EllenbergR <- factor(Basistabel2$EllenbergR)
-Basistabel2$EllenbergF <- factor(Basistabel2$EllenbergF)
+species_freqs %>%
+  ggplot() +
+  geom_histogram(aes(x = prop_n_obs)) + 
+  ylab("number of species") +
+  facet_wrap(~phylum, scales = "free", ncol = 2)
 ```
 
 
 
 ```{r}
-ggplot(Basistabel2, aes(x=AantalKmGO_1980_1999, 
-                        y= AantalKmGO_2000_2019)) + 
-  geom_point() + 
-  geom_smooth(method=lm)
-```
-
-
-
-```{r}
-ggplot(Basistabel2, aes(x=AantalUurhokGO_1980_1999, 
-                        y= AantalUurhokGO_2000_2019)) + 
-  geom_point() + 
-  geom_smooth(method=lm)
+species_freqs %>%
+  ggplot() +
+  geom_histogram(aes(x = n_obs)) + 
+  ylab("number of species") +
+  facet_wrap(~phylum, scales = "free", ncol = 2)
 ```
 
 
@@ -208,418 +218,254 @@ waar is de analyse waarmee CIuurhok (= residuals van de Telfer analyse?) bepaald
 -->
 
 
+
 ```{r}
-ggplot(Basistabel2, aes(x = CIKmhok,
-                        y =  CIUurhok)) + 
-  geom_point () + 
-  geom_smooth (method = lm)
+analyse_data <- alle_data %>%
+  filter(jaar != max(jaar)) %>%
+  filter(phylum %in% c("Bryophyta", "Marchantiophyta")) %>%
+  mutate(periode = ifelse(between(jaar, 1980, 1999),
+                          "1980-1999", 
+                          "2000-2019"))
+```
+
+```{r}
+analyse_data %>%
+  count(ifbl_4by4, periode, name = "number of species") %>%
+  ggplot() + 
+  geom_density(aes(x = `number of species`, 
+                     colour = periode)) + 
+  ylab("density of ifbl 4 km x 4 km squares") +
+  geom_vline(xintercept = 40)
+```
+
+Goed onderzocht = 40 of meer soorten in een uurhok per periode 
+
+Uurhok moet in beide perioden goed onderzocht zijn.
+
+```{r}
+analyse_data_telfer <- analyse_data %>%
+  distinct(ifbl_4by4, taxon_id_parent, periode, taxongroep, phylum) %>%
+  mutate(value = 1) %>%
+  pivot_wider(id_cols = c(ifbl_4by4, taxon_id_parent, taxongroep, phylum),
+              names_from = periode, 
+              values_from = value, 
+              values_fill = list(value = 0)) %>%
+  group_by(ifbl_4by4) %>%
+  filter(sum(`2000-2019`) >= 40,
+         sum(`1980-1999`) >= 40) %>%
+  ungroup() %>%
+  pivot_longer(cols = c(`2000-2019`, `1980-1999`), 
+               names_to = "periode", 
+               values_to = "values") %>%
+  filter(values == 1) %>%
+  select(-values)
+
+```
+
+```{r}
+analyse_data_telfer_agg <- analyse_data_telfer %>%
+  group_by(periode) %>%
+  mutate(n_hok_tot = n_distinct(ifbl_4by4)) %>%
+  count(periode, taxongroep, phylum, taxon_id_parent, n_hok_tot, 
+        name = "n_hok") %>%
+  ungroup()
 ```
 
 
 ```{r}
-ggplot(Basistabel2, aes(x = TaxonGroep, 
-                        y =  CIUurhok)) + 
-  geom_boxplot ()
+analyse_data_telfer_agg <- analyse_data_telfer_agg %>%
+  pivot_wider(id_cols = c(taxongroep, phylum, taxon_id_parent), 
+              names_from = periode,
+              values_from = c(n_hok, n_hok_tot), 
+              values_fill = list(n_hok = 0)) %>%
+  mutate(`n_hok_tot_2000-2019` = ifelse(is.na(`n_hok_tot_2000-2019`),
+                                        max(`n_hok_tot_2000-2019`,
+                                            na.rm = TRUE),
+                                        `n_hok_tot_2000-2019`),
+         `n_hok_tot_1980-1999` = ifelse(is.na(`n_hok_tot_1980-1999`),
+                                        max(`n_hok_tot_1980-1999`,
+                                            na.rm = TRUE),
+                                        `n_hok_tot_1980-1999`),
+         prop_baseline = (`n_hok_1980-1999` + 1) / `n_hok_tot_1980-1999`,
+         prop_2000_2019 = (`n_hok_2000-2019` + 1) / `n_hok_tot_2000-2019`
+         )
 ```
-
 
 
 ```{r}
-ggplot(Basistabel2, aes(x = EllenbergN, 
-                        y = CIUurhok)) + 
-  geom_boxplot () + 
-  facet_wrap(~TaxonGroep)
+# adding explanatory variables
+ellenb_wide <- ellenberg %>%
+  pivot_wider(id_cols = c(taxon_id), 
+              names_from = kenmerk, 
+              values_from = rekenwaarde) %>%
+  select(taxon_id, 
+         ell_l = `Ellenberg Licht`,
+         ell_n = `Ellenberg Stikstof`,
+         ell_f = `Ellenberg Vocht`,
+         ell_r = `Ellenberg Reactiegetal`
+         #, ell_t = `Ellenberg Temperatuur`
+         )
+
+
+analyse_data_telfer_agg <- analyse_data_telfer_agg %>%
+  left_join(ellenb_wide, 
+            by = c("taxon_id_parent" = "taxon_id")) %>%
+  # warning! species can have more than one substrate -> Wouter already selected 
+  # most important one, but this should be coded in the script?
+  left_join(substraat %>% 
+              clean_names() %>%
+              select(taxon_id, substrate = omschrijving),
+            by = c("taxon_id_parent" = "taxon_id")
+            )
 ```
 
+```{r}
+analyse_data_telfer_agg <- analyse_data_telfer_agg %>%
+  filter(complete.cases(analyse_data_telfer_agg)) %>%
+  group_by(substrate) %>%
+  filter(n() > 5)
+```
 
 
 ```{r}
-ggplot(Basistabel2, aes(x=EllenbergL, y =  CIUurhok)) + 
-  geom_boxplot() + 
-  facet_wrap(~TaxonGroep)
+analyse_data_telfer_agg %>%
+  ungroup() %>%
+  select(starts_with("ell")) %>%
+  pairs()
 ```
-
 
 
 ```{r}
-ggplot(Basistabel2, aes(x=EllenbergF, y =  CIUurhok)) + 
-  geom_boxplot() + 
-  facet_wrap(~TaxonGroep)
-```
+alt_telfer <- glm(cbind(`n_hok_2000-2019` + 1,
+                        `n_hok_tot_2000-2019` - `n_hok_2000-2019` - 1) ~ 
+                    qlogis((`n_hok_1980-1999` + 1)/`n_hok_tot_1980-1999`)
+                  + phylum 
+                  + qlogis((`n_hok_1980-1999` + 1)/`n_hok_tot_1980-1999`):phylum 
+                  + substrate
+                  + ell_l
+                  + ell_r
+                  + ell_n
+                  + ell_f
+                  , 
+    family = "binomial", 
+    data = analyse_data_telfer_agg)
 
+alt_telfer_opt <- MASS::stepAIC(alt_telfer)
+
+```
 
 
 ```{r}
-ggplot(Basistabel2, aes(x=EllenbergT, y =  CIUurhok)) + 
-  geom_boxplot() + 
-  facet_wrap(~TaxonGroep)
+plotResiduals(alt_telfer_opt) #not good... proceeding anyway
+plotResiduals(alt_telfer, 
+              form = analyse_data_telfer_agg$phylum)
 ```
 
+```{r}
+nd <- expand.grid(
+  `n_hok_1980-1999` = pretty(analyse_data_telfer_agg$`n_hok_1980-1999`,
+                             n = 20),
+  ell_r = unique(analyse_data_telfer_agg$ell_r),
+  ell_l = unique(analyse_data_telfer_agg$ell_l),
+  ell_f = unique(analyse_data_telfer_agg$ell_f),
+  `n_hok_tot_1980-1999` = 232,
+  phylum = unique(analyse_data_telfer_agg$phylum),
+  substrate = unique(analyse_data_telfer_agg$substrate))
+prd <- predict(alt_telfer_opt, 
+               type = "link", 
+               newdata = nd, 
+               se = TRUE)
+pred_alt_telfer <- nd %>%
+  bind_cols(data.frame(
+  link_est = prd$fit,
+  link_se = prd$se)) %>%
+  mutate(link_lwr = qnorm(p = 0.025, link_est, link_se),
+         link_upr = qnorm(p = 0.975, link_est, link_se),
+         response_est = plogis(link_est),
+         response_lwr = plogis(link_lwr),
+         response_upr = plogis(link_upr),
+         prop_baseline = (`n_hok_1980-1999` + 1)/`n_hok_tot_1980-1999`)
+```
 
 
 ```{r}
-ggplot(Basistabel2, aes(x=Substraat,y=  CIUurhok)) + 
-  geom_boxplot () + 
-  facet_wrap(~TaxonGroep) + 
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=0))
+pred_alt_telfer %>%
+  filter(ell_l == round(median(ell_l)),
+         ell_f == round(median(ell_f)),
+         ell_r == round(median(ell_r))) %>%
+  ggplot(aes(x = prop_baseline, y = response_est)) + 
+  #geom_point(data = analyse_data_telfer_agg,
+  #           aes(y = prop_2000_2019,
+  #               colour = substrate),
+  #           alpha = 0.3) +
+  geom_abline() +
+  geom_ribbon(aes(ymin = response_lwr, 
+                      ymax = response_upr,
+                      fill = substrate), 
+              alpha = 0.3) + 
+  geom_line(aes(colour = substrate)) +
+  facet_wrap(~phylum)
 ```
 
+```{r}
+pred_alt_telfer %>%
+  filter(ell_l == round(median(ell_l)),
+         ell_f == round(median(ell_f)),
+         substrate == "Grond") %>%
+  ggplot(aes(x = prop_baseline, y = response_est)) + 
+  #geom_point(data = analyse_data_telfer_agg,
+  #           aes(y = prop_2000_2019,
+  #               colour = substrate),
+  #           alpha = 0.3) +
+  geom_abline() +
+  geom_ribbon(aes(ymin = response_lwr, 
+                      ymax = response_upr,
+                      fill = factor(ell_r)), 
+              alpha = 0.3) + 
+  geom_line(aes(colour = factor(ell_r))) +
+  facet_wrap(~phylum)
+```
 
 
 ```{r}
-ggplot(Basistabel2, aes(x=Biotoop,y=  CIUurhok)) + 
-  geom_boxplot () + 
-  facet_wrap(~TaxonGroep) + 
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=0))
+pred_alt_telfer %>%
+  filter(ell_l == round(median(ell_l)),
+         ell_r == round(median(ell_r)),
+         substrate == "Grond") %>%
+  ggplot(aes(x = prop_baseline, y = response_est)) + 
+  #geom_point(data = analyse_data_telfer_agg,
+  #           aes(y = prop_2000_2019,
+  #               colour = substrate),
+  #           alpha = 0.3) +
+  geom_abline() +
+  geom_ribbon(aes(ymin = response_lwr, 
+                      ymax = response_upr,
+                      fill = factor(ell_f)), 
+              alpha = 0.3) + 
+  geom_line(aes(colour = factor(ell_f))) +
+  facet_wrap(~phylum)
 ```
-
 
 
 ```{r}
-ModelCIUurhok <- lm(CIUurhok ~  
-                      TaxonGroep 
-                    + Substraat 
-                    + Biotoop 
-                    + EllenbergN 
-                    + EllenbergL 
-                    + EllenbergR
-                    + EllenbergF 
-                    + EllenbergT
-                    ,
-                    data = Basistabel2 )
-```
-
-
-
-```{r}
-n_parameters <- Basistabel2 %>%
-  select(TaxonGroep, Substraat, Biotoop, starts_with("Ellen")) %>%
-  summarise_all(n_distinct) %>%
-  mutate(total =  rowSums(.))
-
-nrow(Basistabel2) / n_parameters$total # veel te weinig => overfitting
-# oplossing: fit Ellenbergwaarden als continue variabele (indifferent wordt dan NA)
-```
-
-
-
-```{r}
-Basistabel2 <- Basistabel2 %>%
-  mutate_if(is.factor, as.character) %>%
-  mutate_at(.vars = vars(starts_with("Ellen")), 
-            .funs = parse_number)
-# de "indifferenten" :
-problems(x = Basistabel2$EllenbergF) # te weinig om iets zinnig over te zeggen
-problems(x = Basistabel2$EllenbergN) # geen problemen
-problems(x = Basistabel2$EllenbergR) # te weinig
-problems(x = Basistabel2$EllenbergT) # 32 gevallen 
-problems(x = Basistabel2$EllenbergL) # 10 gevallen
-
-#remove missing values
-
-Analyseset <- Basistabel2 %>%
-  select(CIUurhok,
-         TaxonGroep, 
-         Substraat,
-         Biotoop, 
-         starts_with("Ellenb")) %>%
-  filter(complete.cases(.))
+pred_alt_telfer %>%
+  filter(ell_f == round(median(ell_f)),
+         ell_r == round(median(ell_r)),
+         substrate == "Grond") %>%
+  ggplot(aes(x = prop_baseline, y = response_est)) + 
+  #geom_point(data = analyse_data_telfer_agg,
+  #           aes(y = prop_2000_2019,
+  #               colour = substrate),
+  #           alpha = 0.3) +
+  geom_abline() +
+  geom_ribbon(aes(ymin = response_lwr, 
+                      ymax = response_upr,
+                      fill = factor(ell_l)), 
+              alpha = 0.3) + 
+  geom_line(aes(colour = factor(ell_l))) +
+  facet_wrap(~phylum)
 
 ```
 
-
-
-```{r}
-table(Analyseset$TaxonGroep)
-# verwijder de hornworths
-```
-
-
-
-```{r}
-Analyseset <- Analyseset %>%
-  filter(TaxonGroep != "hornworts")
-```
-
-
-
-```{r}
-biotopen <- Analyseset %>% count(Biotoop)
-substraten <- Analyseset %>% count(Substraat)
-```
-
-
-
-```{r}
-# remove all biotopes/substrates that have few species
-# alternatively consider fitting these as random effects
-few <- 5
-biotopen <- biotopen %>%
-  filter(n > few)
-substraten <- substraten %>%
-  filter(n > few)
-
-Analyseset <- Analyseset %>%
-  semi_join(biotopen) %>%
-  semi_join(substraten)
-
-```
-
-
-
-```{r}
-Analyseset %>%
-  count(Substraat, Biotoop) %>%
-  arrange(n) %>%
-  View()
-```
-
-
-
-```{r}
-# collineariteit
-panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...)
-{
-  usr <- par("usr"); on.exit(par(usr))
-  par(usr = c(0, 1, 0, 1))
-  r <- cor(x, y)
-  txt <- format(c(r, 0.123456789), digits = digits)[1]
-  txt <- paste0(prefix, txt)
-  if(missing(cex.cor)) cex.cor <- 0.8/strwidth(txt)
-  text(0.5, 0.5, txt, cex = cex.cor * r)
-}
-Analyseset %>%
-  select(starts_with("Ellenb")) %>%
-  pairs(upper.panel = panel.cor)
-# possibly between R and N
-```
-
-
-
-```{r}
-#run the model again
-
-ModelCIUurhok <- lm(CIUurhok ~  
-                      TaxonGroep 
-                    + Substraat 
-                    + Biotoop 
-                    + EllenbergN 
-                    + EllenbergL 
-                    + EllenbergR
-                    + EllenbergF 
-                    + EllenbergT
-                    ,
-                    data = Analyseset )
-
-```
-
-
-
-```{r}
-
-anova(ModelCIUurhok, test  = "F")
-```
-
-
-
-```{r}
-plot(ModelCIUurhok)
-```
-
-
-
-```{r}
-stepAIC(ModelCIUurhok)
-
-ModelCIUurhok2 <- stepAIC(ModelCIUurhok)
-```
-
-
-
-```{r}
-summary(ModelCIUurhok2)
-```
-
-
-
-```{r}
-# interaction with TaxonGroep
-TGxS <- Analyseset %>%
-  count(TaxonGroep, Substraat) %>%
-  arrange(n) %>%
-  filter(n > few)
-```
-
-
-
-```{r}
-TGxB <- Analyseset %>%
-  count(TaxonGroep, Biotoop) %>%
-  arrange(n) %>%
-  filter(n > few)
-```
-
-
-
-```{r}
-
-Analyseset2 <- Analyseset %>%
-  semi_join(TGxS) %>%
-  semi_join(TGxB)
-
-```
-
-
-
-```{r}
-
-ModelCIUurhokI <- lm(CIUurhok ~  TaxonGroep * (
-  Substraat 
-  + Biotoop 
-  + EllenbergN 
-  + EllenbergL 
-  + EllenbergR 
-  + EllenbergF 
-  + EllenbergT
-),
-data = Analyseset )
-```
-
-
-
-```{r}
-summary(ModelCIUurhokI)
-anova(ModelCIUurhokI, test  = "F")
-```
-
-
-
-```{r}
-ModelCIUurhokI2 <- stepAIC(ModelCIUurhokI)
-summary(ModelCIUurhokI2)
-anova(ModelCIUurhokI2)
-```
-
-
-
-```{r}
-Tuk <- TukeyHSD(aov(ModelCIUurhokI), 
-                "Substraat", ordered = TRUE)
-```
-
-
-
-```{r}
-Tuk
-```
-
-
-
-```{r}
-plot(Tuk)
-```
-
-
-
-```{r}
-
-Analyseset3 <- Analyseset[Analyseset$TaxonGroep != "liverworts", ]
-```
-
-
-
-```{r}
-ModelCIUurhokMosses <- lm(CIUurhok ~  Substraat + Biotoop + EllenbergN + EllenbergL + 
-                     EllenbergR + EllenbergF + EllenbergT,data = Analyseset3)
-```
-
-
-
-```{r}
-summary(ModelCIUurhokMosses)
-```
-
-
-
-```{r}
-anova(ModelCIUurhokMosses, test  = "F")
-```
-
-
-
-```{r}
-plot(ModelCIUurhokMosses)
-```
-
-
-
-```{r}
-# random effects model
-library(lme4)
-library(ggeffects)
-m_full <- lmer(CIUurhok ~
-                 (EllenbergF
-               + EllenbergR
-               + EllenbergL
-               + EllenbergN
-               + EllenbergT)
-               * TaxonGroep
-               + (1|Substraat)
-               + (1|Biotoop)
-               ,
-               data = Analyseset)
-
-```
-
-
-
-```{r}
-summary(m_full)
-predictions <- ggpredict(m_full, terms = "EllenbergF")
-```
-
-
-
-```{r}
-#verder uit te werken
-sqlCode2 <-"SELECT qryCCA.*  from qryCCA;"
-SubstraatCI <- sqlQuery(channel = connection, sqlCode2)
-
-head(SubstraatCI)
-str(SubstraatCI)
-```
-
-
-
-```{r}
-ggplot(SubstraatCI, aes(x=Substraat,y=  CIKmhok)) +
-  geom_boxplot ()
-```
-
-
-
-```{r}
-Substraat # species (rows) by substrate ; cells = 0 1 2 3 
-
-modca <- cca(SubstraatCI ~ 1)
-```
-
-
-
-```{r}
-scores(modca, ) #extract row scores
-```
-
-
-
-```{r}
-biplot(modca)
-```
-
-
-
-```{r}
-plot(modca)
-```
 
 
