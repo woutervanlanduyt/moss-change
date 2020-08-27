@@ -303,7 +303,7 @@ ellenb_wide <- ellenberg %>%
          ell_n = `Ellenberg Stikstof`,
          ell_f = `Ellenberg Vocht`,
          ell_r = `Ellenberg Reactiegetal`
-         #, ell_t = `Ellenberg Temperatuur`
+         , ell_t = `Ellenberg Temperatuur`
          )
 
 
