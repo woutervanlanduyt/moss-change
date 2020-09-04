@@ -40,7 +40,6 @@ mosdata <- get_florabank_taxon_ifbl_year(
 )
 
 
-
 ellenberg <- get_florabank_traits(
   connection = con, 
   trait_name = "Ellenb", 
@@ -59,8 +58,7 @@ taxa <- taxa %>%
                select(-ID),
              by = c("ID" = "TaxonID")) %>%
   inner_join(taxongroep %>%
-               filter(Naam %in% c("Mossen",
-                                  "Lichenen (korstmossen)")
+               filter(Naam %in% c("Mossen")
                       ) %>%
                select(-Code),
              by =  c("TaxonGroepID" = "ID")
@@ -73,29 +71,22 @@ rm(con)
 
 
 ```{r}
-korstmosdata <- korstmosdata %>%
-  inner_join(taxa %>%
-               select(ID, taxongroep = Naam), 
-             by = c("TaxonIDParent" = "ID"))
-
 mosdata <- mosdata %>%
   inner_join(taxa %>%
                select(ID, taxongroep = Naam), 
              by = c("TaxonIDParent" = "ID"))
-
-alle_data <- bind_rows(mosdata, korstmosdata)
 ```
 
 ```{r}
 ellenberg <- ellenberg %>%
-  inner_join(alle_data %>%
-               distinct(TaxonIDParent, taxongroep),
+  inner_join(mosdata %>%
+               distinct(TaxonIDParent),
              by = c("TaxonID" = "TaxonIDParent"))
 ```
 
 
 ```{r}
-alle_data <- alle_data %>%
+mosdata <- mosdata %>%
   clean_names()
 ellenberg <- ellenberg %>%
   clean_names()
@@ -120,13 +111,13 @@ taxa_gbif <- read_tsv(file = find_root_file("data/taxa_gbif.csv", criterion = is
 
 ```{r}
 geobserveerde_taxa <- taxa_gbif %>%
-  semi_join(alle_data %>%
+  semi_join(mosdata %>%
                distinct(taxon_id_parent),
              by = c("id" = "taxon_id_parent"))
 ```
 
 ```{r}
-alle_data <- alle_data %>%
+mosdata <- mosdata %>%
   left_join(geobserveerde_taxa %>%
               select(id, phylum),
             by = c("taxon_id_parent" = "id"))
@@ -141,8 +132,8 @@ alle_data <- alle_data %>%
 - Marchantiophyta = liverworths = levermossen
 
 ```{r}
-alle_data %>%
-  group_by(taxongroep, phylum) %>%
+mosdata %>%
+  group_by(phylum) %>%
   summarize(n_obs = n(),
             n_soorten = n_distinct(taxon_id_parent),
             n_hokken = n_distinct(ifbl_4by4)) %>%
@@ -151,7 +142,7 @@ alle_data %>%
 
 
 ```{r}
-alle_data %>%
+mosdata %>%
   count(ifbl_4by4, jaar, name = "number of species") %>%
   ggplot() + 
   geom_density(aes(x = `number of species`, 
@@ -160,20 +151,20 @@ alle_data %>%
 ```
 
 ```{r}
-alle_data %>%
+mosdata %>%
   ggplot() + 
   geom_bar(aes(x = jaar, fill = phylum))
 ```
 
 
 ```{r}
-species_freqs <- alle_data %>%
+species_freqs <- mosdata %>%
   filter(phylum != "Basidiomycota", 
          phylum != "Anthocerotophyta",
          !is.na(phylum)) %>%
-  group_by(taxongroep, phylum) %>%
+  group_by(phylum) %>%
   mutate(n = n()) %>%
-  group_by(taxongroep, phylum, taxon_id_parent) %>%
+  group_by(phylum, taxon_id_parent) %>%
   summarise(
     n_obs = n(),
     prop_n_obs = n_obs/n[1],
@@ -213,7 +204,7 @@ waar is de analyse waarmee CIuurhok (= residuals van de Telfer analyse?) bepaald
 
 
 ```{r}
-analyse_data <- alle_data %>%
+analyse_data <- mosdata %>%
   filter(jaar != max(jaar)) %>%
   filter(phylum %in% c("Bryophyta", "Marchantiophyta")) %>%
   mutate(periode = ifelse(between(jaar, 1980, 1999),
@@ -237,9 +228,9 @@ Uurhok moet in beide perioden goed onderzocht zijn.
 
 ```{r}
 analyse_data_telfer <- analyse_data %>%
-  distinct(ifbl_4by4, taxon_id_parent, periode, taxongroep, phylum) %>%
+  distinct(ifbl_4by4, taxon_id_parent, periode, phylum) %>%
   mutate(value = 1) %>%
-  pivot_wider(id_cols = c(ifbl_4by4, taxon_id_parent, taxongroep, phylum),
+  pivot_wider(id_cols = c(ifbl_4by4, taxon_id_parent, phylum),
               names_from = periode, 
               values_from = value, 
               values_fill = list(value = 0)) %>%
@@ -259,7 +250,7 @@ analyse_data_telfer <- analyse_data %>%
 analyse_data_telfer_agg <- analyse_data_telfer %>%
   group_by(periode) %>%
   mutate(n_hok_tot = n_distinct(ifbl_4by4)) %>%
-  count(periode, taxongroep, phylum, taxon_id_parent, n_hok_tot, 
+  count(periode, phylum, taxon_id_parent, n_hok_tot, 
         name = "n_hok") %>%
   ungroup()
 ```
@@ -267,7 +258,7 @@ analyse_data_telfer_agg <- analyse_data_telfer %>%
 
 ```{r}
 analyse_data_telfer_agg <- analyse_data_telfer_agg %>%
-  pivot_wider(id_cols = c(taxongroep, phylum, taxon_id_parent), 
+  pivot_wider(id_cols = c(phylum, taxon_id_parent), 
               names_from = periode,
               values_from = c(n_hok, n_hok_tot), 
               values_fill = list(n_hok = 0)) %>%
@@ -339,6 +330,7 @@ alt_telfer <- glm(cbind(`n_hok_2000-2019` + 1,
                   + ell_r
                   + ell_n
                   + ell_f
+                  + ell_t
                   , 
     family = "binomial", 
     data = analyse_data_telfer_agg)
@@ -361,6 +353,8 @@ nd <- expand.grid(
   ell_r = unique(analyse_data_telfer_agg$ell_r),
   ell_l = unique(analyse_data_telfer_agg$ell_l),
   ell_f = unique(analyse_data_telfer_agg$ell_f),
+  ell_n = unique(analyse_data_telfer_agg$ell_n),
+  ell_t = unique(analyse_data_telfer_agg$ell_n),
   `n_hok_tot_1980-1999` = 232,
   phylum = unique(analyse_data_telfer_agg$phylum),
   substrate = unique(analyse_data_telfer_agg$substrate))
@@ -385,7 +379,9 @@ pred_alt_telfer <- nd %>%
 pred_alt_telfer %>%
   filter(ell_l == round(median(ell_l)),
          ell_f == round(median(ell_f)),
-         ell_r == round(median(ell_r))) %>%
+         ell_r == round(median(ell_r)),
+         ell_n == round(median(ell_n)),
+         ell_t == round(median(ell_t))) %>%
   ggplot(aes(x = prop_baseline, y = response_est)) + 
   #geom_point(data = analyse_data_telfer_agg,
   #           aes(y = prop_2000_2019,
