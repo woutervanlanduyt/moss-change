@@ -354,7 +354,7 @@ nd <- expand.grid(
   ell_l = unique(analyse_data_telfer_agg$ell_l),
   ell_f = unique(analyse_data_telfer_agg$ell_f),
   ell_n = unique(analyse_data_telfer_agg$ell_n),
-  ell_t = unique(analyse_data_telfer_agg$ell_n),
+  ell_t = unique(analyse_data_telfer_agg$ell_t),
   `n_hok_tot_1980-1999` = 232,
   phylum = unique(analyse_data_telfer_agg$phylum),
   substrate = unique(analyse_data_telfer_agg$substrate))
