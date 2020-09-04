@@ -39,13 +39,6 @@ mosdata <- get_florabank_taxon_ifbl_year(
   collect = TRUE
 )
 
-korstmosdata <- get_florabank_taxon_ifbl_year(
-  connection = con,
-  starting_year = 1980, 
-  ifbl_resolution = "4km-by-4km", 
-  taxongroup = "Lichenen (korstmossen)", 
-  collect = TRUE
-)
 
 
 ellenberg <- get_florabank_traits(
