@@ -347,41 +347,80 @@ plotResiduals(alt_telfer,
 ```
 
 ```{r}
-nd <- expand.grid(
-  `n_hok_1980-1999` = pretty(analyse_data_telfer_agg$`n_hok_1980-1999`,
-                             n = 20),
-  ell_r = unique(analyse_data_telfer_agg$ell_r),
-  ell_l = unique(analyse_data_telfer_agg$ell_l),
-  ell_f = unique(analyse_data_telfer_agg$ell_f),
-  ell_n = unique(analyse_data_telfer_agg$ell_n),
-  ell_t = unique(analyse_data_telfer_agg$ell_t),
-  `n_hok_tot_1980-1999` = 232,
-  phylum = unique(analyse_data_telfer_agg$phylum),
-  substrate = unique(analyse_data_telfer_agg$substrate))
-prd <- predict(alt_telfer_opt, 
-               type = "link", 
-               newdata = nd, 
-               se = TRUE)
-pred_alt_telfer <- nd %>%
-  bind_cols(data.frame(
-  link_est = prd$fit,
-  link_se = prd$se)) %>%
-  mutate(link_lwr = qnorm(p = 0.025, link_est, link_se),
-         link_upr = qnorm(p = 0.975, link_est, link_se),
-         response_est = plogis(link_est),
-         response_lwr = plogis(link_lwr),
-         response_upr = plogis(link_upr),
-         prop_baseline = (`n_hok_1980-1999` + 1)/`n_hok_tot_1980-1999`)
+calc_substrate <- function() {
+  nd_r <- expand.grid(
+    `n_hok_1980-1999` = pretty(analyse_data_telfer_agg$`n_hok_1980-1999`,
+                               n = 20),
+    ell_r = mean(analyse_data_telfer_agg$ell_r),
+    ell_l = mean(analyse_data_telfer_agg$ell_l),
+    ell_f = mean(analyse_data_telfer_agg$ell_f),
+    ell_n = mean(analyse_data_telfer_agg$ell_n),
+    ell_t = mean(analyse_data_telfer_agg$ell_t),
+    `n_hok_tot_1980-1999` = 232,
+    phylum = unique(analyse_data_telfer_agg$phylum),
+    substrate = unique(analyse_data_telfer_agg$substrate))
+  
+  prd_r <- predict(alt_telfer_opt, 
+                   type = "link", 
+                   newdata = nd_r, 
+                   se = TRUE)
+  
+  pred_alt_telfer_r <- nd_r %>%
+    bind_cols(data.frame(
+      link_est = prd_r$fit,
+      link_se = prd_r$se)) %>%
+    mutate(link_lwr = qnorm(p = 0.025, link_est, link_se),
+           link_upr = qnorm(p = 0.975, link_est, link_se),
+           response_est = plogis(link_est),
+           response_lwr = plogis(link_lwr),
+           response_upr = plogis(link_upr),
+           prop_baseline = (`n_hok_1980-1999` + 1)/`n_hok_tot_1980-1999`)
+  
+  return(pred_alt_telfer_r)
+}
+
+calc_ellenberg <- function(ellenberg = "ell_r") {
+  ell <- c("ell_l", "ell_r", "ell_f", "ell_n", "ell_t")
+  ell_fixed <- ell[ell != ellenberg]
+  means <- map_dfc(analyse_data_telfer_agg[,ell_fixed], mean)
+  nd_r <- expand.grid(
+    `n_hok_1980-1999` = pretty(analyse_data_telfer_agg$`n_hok_1980-1999`,
+                               n = 20),
+    x = unique(analyse_data_telfer_agg[[ellenberg]]),
+    `n_hok_tot_1980-1999` = 232,
+    phylum = unique(analyse_data_telfer_agg$phylum),
+    substrate = "Grond")
+  
+  names(nd_r)[2] <- ellenberg
+  
+  nd_r <- nd_r %>%
+    bind_cols(means)
+  
+  prd_r <- predict(alt_telfer_opt, 
+                   type = "link", 
+                   newdata = nd_r, 
+                   se = TRUE)
+  
+  pred_alt_telfer_r <- nd_r %>%
+    bind_cols(data.frame(
+      link_est = prd_r$fit,
+      link_se = prd_r$se)) %>%
+    mutate(link_lwr = qnorm(p = 0.025, link_est, link_se),
+           link_upr = qnorm(p = 0.975, link_est, link_se),
+           response_est = plogis(link_est),
+           response_lwr = plogis(link_lwr),
+           response_upr = plogis(link_upr),
+           prop_baseline = (`n_hok_1980-1999` + 1)/`n_hok_tot_1980-1999`)
+  
+  return(pred_alt_telfer_r)
+}
+
+
 ```
 
 
 ```{r}
-pred_alt_telfer %>%
-  filter(ell_l == round(median(ell_l)),
-         ell_f == round(median(ell_f)),
-         ell_r == round(median(ell_r)),
-         ell_n == round(median(ell_n)),
-         ell_t == round(median(ell_t))) %>%
+calc_predictions() %>%
   ggplot(aes(x = prop_baseline, y = response_est)) + 
   #geom_point(data = analyse_data_telfer_agg,
   #           aes(y = prop_2000_2019,
@@ -397,10 +436,7 @@ pred_alt_telfer %>%
 ```
 
 ```{r}
-pred_alt_telfer %>%
-  filter(ell_l == round(median(ell_l)),
-         ell_f == round(median(ell_f)),
-         substrate == "Grond") %>%
+calc_ellenberg("ell_r") %>%
   ggplot(aes(x = prop_baseline, y = response_est)) + 
   #geom_point(data = analyse_data_telfer_agg,
   #           aes(y = prop_2000_2019,
@@ -417,10 +453,7 @@ pred_alt_telfer %>%
 
 
 ```{r}
-pred_alt_telfer %>%
-  filter(ell_l == round(median(ell_l)),
-         ell_r == round(median(ell_r)),
-         substrate == "Grond") %>%
+calc_ellenberg("ell_f") %>%
   ggplot(aes(x = prop_baseline, y = response_est)) + 
   #geom_point(data = analyse_data_telfer_agg,
   #           aes(y = prop_2000_2019,
@@ -437,10 +470,7 @@ pred_alt_telfer %>%
 
 
 ```{r}
-pred_alt_telfer %>%
-  filter(ell_f == round(median(ell_f)),
-         ell_r == round(median(ell_r)),
-         substrate == "Grond") %>%
+calc_ellenberg("ell_l") %>%
   ggplot(aes(x = prop_baseline, y = response_est)) + 
   #geom_point(data = analyse_data_telfer_agg,
   #           aes(y = prop_2000_2019,
@@ -456,5 +486,37 @@ pred_alt_telfer %>%
 
 ```
 
+```{r}
+calc_ellenberg("ell_n") %>%
+  ggplot(aes(x = prop_baseline, y = response_est)) + 
+  #geom_point(data = analyse_data_telfer_agg,
+  #           aes(y = prop_2000_2019,
+  #               colour = substrate),
+  #           alpha = 0.3) +
+  geom_abline() +
+  geom_ribbon(aes(ymin = response_lwr, 
+                      ymax = response_upr,
+                      fill = factor(ell_n)), 
+              alpha = 0.3) + 
+  geom_line(aes(colour = factor(ell_n))) +
+  facet_wrap(~phylum)
 
+```
+
+```{r}
+calc_ellenberg("ell_t") %>%
+  ggplot(aes(x = prop_baseline, y = response_est)) + 
+  #geom_point(data = analyse_data_telfer_agg,
+  #           aes(y = prop_2000_2019,
+  #               colour = substrate),
+  #           alpha = 0.3) +
+  geom_abline() +
+  geom_ribbon(aes(ymin = response_lwr, 
+                      ymax = response_upr,
+                      fill = factor(ell_t)), 
+              alpha = 0.3) + 
+  geom_line(aes(colour = factor(ell_t))) +
+  facet_wrap(~phylum)
+
+```
 
