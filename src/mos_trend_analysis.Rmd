@@ -425,7 +425,7 @@ calc_ellenberg <- function(ellenberg = "ell_r") {
 
 
 ```{r}
-calc_predictions() %>%
+calc_substrate() %>%
   ggplot(aes(x = prop_baseline, y = response_est)) + 
   #geom_point(data = analyse_data_telfer_agg,
   #           aes(y = prop_2000_2019,
