@@ -39,8 +39,10 @@ vignettes/*.pdf
 .Renviron
 .Rproj.user
 
-# markdown created folders with png files
+# markdown created folders with png files and html files in src
 src/**/*_files/
+src/**/*.html
+
 
 # temp folder
 temp/
