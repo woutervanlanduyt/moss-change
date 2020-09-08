@@ -26,12 +26,14 @@ library(tidyverse)
 library(janitor)
 library(inborutils)
 library(inbodb) #remotes::install_github("inbo/inbodb", build_vignettes = TRUE)
+source(find_root_file("src/functions.R",
+                      criterion = is_git_root))
 ```
 
 ```{r}
 
 con <- connect_inbo_dbase("D0021_00_userFlora")
-mosdata <- get_florabank_taxon_ifbl_year(
+mosdata <- get_florabank_taxon_ifbl_year_2(
   connection = con,
   starting_year = 1980, 
   ifbl_resolution = "4km-by-4km", 
@@ -64,6 +66,9 @@ taxa <- taxa %>%
              by =  c("TaxonGroepID" = "ID")
              ) %>%
   collect()
+
+
+
 
 dbDisconnect(con)
 rm(con)
