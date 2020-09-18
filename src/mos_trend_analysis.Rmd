@@ -310,13 +310,58 @@ analyse_data_telfer_agg <- analyse_data_telfer_agg %>%
             )
 ```
 
-Filter toevoegen voor soorten die minder dan 5 keer voorkomen in periode 1
-Check onderstaande filter;
+
+```{r}
+analyse_data_telfer_agg %>%
+  filter(complete.cases(analyse_data_telfer_agg)) %>%
+  count(phylum, substrate, name = "number of species") %>%
+  kable()
+```
+
+
+```{r}
+analyse_data_telfer_agg %>%
+  filter(complete.cases(analyse_data_telfer_agg)) %>%
+  count(phylum, ell_l, name = "number of species") %>%
+  kable()
+```
+
+```{r}
+analyse_data_telfer_agg %>%
+  filter(complete.cases(analyse_data_telfer_agg)) %>%
+  count(phylum, ell_r, name = "number of species") %>%
+  kable()
+```
+
+
+```{r}
+analyse_data_telfer_agg %>%
+  filter(complete.cases(analyse_data_telfer_agg)) %>%
+  count(phylum, ell_f, name = "number of species") %>%
+  kable()
+```
+
+
+```{r}
+analyse_data_telfer_agg %>%
+  filter(complete.cases(analyse_data_telfer_agg)) %>%
+  count(phylum, ell_n, name = "number of species") %>%
+  kable()
+```
+
+
+```{r}
+analyse_data_telfer_agg %>%
+  filter(complete.cases(analyse_data_telfer_agg)) %>%
+  count(phylum, ell_t, name = "number of species") %>%
+  kable()
+```
+
 
 ```{r}
 analyse_data_telfer_agg <- analyse_data_telfer_agg %>%
   filter(complete.cases(analyse_data_telfer_agg)) %>%
-  group_by(substrate) %>%
+  count(phylum, substrate) %>%
   filter(n() > 5)
 ```
 
