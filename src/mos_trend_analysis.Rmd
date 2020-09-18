@@ -330,12 +330,12 @@ alt_telfer <- glm(cbind(`n_hok_2000-2019` + 1,
                     qlogis((`n_hok_1980-1999` + 1)/`n_hok_tot_1980-1999`)
                   + phylum 
                   + qlogis((`n_hok_1980-1999` + 1)/`n_hok_tot_1980-1999`):phylum 
-                  + substrate
+                  + (substrate
                   + ell_l
                   + ell_r
                   + ell_n
                   + ell_f
-                  + ell_t
+                  + ell_t) * phylum
                   , 
     family = "binomial", 
     data = analyse_data_telfer_agg)
