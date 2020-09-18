@@ -357,21 +357,33 @@ analyse_data_telfer_agg %>%
   kable()
 ```
 
+Only remove substrate levels with less than 5 species (for Ellenberg variables this is not necessary because they are included as continuous covariate).
 
 ```{r}
 analyse_data_telfer_agg <- analyse_data_telfer_agg %>%
   filter(complete.cases(analyse_data_telfer_agg)) %>%
-  count(phylum, substrate) %>%
-  filter(n() > 5)
+  group_by(phylum, substrate) %>%
+  filter(n() > 5) %>%
+  ungroup()
 ```
 
 
 ```{r}
 analyse_data_telfer_agg %>%
   ungroup() %>%
+  filter(phylum == "Bryophyta") %>%
   select(starts_with("ell")) %>%
-  pairs()
+  pairs(main = "Bryophyta")
 ```
+
+```{r}
+analyse_data_telfer_agg %>%
+  ungroup() %>%
+  filter(phylum != "Bryophyta") %>%
+  select(starts_with("ell")) %>%
+  pairs(main = "Marchantiophyta")
+```
+
 
 
 ```{r}
