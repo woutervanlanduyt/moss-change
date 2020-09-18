@@ -496,7 +496,7 @@ calc_ellenberg <- function(ellenberg = "ell_r") {
 ```
 
 
-```{r}
+```{r substrate-prop}
 calc_substrate() %>%
   ggplot(aes(x = prop_baseline, y = response_est)) + 
   #geom_point(data = analyse_data_telfer_agg,
@@ -514,7 +514,7 @@ calc_substrate() %>%
 
 Same figure but this time in link-scale (to obtain Telfer-like figures):
 
-```{r}
+```{r substrate-link}
 calc_substrate() %>%
   ggplot(aes(x = qlogis(prop_baseline), y = link_est)) + 
   #geom_point(data = analyse_data_telfer_agg,
@@ -530,7 +530,7 @@ calc_substrate() %>%
   facet_wrap(~phylum)
 ```
 
-```{r}
+```{r substrate-diff}
 calc_substrate() %>%
   as_tibble() %>%
   mutate(link_est_diff = link_est - qlogis(prop_baseline),
@@ -555,7 +555,7 @@ calc_substrate() %>%
 ```
 
 
-```{r}
+```{r ell-r-prop}
 calc_ellenberg("ell_r") %>%
   ggplot(aes(x = prop_baseline, y = response_est)) + 
   #geom_point(data = analyse_data_telfer_agg,
@@ -572,7 +572,7 @@ calc_ellenberg("ell_r") %>%
 ```
 
 
-```{r}
+```{r ell-r-link}
 calc_ellenberg("ell_r") %>%
   ggplot(aes(x = qlogis(prop_baseline), y = link_est)) + 
   #geom_point(data = analyse_data_telfer_agg,
@@ -589,7 +589,30 @@ calc_ellenberg("ell_r") %>%
 ```
 
 
-```{r}
+```{r ell-r-diff}
+calc_ellenberg(ellenberg = "ell_r") %>%
+  as_tibble() %>%
+  mutate(link_est_diff = link_est - qlogis(prop_baseline),
+         link_lwr_diff = link_lwr - qlogis(prop_baseline),
+         link_upr_diff = link_upr - qlogis(prop_baseline)) %>% 
+  filter(`n_hok_1980-1999` %in% c(20, 100, 180)) %>%
+  mutate(`n_hok_1980-1999` = factor(`n_hok_1980-1999`)) %>%
+  ggplot(aes(x = ell_r, y = link_est_diff)) + 
+  #geom_point(data = analyse_data_telfer_agg,
+  #           aes(y = prop_2000_2019,
+  #               colour = substrate),
+  #           alpha = 0.3) +
+  geom_hline(yintercept = 0) +
+  geom_ribbon(aes(ymin = link_lwr_diff, 
+                    ymax = link_upr_diff,
+                    fill = `n_hok_1980-1999`),
+              alpha = 0.3) +
+  geom_line(aes(colour = `n_hok_1980-1999`)) +
+  facet_grid(~phylum)
+```
+
+
+```{r ell-f-prop}
 calc_ellenberg("ell_f") %>%
   ggplot(aes(x = prop_baseline, y = response_est)) + 
   #geom_point(data = analyse_data_telfer_agg,
@@ -606,7 +629,7 @@ calc_ellenberg("ell_f") %>%
 ```
 
 
-```{r}
+```{r ell-f-link}
 calc_ellenberg("ell_f") %>%
   ggplot(aes(x = qlogis(prop_baseline), y = link_est)) + 
   #geom_point(data = analyse_data_telfer_agg,
@@ -622,7 +645,31 @@ calc_ellenberg("ell_f") %>%
   facet_wrap(~phylum)
 ```
 
-```{r}
+```{r ell-f-diff}
+calc_ellenberg(ellenberg = "ell_f") %>%
+  as_tibble() %>%
+  mutate(link_est_diff = link_est - qlogis(prop_baseline),
+         link_lwr_diff = link_lwr - qlogis(prop_baseline),
+         link_upr_diff = link_upr - qlogis(prop_baseline)) %>% 
+  filter(`n_hok_1980-1999` %in% c(20, 100, 180)) %>%
+  mutate(`n_hok_1980-1999` = factor(`n_hok_1980-1999`)) %>%
+  ggplot(aes(x = ell_f, y = link_est_diff)) + 
+  #geom_point(data = analyse_data_telfer_agg,
+  #           aes(y = prop_2000_2019,
+  #               colour = substrate),
+  #           alpha = 0.3) +
+  geom_hline(yintercept = 0) +
+  geom_ribbon(aes(ymin = link_lwr_diff, 
+                    ymax = link_upr_diff,
+                    fill = `n_hok_1980-1999`),
+              alpha = 0.3) +
+  geom_line(aes(colour = `n_hok_1980-1999`)) +
+  facet_grid(~phylum)
+```
+
+
+
+```{r ell-l-prop}
 calc_ellenberg("ell_l") %>%
   ggplot(aes(x = prop_baseline, y = response_est)) + 
   #geom_point(data = analyse_data_telfer_agg,
@@ -640,7 +687,7 @@ calc_ellenberg("ell_l") %>%
 ```
 
 
-```{r}
+```{r ell-l-link}
 calc_ellenberg("ell_l") %>%
   ggplot(aes(x = qlogis(prop_baseline), y = link_est)) + 
   #geom_point(data = analyse_data_telfer_agg,
@@ -657,8 +704,50 @@ calc_ellenberg("ell_l") %>%
 
 ```
 
+```{r ell-l-diff}
+calc_ellenberg(ellenberg = "ell_l") %>%
+  as_tibble() %>%
+  mutate(link_est_diff = link_est - qlogis(prop_baseline),
+         link_lwr_diff = link_lwr - qlogis(prop_baseline),
+         link_upr_diff = link_upr - qlogis(prop_baseline)) %>% 
+  filter(`n_hok_1980-1999` %in% c(20, 100, 180)) %>%
+  mutate(`n_hok_1980-1999` = factor(`n_hok_1980-1999`)) %>%
+  ggplot(aes(x = ell_l, y = link_est_diff)) + 
+  #geom_point(data = analyse_data_telfer_agg,
+  #           aes(y = prop_2000_2019,
+  #               colour = substrate),
+  #           alpha = 0.3) +
+  geom_hline(yintercept = 0) +
+  geom_ribbon(aes(ymin = link_lwr_diff, 
+                    ymax = link_upr_diff,
+                    fill = `n_hok_1980-1999`),
+              alpha = 0.3) +
+  geom_line(aes(colour = `n_hok_1980-1999`)) +
+  facet_grid(~phylum)
+```
 
-```{r}
+
+```{r ell-n-prop}
+calc_ellenberg("ell_n") %>%
+  ggplot(aes(x = prop_baseline, y = response_est)) + 
+  #geom_point(data = analyse_data_telfer_agg,
+  #           aes(y = prop_2000_2019,
+  #               colour = substrate),
+  #           alpha = 0.3) +
+  geom_abline() +
+  geom_ribbon(aes(ymin = response_lwr, 
+                      ymax = response_upr,
+                      fill = factor(ell_n)), 
+              alpha = 0.3) + 
+  geom_line(aes(colour = factor(ell_n))) +
+  facet_wrap(~phylum)
+
+```
+
+
+
+
+```{r ell-n-link}
 calc_ellenberg("ell_n") %>%
   ggplot(aes(x = qlogis(prop_baseline), y = link_est)) + 
   #geom_point(data = analyse_data_telfer_agg,
@@ -675,7 +764,30 @@ calc_ellenberg("ell_n") %>%
 
 ```
 
-```{r}
+```{r ell-n-diff}
+calc_ellenberg(ellenberg = "ell_n") %>%
+  as_tibble() %>%
+  mutate(link_est_diff = link_est - qlogis(prop_baseline),
+         link_lwr_diff = link_lwr - qlogis(prop_baseline),
+         link_upr_diff = link_upr - qlogis(prop_baseline)) %>% 
+  filter(`n_hok_1980-1999` %in% c(20, 100, 180)) %>%
+  mutate(`n_hok_1980-1999` = factor(`n_hok_1980-1999`)) %>%
+  ggplot(aes(x = ell_n, y = link_est_diff)) + 
+  #geom_point(data = analyse_data_telfer_agg,
+  #           aes(y = prop_2000_2019,
+  #               colour = substrate),
+  #           alpha = 0.3) +
+  geom_hline(yintercept = 0) +
+  geom_ribbon(aes(ymin = link_lwr_diff, 
+                    ymax = link_upr_diff,
+                    fill = `n_hok_1980-1999`),
+              alpha = 0.3) +
+  geom_line(aes(colour = `n_hok_1980-1999`)) +
+  facet_grid(~phylum)
+```
+
+
+```{r ell-t-prop}
 calc_ellenberg("ell_t") %>%
   ggplot(aes(x = prop_baseline, y = response_est)) + 
   #geom_point(data = analyse_data_telfer_agg,
@@ -692,7 +804,7 @@ calc_ellenberg("ell_t") %>%
 
 ```
 
-```{r}
+```{r ell-t-link}
 calc_ellenberg("ell_t") %>%
   ggplot(aes(x = qlogis(prop_baseline), y = link_est)) + 
   #geom_point(data = analyse_data_telfer_agg,
@@ -707,4 +819,27 @@ calc_ellenberg("ell_t") %>%
   geom_line(aes(colour = factor(ell_t))) +
   facet_wrap(~phylum)
 
+```
+
+
+```{r ell-t-diff}
+calc_ellenberg(ellenberg = "ell_t") %>%
+  as_tibble() %>%
+  mutate(link_est_diff = link_est - qlogis(prop_baseline),
+         link_lwr_diff = link_lwr - qlogis(prop_baseline),
+         link_upr_diff = link_upr - qlogis(prop_baseline)) %>% 
+  filter(`n_hok_1980-1999` %in% c(20, 100, 180)) %>%
+  mutate(`n_hok_1980-1999` = factor(`n_hok_1980-1999`)) %>%
+  ggplot(aes(x = ell_t, y = link_est_diff)) + 
+  #geom_point(data = analyse_data_telfer_agg,
+  #           aes(y = prop_2000_2019,
+  #               colour = substrate),
+  #           alpha = 0.3) +
+  geom_hline(yintercept = 0) +
+  geom_ribbon(aes(ymin = link_lwr_diff, 
+                    ymax = link_upr_diff,
+                    fill = `n_hok_1980-1999`),
+              alpha = 0.3) +
+  geom_line(aes(colour = `n_hok_1980-1999`)) +
+  facet_grid(~phylum)
 ```
