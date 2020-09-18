@@ -406,10 +406,20 @@ alt_telfer_opt <- MASS::stepAIC(alt_telfer)
 
 ```
 
+Now the interaction `qlogis((`n_hok_1980-1999` + 1)/`n_hok_tot_1980-1999`):phylum` is removed, but the difference in AIC is only marginal so I would keep it in and for the paper not do model selection at all and argue that the interactions with phylum are required by design.
+
+The figures below thus show the full model (including all interactions).
+
+```{r}
+# overriding the stepAIC
+alt_telfer_opt <- alt_telfer
+```
+
+
 
 ```{r}
 plotResiduals(alt_telfer_opt) #not good... proceeding anyway
-plotResiduals(alt_telfer, 
+plotResiduals(alt_telfer_opt, 
               form = analyse_data_telfer_agg$phylum)
 ```
 
@@ -485,7 +495,6 @@ calc_ellenberg <- function(ellenberg = "ell_r") {
 
 ```
 
-respons als errorbar en afwijking berekenen van de 1 op 1 lijn en dit voor een aantal waarden van baseline.
 
 ```{r}
 calc_substrate() %>%
@@ -521,6 +530,29 @@ calc_substrate() %>%
   facet_wrap(~phylum)
 ```
 
+```{r}
+calc_substrate() %>%
+  as_tibble() %>%
+  mutate(link_est_diff = link_est - qlogis(prop_baseline),
+         link_lwr_diff = link_lwr - qlogis(prop_baseline),
+         link_upr_diff = link_upr - qlogis(prop_baseline)) %>% 
+  filter(`n_hok_1980-1999` %in% c(20, 100, 180)) %>%
+  mutate(substrate = reorder(substrate, link_est_diff),
+         `n_hok_1980-1999` = factor(`n_hok_1980-1999`)) %>%
+  ggplot(aes(x = substrate, y = link_est_diff)) + 
+  #geom_point(data = analyse_data_telfer_agg,
+  #           aes(y = prop_2000_2019,
+  #               colour = substrate),
+  #           alpha = 0.3) +
+  geom_hline(yintercept = 0) +
+  geom_pointrange(aes(ymin = link_lwr_diff, 
+                    ymax = link_upr_diff,
+                    colour = `n_hok_1980-1999`),
+                position = position_dodge(width = 0.5)) +
+  facet_grid(~phylum) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+  
+```
 
 
 ```{r}
