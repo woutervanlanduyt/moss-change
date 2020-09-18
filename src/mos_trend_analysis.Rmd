@@ -257,7 +257,9 @@ analyse_data_telfer_agg <- analyse_data_telfer %>%
   mutate(n_hok_tot = n_distinct(ifbl_4by4)) %>%
   count(periode, phylum, taxon_id_parent, n_hok_tot, 
         name = "n_hok") %>%
-  ungroup()
+  ungroup() %>%
+  # remove species that occur in less than 5 squares in period 1
+  filter(!(n_hok < 5 & periode == "1980-1999"))
 ```
 
 
@@ -307,6 +309,9 @@ analyse_data_telfer_agg <- analyse_data_telfer_agg %>%
             by = c("taxon_id_parent" = "taxon_id")
             )
 ```
+
+Filter toevoegen voor soorten die minder dan 5 keer voorkomen in periode 1
+Check onderstaande filter;
 
 ```{r}
 analyse_data_telfer_agg <- analyse_data_telfer_agg %>%
@@ -423,6 +428,7 @@ calc_ellenberg <- function(ellenberg = "ell_r") {
 
 ```
 
+respons als errorbar en afwijking berekenen van de 1 op 1 lijn en dit voor een aantal waarden van baseline.
 
 ```{r}
 calc_substrate() %>%
