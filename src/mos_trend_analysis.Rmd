@@ -440,6 +440,26 @@ calc_substrate() %>%
   facet_wrap(~phylum)
 ```
 
+Same figure but this time in link-scale (to obtain Telfer-like figures):
+
+```{r}
+calc_substrate() %>%
+  ggplot(aes(x = qlogis(prop_baseline), y = link_est)) + 
+  #geom_point(data = analyse_data_telfer_agg,
+  #           aes(y = prop_2000_2019,
+  #               colour = substrate),
+  #           alpha = 0.3) +
+  geom_abline() +
+  geom_ribbon(aes(ymin = link_lwr, 
+                      ymax = link_upr,
+                      fill = substrate), 
+              alpha = 0.3) + 
+  geom_line(aes(colour = substrate)) +
+  facet_wrap(~phylum)
+```
+
+
+
 ```{r}
 calc_ellenberg("ell_r") %>%
   ggplot(aes(x = prop_baseline, y = response_est)) + 
@@ -451,6 +471,23 @@ calc_ellenberg("ell_r") %>%
   geom_ribbon(aes(ymin = response_lwr, 
                       ymax = response_upr,
                       fill = factor(ell_r)), 
+              alpha = 0.3) + 
+  geom_line(aes(colour = factor(ell_r))) +
+  facet_wrap(~phylum)
+```
+
+
+```{r}
+calc_ellenberg("ell_r") %>%
+  ggplot(aes(x = qlogis(prop_baseline), y = link_est)) + 
+  #geom_point(data = analyse_data_telfer_agg,
+  #           aes(y = prop_2000_2019,
+  #               colour = substrate),
+  #           alpha = 0.3) +
+  geom_abline() +
+  geom_ribbon(aes(ymin = link_lwr, 
+                  ymax = link_upr,
+                  fill = factor(ell_r)), 
               alpha = 0.3) + 
   geom_line(aes(colour = factor(ell_r))) +
   facet_wrap(~phylum)
@@ -475,6 +512,22 @@ calc_ellenberg("ell_f") %>%
 
 
 ```{r}
+calc_ellenberg("ell_f") %>%
+  ggplot(aes(x = qlogis(prop_baseline), y = link_est)) + 
+  #geom_point(data = analyse_data_telfer_agg,
+  #           aes(y = prop_2000_2019,
+  #               colour = substrate),
+  #           alpha = 0.3) +
+  geom_abline() +
+  geom_ribbon(aes(ymin = link_lwr, 
+                      ymax = link_upr,
+                      fill = factor(ell_f)), 
+              alpha = 0.3) + 
+  geom_line(aes(colour = factor(ell_f))) +
+  facet_wrap(~phylum)
+```
+
+```{r}
 calc_ellenberg("ell_l") %>%
   ggplot(aes(x = prop_baseline, y = response_est)) + 
   #geom_point(data = analyse_data_telfer_agg,
@@ -491,16 +544,35 @@ calc_ellenberg("ell_l") %>%
 
 ```
 
+
 ```{r}
-calc_ellenberg("ell_n") %>%
-  ggplot(aes(x = prop_baseline, y = response_est)) + 
+calc_ellenberg("ell_l") %>%
+  ggplot(aes(x = qlogis(prop_baseline), y = link_est)) + 
   #geom_point(data = analyse_data_telfer_agg,
   #           aes(y = prop_2000_2019,
   #               colour = substrate),
   #           alpha = 0.3) +
   geom_abline() +
-  geom_ribbon(aes(ymin = response_lwr, 
-                      ymax = response_upr,
+  geom_ribbon(aes(ymin = link_lwr, 
+                      ymax = link_upr,
+                      fill = factor(ell_l)), 
+              alpha = 0.3) + 
+  geom_line(aes(colour = factor(ell_l))) +
+  facet_wrap(~phylum)
+
+```
+
+
+```{r}
+calc_ellenberg("ell_n") %>%
+  ggplot(aes(x = qlogis(prop_baseline), y = link_est)) + 
+  #geom_point(data = analyse_data_telfer_agg,
+  #           aes(y = prop_2000_2019,
+  #               colour = substrate),
+  #           alpha = 0.3) +
+  geom_abline() +
+  geom_ribbon(aes(ymin = link_lwr, 
+                      ymax = link_upr,
                       fill = factor(ell_n)), 
               alpha = 0.3) + 
   geom_line(aes(colour = factor(ell_n))) +
@@ -525,3 +597,19 @@ calc_ellenberg("ell_t") %>%
 
 ```
 
+```{r}
+calc_ellenberg("ell_t") %>%
+  ggplot(aes(x = qlogis(prop_baseline), y = link_est)) + 
+  #geom_point(data = analyse_data_telfer_agg,
+  #           aes(y = prop_2000_2019,
+  #               colour = substrate),
+  #           alpha = 0.3) +
+  geom_abline() +
+  geom_ribbon(aes(ymin = link_lwr, 
+                      ymax = link_upr,
+                      fill = factor(ell_t)), 
+              alpha = 0.3) + 
+  geom_line(aes(colour = factor(ell_t))) +
+  facet_wrap(~phylum)
+
+```
