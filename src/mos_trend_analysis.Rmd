@@ -436,7 +436,11 @@ analyse_data_telfer_agg <- analyse_data_telfer_agg %>%
 ```
 
 
-```{r ful-model}
+Overdispersion! Quasi-binomial model needed.
+
+Should we include interaction between baseline proportion and substrate or ellenberg variables?
+
+```{r full-model}
 alt_telfer <- glm(cbind(`n_hok_2000-2019` + 1,
                         `n_hok_tot_2000-2019` - `n_hok_2000-2019` - 1) ~ 
                     qlogis((`n_hok_1980-1999` + 1)/`n_hok_tot_1980-1999`)
@@ -444,14 +448,17 @@ alt_telfer <- glm(cbind(`n_hok_2000-2019` + 1,
                   + qlogis((`n_hok_1980-1999` + 1)/`n_hok_tot_1980-1999`):phylum 
                   + (substrate
                   + ell_l
-                  + ell_r
-                  #+ ell_n
+                  #+ ell_r
+                  + ell_n
                   + ell_f
                   + ell_t) * phylum
                   , 
-    family = "binomial", 
+    family = "quasibinomial", 
     data = analyse_data_telfer_agg)
 
+summary(alt_telfer)
+#plot(alt_telfer)
+anova(alt_telfer, test = "F")
 ```
 
 
@@ -463,11 +470,12 @@ m_substrate <- glm(cbind(`n_hok_2000-2019`,
                   + qlogis((`n_hok_1980-1999`)/`n_hok_tot_1980-1999`):phylum 
                   + substrate * phylum
                   , 
-    family = "binomial", 
+    family = "quasibinomial", 
     data = analyse_data_telfer_agg)
 
+
 summary(m_substrate)
-anova(m_substrate, test = "Chisq")
+anova(m_substrate, test = "F") # for quasibinomial
 ```
 
 ```{r model-ellenberg}
@@ -477,12 +485,12 @@ m_ellenberg <- glm(cbind(`n_hok_2000-2019`,
                   + phylum 
                   + qlogis((`n_hok_1980-1999`)/`n_hok_tot_1980-1999`):phylum 
                   + (ell_l
-                  + ell_r
-                  #+ ell_n
+                  #+ ell_r
+                  + ell_n
                   + ell_f
                   + ell_t) * phylum
                   , 
-    family = "binomial", 
+    family = "quasibinomial", 
     data = analyse_data_telfer_agg)
 
 summary(m_ellenberg)
@@ -491,11 +499,11 @@ summary(m_ellenberg)
 
 
 
-
 ```{r}
-plotResiduals(alt_telfer)
-plotResiduals(m_substrate) 
-plotResiduals(m_ellenberg)
+# model validation
+
+
+#plotResiduals(m_ellenberg)
 ```
 
 ```{r}
@@ -503,11 +511,6 @@ calc_substrate <- function(model) {
   nd_r <- expand.grid(
     `n_hok_1980-1999` = pretty(analyse_data_telfer_agg$`n_hok_1980-1999`,
                                n = 20),
-    ell_r = mean(analyse_data_telfer_agg$ell_r),
-    ell_l = mean(analyse_data_telfer_agg$ell_l),
-    ell_f = mean(analyse_data_telfer_agg$ell_f),
-    ell_n = mean(analyse_data_telfer_agg$ell_n),
-    ell_t = mean(analyse_data_telfer_agg$ell_t),
     `n_hok_tot_1980-1999` = 232,
     phylum = unique(analyse_data_telfer_agg$phylum),
     substrate = unique(analyse_data_telfer_agg$substrate))
@@ -534,8 +537,13 @@ calc_substrate <- function(model) {
   return(pred_alt_telfer_r)
 }
 
-calc_ellenberg <- function(ellenberg = "ell_r", model) {
-  ell <- c("ell_l", "ell_r", "ell_f", "ell_n", "ell_t")
+calc_ellenberg <- function(ellenberg = "ell_l", model) {
+  stopifnot(ellenberg %in% names(model$model))
+  ell <- c("ell_l", 
+           #"ell_r", 
+           "ell_f",
+           "ell_n", 
+           "ell_t")
   ell_fixed <- ell[ell != ellenberg]
   means <- map_dfc(analyse_data_telfer_agg[,ell_fixed], mean)
   nd_r <- expand.grid(
@@ -544,7 +552,8 @@ calc_ellenberg <- function(ellenberg = "ell_r", model) {
     x = unique(analyse_data_telfer_agg[[ellenberg]]),
     `n_hok_tot_1980-1999` = 232,
     phylum = unique(analyse_data_telfer_agg$phylum),
-    substrate = "Grond")
+    substrate = "Grond") %>%
+    filter(`n_hok_1980-1999` > 0)
   
   names(nd_r)[2] <- ellenberg
   
@@ -578,6 +587,7 @@ Models including substrate are rank-deficient and the fit may be misleading...
 
 ```{r substrate-prop}
 calc_substrate(model = m_substrate) %>%
+  filter(!is.na(link_est)) %>%
   ggplot(aes(x = prop_baseline, y = response_est)) + 
   #geom_point(data = analyse_data_telfer_agg,
   #           aes(y = prop_2000_2019,
@@ -596,6 +606,7 @@ Same figure but this time in link-scale (to obtain Telfer-like figures):
 
 ```{r substrate-link}
 calc_substrate(model = m_substrate) %>%
+  filter(!is.na(link_est)) %>%
   ggplot(aes(x = qlogis(prop_baseline), y = link_est)) + 
   #geom_point(data = analyse_data_telfer_agg,
   #           aes(y = prop_2000_2019,
@@ -635,7 +646,7 @@ calc_substrate(model = m_substrate) %>%
 ```
 
 
-```{r ell-r-prop}
+```{r ell-r-prop, eval=FALSE}
 calc_ellenberg("ell_r", model = m_ellenberg) %>%
   ggplot(aes(x = prop_baseline, y = response_est)) + 
   #geom_point(data = analyse_data_telfer_agg,
@@ -652,7 +663,7 @@ calc_ellenberg("ell_r", model = m_ellenberg) %>%
 ```
 
 
-```{r ell-r-link}
+```{r ell-r-link, eval=FALSE}
 calc_ellenberg("ell_r", model = m_ellenberg) %>%
   ggplot(aes(x = qlogis(prop_baseline), y = link_est)) + 
   #geom_point(data = analyse_data_telfer_agg,
@@ -669,7 +680,7 @@ calc_ellenberg("ell_r", model = m_ellenberg) %>%
 ```
 
 
-```{r ell-r-diff}
+```{r ell-r-diff, eval=FALSE}
 calc_ellenberg(ellenberg = "ell_r", model = m_ellenberg) %>%
   as_tibble() %>%
   mutate(link_est_diff = link_est - qlogis(prop_baseline),
@@ -807,7 +818,7 @@ calc_ellenberg(ellenberg = "ell_l", model = m_ellenberg) %>%
 ```
 
 
-```{r ell-n-prop, eval=FALSE}
+```{r ell-n-prop}
 calc_ellenberg("ell_n", model = m_ellenberg) %>%
   ggplot(aes(x = prop_baseline, y = response_est)) + 
   #geom_point(data = analyse_data_telfer_agg,
@@ -827,7 +838,7 @@ calc_ellenberg("ell_n", model = m_ellenberg) %>%
 
 
 
-```{r ell-n-link, eval=FALSE}
+```{r ell-n-link}
 calc_ellenberg("ell_n", model = m_ellenberg) %>%
   ggplot(aes(x = qlogis(prop_baseline), y = link_est)) + 
   #geom_point(data = analyse_data_telfer_agg,
@@ -844,7 +855,7 @@ calc_ellenberg("ell_n", model = m_ellenberg) %>%
 
 ```
 
-```{r ell-n-diff, eval=FALSE}
+```{r ell-n-diff}
 calc_ellenberg(ellenberg = "ell_n", model = m_ellenberg) %>%
   as_tibble() %>%
   mutate(link_est_diff = link_est - qlogis(prop_baseline),
