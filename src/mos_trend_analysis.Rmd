@@ -128,6 +128,13 @@ mosdata <- mosdata %>%
             by = c("taxon_id_parent" = "id"))
 ```
 
+```{r}
+vertaling_substraat <- read_csv2(
+  find_root_file(
+    "data/substraat_mossen.csv",
+    criterion = is_git_root)
+  )
+```
 
 ## Exploratory data analysis
 
@@ -305,7 +312,10 @@ analyse_data_telfer_agg <- analyse_data_telfer_agg %>%
   # most important one, but this should be coded in the script?
   left_join(substraat %>% 
               clean_names() %>%
-              select(taxon_id, substrate = omschrijving),
+              select(taxon_id, substraat = omschrijving) %>%
+              inner_join(vertaling_substraat, 
+                         ) %>%
+              select(-substraat),
             by = c("taxon_id_parent" = "taxon_id")
             )
 ```
@@ -436,7 +446,7 @@ analyse_data_telfer_agg <- analyse_data_telfer_agg %>%
 ```
 
 
-Overdispersion! Quasi-binomial model needed.
+Overdispersion (residual deviance divided by residual degrees of freedom >> 1)! Quasi-binomial model needed.
 
 Should we include interaction between baseline proportion and substrate or ellenberg variables?
 
