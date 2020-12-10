@@ -173,8 +173,7 @@ mosdata %>%
 
 ```{r}
 species_freqs <- mosdata %>%
-  filter(phylum != "Basidiomycota", 
-         phylum != "Anthocerotophyta",
+  filter(phylum != "Anthocerotophyta",
          !is.na(phylum)) %>%
   group_by(phylum) %>%
   mutate(n = n()) %>%
