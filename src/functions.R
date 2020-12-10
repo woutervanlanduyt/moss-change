@@ -118,3 +118,73 @@ get_florabank_taxon_ifbl_year_2 <- function(connection,
     return(query_result)
   }
 }
+
+
+
+get_florabank_traits_2 <- function(connection, trait_name, collect = FALSE) {
+  
+  
+  require(assertthat)
+  require(glue)
+  require(dplyr)
+  require(rlang)
+  
+  assert_that(inherits(connection, what = "Microsoft SQL Server"),
+              msg = "Not a connection object to database.")
+  assert_that(connection@info$dbname == "D0021_00_userFlora")
+  
+  if (missing(trait_name)) {
+    traitnames <- tbl(connection, "tblTaxonKenmerk") %>%
+      distinct(.data$Naam) %>%
+      collect() %>%
+      pull(.data$Naam)
+    message <- paste0("Please provide (part of) a trait name from this list: ",
+                      paste(traitnames, collapse = ", "))
+    options(warning.length = nchar(message))
+    stop(message)
+  }
+  
+  trait_name <- tolower(trait_name)
+  
+  fb_taxon <- tbl(connection, "tblTaxon")
+  fb_taxon_kenmerk <- tbl(connection, "tblTaxonKenmerk")
+  fb_taxon_kenmerk_waarde <- tbl(connection, "tblTaxonKenmerkWaarde")
+  rel_taxon_taxon_kenmerk_waarde <- tbl(connection, "relTaxonTaxonKenmerkWaarde")
+  
+  query_result <- rel_taxon_taxon_kenmerk_waarde %>%
+    inner_join(fb_taxon_kenmerk %>%
+                 filter(tolower(.data$Naam) %LIKE%
+                          paste0("%", trait_name, "%")) %>%
+                 select(.data$ID, .data$Naam),
+               by = c("TaxonKenmerkID" = "ID")) %>%
+    rename(extra_omschrijving = .data$Omschrijving) %>%
+    left_join(fb_taxon_kenmerk_waarde %>%
+                distinct(.data$ID,
+                         .data$Code, 
+                         .data$TaxonKenmerkID,
+                         .data$Omschrijving,
+                         .data$Rekenwaarde),
+              by = c("TaxonKenmerkID" = "TaxonKenmerkID",
+                     "TaxonKenmerkWaardeID" = "ID")) %>%
+    left_join(fb_taxon %>%
+                rename(NaamAfkorting = .data$Code),
+              by = c("TaxonID" = "ID")) %>%
+    distinct(.data$TaxonID,
+             TaxonAfkorting = .data$NaamAfkorting,
+             TaxonWetenschappelijk = .data$NaamWetenschappelijk,
+             TaxonNederlands = .data$NaamNederlands,
+             Kenmerk = .data$Naam,
+             .data$Code,
+             .data$Omschrijving,
+             .data$Rekenwaarde,
+             .data$extra_omschrijving
+    )
+  if (!isTRUE(collect)) {
+    return(query_result)
+  } else {
+    query_result <- query_result %>%
+      collect()
+    return(query_result)
+  }
+}
+

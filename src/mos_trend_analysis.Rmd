@@ -47,9 +47,11 @@ ellenberg <- get_florabank_traits(
   trait_name = "Ellenb", 
   collect = TRUE)
 
-substraat <- get_florabank_traits(con, 
+substraat <- get_florabank_traits_2(con, 
                      trait_name = "Substraat klassen mossen", 
-                     collect = TRUE)
+                     collect = TRUE) %>%
+  filter(extra_omschrijving == "3")
+
 
 taxa <- tbl(src = con, "tblTaxon")
 rel_groep <- tbl(src = con, "relTaxonTaxonGroep")
