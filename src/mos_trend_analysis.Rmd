@@ -508,6 +508,15 @@ summary(m_ellenberg)
 
 ```
 
+```{r eval=FALSE}
+analyse_data_telfer_agg %>%
+  mutate(residuals_model_substrate = residuals(m_substrate, type = "pearson"),
+         residuals_model_ellenberg = residuals(m_ellenberg, type = "pearson")) %>%
+  write_excel_csv2(path = find_root_file(
+    "data",
+    "analysis_data_residuals.csv",
+    criterion = is_git_root))
+```
 
 
 ```{r}
