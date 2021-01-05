@@ -384,7 +384,7 @@ analyse_data_telfer_agg %>%
   ungroup() %>%
   filter(phylum == "Bryophyta") %>%
   select(starts_with("ell")) %>%
-  GGally::ggpairs(main = "Bryophyta")
+  GGally::ggpairs(title = "Bryophyta")
 ```
 
 ```{r}
@@ -425,6 +425,9 @@ analyse_data_telfer_agg %>%
 analyse_data_telfer_agg %>%
   ggplot() +
   geom_jitter(aes(x = prop_baseline,
+                  y = prop_2000_2019)) +
+  geom_abline() +
+  geom_smooth(aes(x = prop_baseline,
                   y = prop_2000_2019))
 ```
 
@@ -523,7 +526,7 @@ analyse_data_telfer_agg %>%
 # model validation
 
 
-#plotResiduals(m_ellenberg)
+#plot(m_ellenberg)
 ```
 
 ```{r}
@@ -557,7 +560,7 @@ calc_substrate <- function(model) {
   return(pred_alt_telfer_r)
 }
 
-calc_ellenberg <- function(ellenberg = "ell_l", model) {
+calc_ellenberg <- function(ellenberg = "ell_l", model, data = analyse_data_telfer_agg) {
   stopifnot(ellenberg %in% names(model$model))
   ell <- c("ell_l", 
            #"ell_r", 
@@ -565,17 +568,16 @@ calc_ellenberg <- function(ellenberg = "ell_l", model) {
            "ell_n", 
            "ell_t")
   ell_fixed <- ell[ell != ellenberg]
-  means <- map_dfc(analyse_data_telfer_agg[,ell_fixed], mean)
-  nd_r <- expand.grid(
-    `n_hok_1980-1999` = pretty(analyse_data_telfer_agg$`n_hok_1980-1999`,
-                               n = 20),
-    x = unique(analyse_data_telfer_agg[[ellenberg]]),
-    `n_hok_tot_1980-1999` = 232,
-    phylum = unique(analyse_data_telfer_agg$phylum),
-    substrate = "Grond") %>%
-    filter(`n_hok_1980-1999` > 0)
+  means <- map_dfc(data[,ell_fixed], mean)
   
-  names(nd_r)[2] <- ellenberg
+  nd_r <- 
+  expand.grid(
+    `n_hok_1980-1999` = pretty(data$`n_hok_1980-1999`,
+                               n = 20),
+    `n_hok_tot_1980-1999` = 232,
+    substrate = "Grond") %>%
+    expand_grid(unique(data[,c("phylum", ellenberg)])) %>%
+    filter(`n_hok_1980-1999` > 0)
   
   nd_r <- nd_r %>%
     bind_cols(means)
