@@ -8,7 +8,8 @@ output: html_document
 ```{r setup, include=FALSE}
 library(knitr)
 opts_chunk$set(
-  echo = FALSE)
+  echo = FALSE,
+  dpi = 300)
 
 #library(RODBC)
 library(ggplot2)
@@ -423,7 +424,7 @@ analyse_data_telfer_agg %>%
 
 
 
-```{r}
+```{r plotlyfig, out.width="100%", out.height="5in"}
 p <- analyse_data_telfer_agg %>%
   left_join(taxa_gbif %>%
               select(id, naam_wetenschappelijk),
@@ -434,11 +435,31 @@ p <- analyse_data_telfer_agg %>%
                   text = naam_wetenschappelijk)) +
   geom_abline() +
   geom_smooth(aes(x = prop_baseline,
-                  y = prop_2000_2019)) +
+                  y = prop_2000_2019),
+              method = "lm") +
   facet_wrap(~phylum) 
 
 p %>% plotly::ggplotly()
 ```
+
+```{r plotlyfiglogit, out.width="100%", out.height="5in"}
+p <- analyse_data_telfer_agg %>%
+  left_join(taxa_gbif %>%
+              select(id, naam_wetenschappelijk),
+            by = c("taxon_id_parent" = "id")) %>%
+  ggplot() +
+  geom_jitter(aes(x = qlogis(prop_baseline),
+                  y = qlogis(prop_2000_2019),
+                  text = naam_wetenschappelijk)) +
+  geom_abline() +
+  geom_smooth(aes(x = qlogis(prop_baseline),
+                  y = qlogis(prop_2000_2019)),
+              method = "lm") +
+  facet_wrap(~phylum) 
+
+p %>% plotly::ggplotly()
+```
+
 
 ```{r}
 analyse_data_telfer_agg %>%
@@ -463,7 +484,33 @@ Overdispersion (residual deviance divided by residual degrees of freedom >> 1)! 
 
 Should we include interaction between baseline proportion and substrate or ellenberg variables?
 
-```{r full-model, eval=!file.exists("brmsfit_alt_telfer.rds")}
+
+Model formulation:
+
+
+$$
+g(\mu_{i,s2}) = (\beta_0 + \beta_1\log\frac{\mu_{i,s1}}{1-\mu_{i,s1}} + \beta_L\text{ell}_L + \dots)*\text{phylum}_k + \mathbf{b}_{o,j} + \mathbf{b}_{1,j}\text{phylum}_k
+$$
+where:
+
+$$
+\begin{aligned}
+\mu_{i,s2} \equiv \mathbf{E}(Y_{i,s2}|\text{trials},\mathbf{b})&& \text{expected value}\\
+g(\mu_{i,s2}) = \log\frac{\mu_{i,s2}}{1-\mu_{i,s2}} && \text{logit-link} \\
+Y_{i,s2} \sim \text{BetaBinomial}(\mu_{i,s2}, \phi_{i,s2}) && \text{Beta-Binomial distribution}\\
+\begin{bmatrix}\mathbf{b}_{o,j}\\ \mathbf{b}_{1,j}\end{bmatrix}\sim N(0,\Sigma) && \text{random intercept and slope}\\
+\Sigma = \begin{bmatrix}\sigma^2_{0,j}&\sigma_{01,j}\\\sigma_{01,j}&\sigma^2_{1,j}\end{bmatrix} && \text{variance-covariance matrix}
+\end{aligned}
+$$
+
+After rearranging (for one phylum) and exponentiating the linear predictor, ignoring all random effects, we obtain the following odds-ratio:
+
+$$
+\frac{Odds_{\mu_{i,s2}}}{Odds^{\beta_1}_{\mu_{i,s1}}} = \exp(\beta_0 + \beta_L\text{ell}_L + \dots)
+$$
+which allows us to predict the effect of Ellenberg values on the relative increase or decrease of the Bryophytes.
+
+```{r full-model, eval=!file.exists(find_root_file("brmsfit_alt_telfer.rds", criterion=is_git_root))}
 beta_binomial2 <- custom_family(
   "beta_binomial2", dpars = c("mu", "phi"),
   links = c("logit", "log"), lb = c(NA, 0),
@@ -497,15 +544,18 @@ alt_telfer <- brm(n_hok_2000_2019 | vint(n_hok_tot_2000_2019) ~
     file = "stanmodel_alt_telfer"
     )
 
-saveRDS(alt_telfer, file = "brmsfit_alt_telfer.rds")
+saveRDS(alt_telfer, file = find_root_file("brmsfit_alt_telfer.rds", 
+                                          criterion=is_git_root))
 ```
 
-```{r eval=file.exists("brmsfit_alt_telfer.rds")}
-alt_telfer <- readRDS(file = "brmsfit_alt_telfer.rds")
+```{r eval=file.exists(find_root_file("brmsfit_alt_telfer.rds", criterion=is_git_root))}
+alt_telfer <- readRDS(file = find_root_file("brmsfit_alt_telfer.rds", 
+                                            criterion=is_git_root))
 ```
 
 ```{r}
-summary(alt_telfer)
+broom.mixed::tidy(alt_telfer) %>%
+  kable()
 ```
 
 
@@ -536,6 +586,8 @@ posterior_epred_beta_binomial2 <- function(prep) {
 }
 ```
 
+From Telfer et al (2002) $\text{logit}(P_2k) = a + b \text{logit}(P_1k) + Z_k$:
+> The intercept _a_ measures change in recording probability(on a logit scale) and the slope _b_ measures the extent to which that change depends on the recording probability in the first survey. Parameters _a_ and _b_ may include the effects both of biological change and of change in recorder behaviour.
 
 ```{r random-effects-substrate}
 nd <- analyse_data_telfer_agg %>%
@@ -543,12 +595,37 @@ nd <- analyse_data_telfer_agg %>%
   expand_grid(
     unique(analyse_data_telfer_agg[,c("phylum", "substrate")]))
 
+ps <- posterior_samples(alt_telfer, 
+                        pars = c("b_Intercept",
+                                 "b_phylum",
+                                 "b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999"))
+
+#Bryophyta
+indices <- which(nd$phylum=="Bryophyta")
+lineartrend_bryo <- 
+  #ps$b_Intercept + 
+  ps$b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999 %*%
+  t(qlogis(nd$n_hok_1980_1999/nd$n_hok_tot_1980_1999)[indices])
+# Marchantiophyta
+indices <- which(nd$phylum=="Marchantiophyta")
+lineartrend_marc <- 
+  #ps$b_Intercept + ps$b_phylumMarchantiophyta +
+  (ps$b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999 +
+     ps$`b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999:phylumMarchantiophyta`) %*%
+  t(qlogis(nd$n_hok_1980_1999/nd$n_hok_tot_1980_1999)[indices])
+
+lineartrend <- cbind(lineartrend_bryo, lineartrend_marc)
+
 logit_s2 <- posterior_linpred(alt_telfer, newdata = nd)
-log_odds_ratio_s2_s1 <- sweep(
-  logit_s2, 
-  MARGIN = 2, 
-  STATS = qlogis(nd$n_hok_1980_1999/nd$n_hok_tot_1980_1999),
-  FUN = "-")
+
+log_odds_ratio_s2_s1 <- logit_s2 - lineartrend
+
+
+# log_odds_ratio_s2_s1 <- sweep(
+#   logit_s2, 
+#   MARGIN = 2, 
+#   STATS = qlogis(nd$n_hok_1980_1999/nd$n_hok_tot_1980_1999),
+#   FUN = "-")
 odds_ratio_s2_s1 <- exp(log_odds_ratio_s2_s1)
 pp_summary <- nd %>%  
   mutate(
@@ -570,12 +647,12 @@ pp_summary %>%
     breaks = c( 0.5, 0.75, 1, 4/3, 2),
     labels = scales::percent) + 
   coord_trans(y = "log") + 
-  labs(y = "odds-ratio of survey 2000-2019 to survey 1980-1999")
+  labs(y = "odds-ratio of survey 2000-2019\n to survey 1980-1999")
   
 ```
 
 
-```{r fixed-effects-ellenberg, fig.width="100%", fig.height = 200/25.4, dpi = 300}
+```{r fixed-effects-ellenberg, out.width="100%", fig.height=150/25.4}
 pp_ellenberg <- function(data = analyse_data_telfer_agg,
                            model = alt_telfer,
                            ellenberg = "ell_l",
@@ -590,13 +667,23 @@ pp_ellenberg <- function(data = analyse_data_telfer_agg,
         distinct()
     ) %>%
     mutate(substrate = NA)
-  
+  #Bryophyta
+indices <- which(nd$phylum=="Bryophyta")
+lineartrend_bryo <- 
+  #ps$b_Intercept + 
+  ps$b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999 %*%
+  t(qlogis(nd$n_hok_1980_1999/nd$n_hok_tot_1980_1999)[indices])
+# Marchantiophyta
+indices <- which(nd$phylum=="Marchantiophyta")
+lineartrend_marc <- 
+  #ps$b_Intercept + ps$b_phylumMarchantiophyta +
+  (ps$b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999 +
+     ps$`b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999:phylumMarchantiophyta`) %*%
+  t(qlogis(nd$n_hok_1980_1999/nd$n_hok_tot_1980_1999)[indices])
+
+lineartrend <- cbind(lineartrend_bryo, lineartrend_marc)
   logit_s2 <- posterior_linpred(model, newdata = nd, re_formula = NA)
-  log_odds_ratio_s2_s1 <- sweep(
-    logit_s2, 
-    MARGIN = 2, 
-    STATS = qlogis(nd$n_hok_1980_1999/nd$n_hok_tot_1980_1999),
-    FUN = "-")
+  log_odds_ratio_s2_s1 <- logit_s2 - lineartrend 
   odds_ratio_s2_s1 <- exp(log_odds_ratio_s2_s1)
   pp_summary <- nd %>%  
     mutate(
