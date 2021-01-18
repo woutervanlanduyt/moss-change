@@ -479,11 +479,16 @@ analyse_data_telfer_agg <- analyse_data_telfer_agg  %>%
              n_hok_1980_1999 > 0)  
 ```
 
+### Model description
 
-Overdispersion (residual deviance divided by residual degrees of freedom >> 1)! Quasi-binomial or beta-binomial model needed.
-
+We modeled the per-species probability in the recent period (occupied 4 km x 4 km squares out of the total number of squares) through a logit-link as a function of logit-transformed baseline occurrence probability and Ellenberg values for nitrogen, light, temperature and moisture in interaction with phylum (either mosses or liverworts).
+Substrate types grouped by phylum were included as random effects.
+Preliminary model building showed that the data were overdispersed relative to a Binomial distribution.
+Therefore, we modelled the data with a Beta-Binomial distribution.
+This distribution has parameters for the number of trials (not estimated), the per-trial probability ($\mu$) and an overdispersion parameter ($\phi$) (both estimated).
+<!--Overdispersion (residual deviance divided by residual degrees of freedom >> 1)! Quasi-binomial or beta-binomial model needed.
 Should we include interaction between baseline proportion and substrate or ellenberg variables?
-
+-->
 
 Model formulation:
 
@@ -502,6 +507,7 @@ Y_{i,s2} \sim \text{BetaBinomial}(\mu_{i,s2}, \phi_{i,s2}) && \text{Beta-Binomia
 \Sigma = \begin{bmatrix}\sigma^2_{0,j}&\sigma_{01,j}\\\sigma_{01,j}&\sigma^2_{1,j}\end{bmatrix} && \text{variance-covariance matrix}
 \end{aligned}
 $$
+A Bayesian hierarchical modeling procedure was used to calculate the posterior distribution for these parameters [@burkner2017] and we assumed non-informative priors.
 
 After rearranging (for one phylum) and exponentiating the linear predictor, ignoring all random effects, we obtain the following odds-ratio:
 
@@ -510,12 +516,18 @@ $$
 $$
 which allows us to predict the effect of Ellenberg values on the relative increase or decrease of the Bryophytes.
 
+In a similar way, substrate effects are calculated from the posterior linear predictor, conditional on Ellenberg values fixed at their median values.
+@Gelman2012 point out that no correction for multiple comparisons are necessary when substrate effects are calculated in this way.
+
 ```{r full-model, eval=!file.exists(find_root_file("brmsfit_alt_telfer.rds", criterion=is_git_root))}
 beta_binomial2 <- custom_family(
   "beta_binomial2", dpars = c("mu", "phi"),
   links = c("logit", "log"), lb = c(NA, 0),
   type = "int", vars = "vint1[n]"
 )
+# T = number of trials
+# mu = a / (a + b) = per trial probability
+# phi = a + b = overdispersion parameter
 stan_funs <- "
   real beta_binomial2_lpmf(int y, real mu, real phi, int T) {
     return beta_binomial_lpmf(y | T, mu * phi, (1 - mu) * phi);
@@ -543,6 +555,7 @@ alt_telfer <- brm(n_hok_2000_2019 | vint(n_hok_tot_2000_2019) ~
     data = analyse_data_telfer_agg,
     file = "stanmodel_alt_telfer"
     )
+
 
 saveRDS(alt_telfer, file = find_root_file("brmsfit_alt_telfer.rds", 
                                           criterion=is_git_root))
