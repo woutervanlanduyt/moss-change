@@ -2,7 +2,8 @@
 title: "Analysis of moss change"
 author: "Wouter Van Landuyt, Hans Van Calster"
 date: "`r Sys.Date()`"
-output: html_document
+output: bookdown::html_document2
+bibliography: moss-change.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -140,7 +141,7 @@ vertaling_substraat <- read_csv2(
   )
 ```
 
-## Exploratory data analysis
+# Exploratory data analysis
 
 
 - Anthocerotophyta = hornworth = hauwmossen
@@ -207,15 +208,6 @@ species_freqs %>%
 ```
 
 
-## Alternative Telfer method
-
-<!--
-Telfer methode op uurhok??
-hoe is totaal aantal hokken bepaald?
-hoe gevallen proportie 0 en 1 aangepakt?
-waar is de analyse waarmee CIuurhok (= residuals van de Telfer analyse?) bepaald werd?
--->
-
 
 
 ```{r}
@@ -237,9 +229,6 @@ analyse_data %>%
   geom_vline(xintercept = 40)
 ```
 
-Goed onderzocht = 40 of meer soorten in een uurhok per periode 
-
-Uurhok moet in beide perioden goed onderzocht zijn.
 
 ```{r}
 analyse_data_telfer <- analyse_data %>%
@@ -470,27 +459,41 @@ analyse_data_telfer_agg %>%
 
 ```
 
-Keeping only species that occur in both periods (much improves model validation).
-(Alternative could be to include a factor with levels for lost, persisting, gained in the model to explain lost and gained species, but maybe see this as a separate model with the full dataset!)
 
 ```{r}
+#Keeping only species that occur in both periods (much improves model validation).
+#(Alternative could be to include a factor with levels for lost, persisting, gained #in the model to explain lost and gained species, but maybe see this as a separate #model with the full dataset!)
 analyse_data_telfer_agg <- analyse_data_telfer_agg  %>%
       filter(n_hok_2000_2019 > 0,
              n_hok_1980_1999 > 0)  
 ```
 
-### Model description
 
-We modeled the per-species probability in the recent period (occupied 4 km x 4 km squares out of the total number of squares) through a logit-link as a function of logit-transformed baseline occurrence probability and Ellenberg values for nitrogen, light, temperature and moisture in interaction with phylum (either mosses or liverworts).
-Substrate types grouped by phylum were included as random effects.
-Preliminary model building showed that the data were overdispersed relative to a Binomial distribution.
-Therefore, we modelled the data with a Beta-Binomial distribution.
-This distribution has parameters for the number of trials (not estimated), the per-trial probability ($\mu$) and an overdispersion parameter ($\phi$) (both estimated).
-<!--Overdispersion (residual deviance divided by residual degrees of freedom >> 1)! Quasi-binomial or beta-binomial model needed.
-Should we include interaction between baseline proportion and substrate or ellenberg variables?
--->
 
-Model formulation:
+# Methods
+
+## Trends
+
+To assess the changes in distribution of bryophyte species form 1980 until 2018 we divided the survey in two periods and compared the period 1980-1999 with the period 2000-2018. 
+To minimize the effect of badly prospected grid cells we only used grid cells (16km²) where at least 40 species were found in both periods (Figure \@ref(fig:fig1)).
+
+(ref:fig1) 16 km² grids of Flanders and the Brussels Capital Region with at least 40 species of Bryophytes recorded in both the period 1980-1999 and the period 2000-2019.
+
+```{r fig1, out.width = "100%", fig.cap = "(ref:fig1)"}
+include_graphics("figure_1.jpg")
+```
+
+
+This resulted in 224 grid cells prospected in both periods.
+In these selected grid cells 35648 bryophyte observations (expressed as unique species per year and per 16 km² grid) were done in the first period and 45236 in the second period.
+To correct for potential changes in survey effort within those grids we used a relative change index as proposed by @telfer2002, with slight modifications.
+
+This method assumes that during the two surveys recorders attempted to observe as many species as possible in each grid cell.
+The size of the distribution area of individual species in a given period, i.e., the number of 16 km² grid cells where the species was observed, was expressed as a proportion of the total number of grid cells studied during that period.
+To summarise the changes in distribution area for all species, we modeled the number of occupied 16 km² squares in the second survey (out of the total number of 16 km² squares considered, i.e. proportional data) as a function of the logit-transformed proportion in the first survey (baseline) and covariates (phylum, substrate and Ellenberg values).
+Substrate effects were modeled for each phylum separately as random effects coming from a normal distribution with mean zero and an estimated standard deviation.
+Because the counts were overdispersed (variance larger than Binomial distribution), a beta-binomial distribution was used to account for overdispersion and a logit-link was used to link the proportions to the linear predictor with the following model equation:
+
 
 
 $$
@@ -504,20 +507,39 @@ $$
 g(\mu_{i,s2}) = \log\frac{\mu_{i,s2}}{1-\mu_{i,s2}} && \text{logit-link} \\
 Y_{i,s2} \sim \text{BetaBinomial}(\mu_{i,s2}, \phi_{i,s2}) && \text{Beta-Binomial distribution}\\
 \begin{bmatrix}\mathbf{b}_{o,j}\\ \mathbf{b}_{1,j}\end{bmatrix}\sim N(0,\Sigma) && \text{random intercept and slope}\\
-\Sigma = \begin{bmatrix}\sigma^2_{0,j}&\sigma_{01,j}\\\sigma_{01,j}&\sigma^2_{1,j}\end{bmatrix} && \text{variance-covariance matrix}
+\Sigma = \begin{bmatrix}\sigma^2_{0,j}&0\\0&\sigma^2_{1,j}\end{bmatrix} && \text{variance-covariance matrix}
 \end{aligned}
 $$
+
+
+
+Species that occurred in less than five 16 km² grid cells in the first period were omitted form the analyses.
+We also used only species that were present in both periods. 
+
+
 A Bayesian hierarchical modeling procedure was used to calculate the posterior distribution for these parameters [@burkner2017] and we assumed non-informative priors.
 
-After rearranging (for one phylum) and exponentiating the linear predictor, ignoring all random effects, we obtain the following odds-ratio:
+We focuses model selection on the Ellenberg terms only. 
+All other effects were kept in the model.
+First, interaction terms for Ellenberg-values with phylum for which the 95% confidence interval contained 0 were removed.
+The simplified model was refit and compared to the full model using leave-one-out cross validation as explained in @Vehtari2017.
+The simplified model was preferred over the full model when 
+alt_telfer_2 is the better model 
+# the elpd_diff is more than 2 times larger than its standard erro 
+
+After rearranging the model equation (for one phylum) and exponentiating the linear predictor, ignoring all random effects, we obtain the following odds-ratio:
 
 $$
 \frac{Odds_{\mu_{i,s2}}}{Odds^{\beta_1}_{\mu_{i,s1}}} = \exp(\beta_0 + \beta_L\text{ell}_L + \dots)
 $$
 which allows us to predict the effect of Ellenberg values on the relative increase or decrease of the Bryophytes.
 
-In a similar way, substrate effects are calculated from the posterior linear predictor, conditional on Ellenberg values fixed at their median values.
+In a similar way, substrate random effects are calculated from the posterior linear predictor, conditional on Ellenberg values fixed at their median values.
 @Gelman2012 point out that no correction for multiple comparisons are necessary when substrate effects are calculated in this way.
+
+All analyses were done using the R language for statistical computing [@rcoreteam2020].
+
+
 
 ```{r full-model, eval=!file.exists(find_root_file("brmsfit_alt_telfer.rds", criterion=is_git_root))}
 beta_binomial2 <- custom_family(
@@ -548,7 +570,7 @@ alt_telfer <- brm(n_hok_2000_2019 | vint(n_hok_tot_2000_2019) ~
                   + ell_n
                   + ell_f
                   + ell_t) * phylum 
-                  + (1 + phylum | substrate)
+                  + (1 + phylum || substrate) #no correlations modeled (if included, estimate was -1 to +1)
                   , 
     family = beta_binomial2,
     stanvars = stanvars,
@@ -557,6 +579,7 @@ alt_telfer <- brm(n_hok_2000_2019 | vint(n_hok_tot_2000_2019) ~
     file_refit = "on_change",
     silent = 2,
     cores = 4)
+
 
 
 saveRDS(alt_telfer, file = find_root_file("brmsfit_alt_telfer.rds", 
@@ -568,10 +591,6 @@ alt_telfer <- readRDS(file = find_root_file("brmsfit_alt_telfer.rds",
                                             criterion=is_git_root))
 ```
 
-```{r}
-broom.mixed::tidy(alt_telfer) %>%
-  kable()
-```
 
 
 
@@ -601,81 +620,130 @@ posterior_epred_beta_binomial2 <- function(prep) {
 }
 ```
 
+
+```{r model-selection}
+alt_telfer_2 <- update(alt_telfer, 
+                       .~. 
+                       - ell_l 
+                       - ell_l:phylum 
+                       - ell_n 
+                       - ell_n:phylum
+                       - ell_f:phylum 
+                       , cores = 4)
+
+loo1 <- loo(alt_telfer, alt_telfer_2, save_psis = TRUE) # alt_telfer_2 is the better model 
+# the elpd_diff is more than 2 times larger than its standard erro 
+```
+
+```{r model-diagnostics, echo = TRUE}
+plot(loo1$loos$alt_telfer, label_points = TRUE)
+plot(loo1$loos$alt_telfer_2, label_points = TRUE)
+
+alt_telfer_2$data[745,]
+analyse_data_telfer_agg[745,]
+taxa[taxa$id == 760, ] 
+#Boomfranjemos looks like an outlying observation
+#it is the only epiphytic liverworth on living wood that declines strongly:
+analyse_data_telfer_agg %>%
+  filter(substrate == "epiphytic on living wood",
+         phylum == "Marchantiophyta")
+```
+
+
+# Results
+
+
+```{r}
+broom.mixed::tidy(alt_telfer_2) %>%
+  kable()
+```
+
+<!--
 From Telfer et al (2002) $\text{logit}(P_2k) = a + b \text{logit}(P_1k) + Z_k$:
 > The intercept _a_ measures change in recording probability(on a logit scale) and the slope _b_ measures the extent to which that change depends on the recording probability in the first survey. Parameters _a_ and _b_ may include the effects both of biological change and of change in recorder behaviour.
+-->
+
 
 ```{r predictions-random-effects-substrate}
-nd <- analyse_data_telfer_agg %>%
-  summarise(across(starts_with(c("n_hok_tot", "n_hok_19", "ell")), median)) %>%
-  expand_grid(
-    unique(analyse_data_telfer_agg[,c("phylum", "substrate")]))
-
-ps <- posterior_samples(alt_telfer, 
-                        pars = c("b_Intercept",
-                                 "b_phylum",
-                                 "b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999"))
-
-#Bryophyta
-indices <- which(nd$phylum=="Bryophyta")
-lineartrend_bryo <- 
-  #ps$b_Intercept + 
-  ps$b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999 %*%
-  t(qlogis(nd$n_hok_1980_1999/nd$n_hok_tot_1980_1999)[indices])
-lineartrend_bryo_incl_intercept <- 
-  ps$b_Intercept + 
-  ps$b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999 %*%
-  t(qlogis(nd$n_hok_1980_1999/nd$n_hok_tot_1980_1999)[indices])
-# Marchantiophyta
-indices <- which(nd$phylum=="Marchantiophyta")
-lineartrend_marc <- 
-  #ps$b_Intercept + ps$b_phylumMarchantiophyta +
-  (ps$b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999 +
-     ps$`b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999:phylumMarchantiophyta`) %*%
-  t(qlogis(nd$n_hok_1980_1999/nd$n_hok_tot_1980_1999)[indices])
-lineartrend_marc_incl_intercept <- 
-  ps$b_Intercept + ps$b_phylumMarchantiophyta +
-  (ps$b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999 +
-     ps$`b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999:phylumMarchantiophyta`) %*%
-  t(qlogis(nd$n_hok_1980_1999/nd$n_hok_tot_1980_1999)[indices])
-
-lineartrend <- cbind(lineartrend_bryo, lineartrend_marc)
-
-lineartrend_incl_intercept <- cbind(
-  lineartrend_bryo_incl_intercept, 
-  lineartrend_marc_incl_intercept
-  )
-
-# calculate as odds-ratio
-#########################
-logit_s2 <- posterior_linpred(alt_telfer, newdata = nd)
-log_odds_ratio_s2_s1 <- logit_s2 - lineartrend
-odds_ratio_s2_s1 <- exp(log_odds_ratio_s2_s1)
-pp_summary <- nd %>%  
-  mutate(
-  median = apply(odds_ratio_s2_s1, 2, "median"),
-  lwr = apply(odds_ratio_s2_s1, 2, "quantile", probs = 0.025),
-  upr = apply(odds_ratio_s2_s1, 2, "quantile", probs = 0.975),
-  )
-
-# calculate difference based on linear predictor (in logit-scale)
-logit_s2_minus_s1 <- logit_s2 - lineartrend_incl_intercept
-pp_summary_linear_diff <- nd %>%
-  mutate(
-    median = apply(logit_s2_minus_s1, 2, "median"),
-    lwr = apply(logit_s2_minus_s1, 2, "quantile", probs = 0.025),
-    upr = apply(logit_s2_minus_s1, 2, "quantile", probs = 0.975),
+pp_substrate <- function(model,
+                         odds_ratio = TRUE) {
+  nd <- model$data %>%
+    summarise(across(starts_with(c("n_hok_tot", "n_hok_19", "ell")), median)) %>%
+    expand_grid(
+      unique(analyse_data_telfer_agg[,c("phylum", "substrate")]))
   
+  ps <- posterior_samples(
+    model, 
+    pars = c("b_Intercept",
+             "b_phylum",
+             "b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999"))
+  
+  
+  #Bryophyta
+  indices <- which(nd$phylum=="Bryophyta")
+  lineartrend_bryo <- 
+    #ps$b_Intercept + 
+    ps$b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999 %*%
+    t(qlogis(nd$n_hok_1980_1999/nd$n_hok_tot_1980_1999)[indices])
+  lineartrend_bryo_incl_intercept <- 
+    ps$b_Intercept + 
+    ps$b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999 %*%
+    t(qlogis(nd$n_hok_1980_1999/nd$n_hok_tot_1980_1999)[indices])
+  # Marchantiophyta
+  indices <- which(nd$phylum=="Marchantiophyta")
+  lineartrend_marc <- 
+    #ps$b_Intercept + ps$b_phylumMarchantiophyta +
+    (ps$b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999 +
+       ps$`b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999:phylumMarchantiophyta`) %*%
+    t(qlogis(nd$n_hok_1980_1999/nd$n_hok_tot_1980_1999)[indices])
+  lineartrend_marc_incl_intercept <- 
+    ps$b_Intercept + ps$b_phylumMarchantiophyta +
+    (ps$b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999 +
+       ps$`b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999:phylumMarchantiophyta`) %*%
+    t(qlogis(nd$n_hok_1980_1999/nd$n_hok_tot_1980_1999)[indices])
+  
+  lineartrend <- cbind(lineartrend_bryo, lineartrend_marc)
+  
+  lineartrend_incl_intercept <- cbind(
+    lineartrend_bryo_incl_intercept, 
+    lineartrend_marc_incl_intercept
   )
+  
+  
+  logit_s2 <- posterior_linpred(model, newdata = nd)
+    
+  
+  if (odds_ratio) {
+    # calculate as odds-ratio
+    #########################
+    log_odds_ratio_s2_s1 <- logit_s2 - lineartrend
+    odds_ratio_s2_s1 <- exp(log_odds_ratio_s2_s1)
+    pp_summary <- nd %>%  
+      mutate(
+        median = apply(odds_ratio_s2_s1, 2, "median"),
+        lwr = apply(odds_ratio_s2_s1, 2, "quantile", probs = 0.025),
+        upr = apply(odds_ratio_s2_s1, 2, "quantile", probs = 0.975),
+      )
+    return(pp_summary)
+    
+  } else {
+    # calculate difference based on linear predictor (in logit-scale)
+    logit_s2_minus_s1 <- logit_s2 - lineartrend_incl_intercept
+    pp_summary_linear_diff <- nd %>%
+      mutate(
+        median = apply(logit_s2_minus_s1, 2, "median"),
+        lwr = apply(logit_s2_minus_s1, 2, "quantile", probs = 0.025),
+        upr = apply(logit_s2_minus_s1, 2, "quantile", probs = 0.975),
+      )
+    return(pp_summary_linear_diff)
+  }
+}
 
-# log_odds_ratio_s2_s1 <- sweep(
-#   logit_s2, 
-#   MARGIN = 2, 
-#   STATS = qlogis(nd$n_hok_1980_1999/nd$n_hok_tot_1980_1999),
-#   FUN = "-")
 ```
 
 ```{r plot-odds-ratio-random-effects-substrate}
-pp_summary %>%
+pp_substrate(model = alt_telfer_2, 
+           odds_ratio = TRUE) %>%
   group_by(phylum) %>%
   mutate(substrate = reorder(substrate, median)) %>%
   ggplot(aes(x = substrate, y = median, colour = phylum)) + 
@@ -694,7 +762,7 @@ pp_summary %>%
 
 
 ```{r plot-lineardifference-random-effects-substrate}
-pp_summary_linear_diff %>%
+pp_substrate(model = alt_telfer_2, odds_ratio = FALSE) %>%
   group_by(phylum) %>%
   mutate(substrate = reorder(substrate, median)) %>%
   ggplot(aes(x = substrate, y = median, colour = phylum)) + 
@@ -712,10 +780,11 @@ pp_summary_linear_diff %>%
 
 ```{r function-fixed-effects-ellenberg}
 pp_ellenberg <- function(data = analyse_data_telfer_agg,
-                         model = alt_telfer,
+                         model,
                          ellenberg = "ell_l",
                          ellenberg_name = "Light",
                          odds_ratio = TRUE) {
+  assertthat::assert_that(any(ellenberg %in% colnames(model$data)))
   nd <- data %>%
     summarise(across(starts_with(c("n_hok_tot", "n_hok_19", "ell")), median)) %>%
     select(-all_of(ellenberg)) %>%
@@ -726,102 +795,105 @@ pp_ellenberg <- function(data = analyse_data_telfer_agg,
         distinct()
     ) %>%
     mutate(substrate = NA)
-if (odds_ratio) {
-  #Bryophyta
-  indices <- which(nd$phylum=="Bryophyta")
-  lineartrend_bryo <- 
-    #ps$b_Intercept + 
-    ps$b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999 %*%
-    t(qlogis(nd$n_hok_1980_1999/nd$n_hok_tot_1980_1999)[indices])
-  # Marchantiophyta
-  indices <- which(nd$phylum=="Marchantiophyta")
-  lineartrend_marc <- 
-    #ps$b_Intercept + ps$b_phylumMarchantiophyta +
-    (ps$b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999 +
-       ps$`b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999:phylumMarchantiophyta`) %*%
-    t(qlogis(nd$n_hok_1980_1999/nd$n_hok_tot_1980_1999)[indices])
   
-  lineartrend <- cbind(lineartrend_bryo, lineartrend_marc)
-  logit_s2 <- posterior_linpred(model, newdata = nd, re_formula = NA)
-  log_odds_ratio_s2_s1 <- logit_s2 - lineartrend 
-  odds_ratio_s2_s1 <- exp(log_odds_ratio_s2_s1)
-  pp_summary <- nd %>%  
-    mutate(
-      median = apply(odds_ratio_s2_s1, 2, "median"),
-      lwr = apply(odds_ratio_s2_s1, 2, "quantile", probs = 0.025),
-      upr = apply(odds_ratio_s2_s1, 2, "quantile", probs = 0.975),
-    )
+  ps <- posterior_samples(
+    model, 
+    pars = c("b_Intercept",
+             "b_phylum",
+             "b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999"))
   
-  from <- min(nd[,ellenberg])
-  to <- max(nd[,ellenberg])
-  
-  pp_summary %>%
-    mutate(x_ellenberg = ellenberg,
-           name_ellenberg = ellenberg_name) %>%
-    rename("ellenberg_values" = ellenberg)
-} else {
-  #Bryophyta
-  indices <- which(nd$phylum=="Bryophyta")
-  lineartrend_bryo <- 
-    ps$b_Intercept + 
-    ps$b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999 %*%
-    t(qlogis(nd$n_hok_1980_1999/nd$n_hok_tot_1980_1999)[indices])
-  # Marchantiophyta
-  indices <- which(nd$phylum=="Marchantiophyta")
-  lineartrend_marc <- 
-    ps$b_Intercept + ps$b_phylumMarchantiophyta +
-    (ps$b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999 +
-       ps$`b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999:phylumMarchantiophyta`) %*%
-    t(qlogis(nd$n_hok_1980_1999/nd$n_hok_tot_1980_1999)[indices])
-  
-  lineartrend <- cbind(lineartrend_bryo, lineartrend_marc)
-  logit_s2 <- posterior_linpred(model, newdata = nd, re_formula = NA)
-  logit_s2_minus_s1 <- logit_s2 - lineartrend 
-  pp_summary <- nd %>%  
-    mutate(
-      median = apply(logit_s2_minus_s1, 2, "median"),
-      lwr = apply(logit_s2_minus_s1, 2, "quantile", probs = 0.025),
-      upr = apply(logit_s2_minus_s1, 2, "quantile", probs = 0.975),
-    )
-  
-  from <- min(nd[,ellenberg])
-  to <- max(nd[,ellenberg])
-  
-  pp_summary %>%
-    mutate(x_ellenberg = ellenberg,
-           name_ellenberg = ellenberg_name) %>%
-    rename("ellenberg_values" = ellenberg)
-}
+  if (odds_ratio) {
+    #Bryophyta
+    indices <- which(nd$phylum=="Bryophyta")
+    lineartrend_bryo <- 
+      #ps$b_Intercept + 
+      ps$b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999 %*%
+      t(qlogis(nd$n_hok_1980_1999/nd$n_hok_tot_1980_1999)[indices])
+    # Marchantiophyta
+    indices <- which(nd$phylum=="Marchantiophyta")
+    lineartrend_marc <- 
+      #ps$b_Intercept + ps$b_phylumMarchantiophyta +
+      (ps$b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999 +
+         ps$`b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999:phylumMarchantiophyta`) %*%
+      t(qlogis(nd$n_hok_1980_1999/nd$n_hok_tot_1980_1999)[indices])
+    
+    lineartrend <- cbind(lineartrend_bryo, lineartrend_marc)
+    logit_s2 <- posterior_linpred(model, newdata = nd, re_formula = NA)
+    log_odds_ratio_s2_s1 <- logit_s2 - lineartrend 
+    odds_ratio_s2_s1 <- exp(log_odds_ratio_s2_s1)
+    pp_summary <- nd %>%  
+      mutate(
+        median = apply(odds_ratio_s2_s1, 2, "median"),
+        lwr = apply(odds_ratio_s2_s1, 2, "quantile", probs = 0.025),
+        upr = apply(odds_ratio_s2_s1, 2, "quantile", probs = 0.975),
+      )
+    
+    from <- min(nd[,ellenberg])
+    to <- max(nd[,ellenberg])
+    
+    pp_summary %>%
+      mutate(x_ellenberg = ellenberg,
+             name_ellenberg = ellenberg_name) %>%
+      rename("ellenberg_values" = ellenberg)
+  } else {
+    #Bryophyta
+    indices <- which(nd$phylum=="Bryophyta")
+    lineartrend_bryo <- 
+      ps$b_Intercept + 
+      ps$b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999 %*%
+      t(qlogis(nd$n_hok_1980_1999/nd$n_hok_tot_1980_1999)[indices])
+    # Marchantiophyta
+    indices <- which(nd$phylum=="Marchantiophyta")
+    lineartrend_marc <- 
+      ps$b_Intercept + ps$b_phylumMarchantiophyta +
+      (ps$b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999 +
+         ps$`b_qlogisn_hok_1980_1999Dn_hok_tot_1980_1999:phylumMarchantiophyta`) %*%
+      t(qlogis(nd$n_hok_1980_1999/nd$n_hok_tot_1980_1999)[indices])
+    
+    lineartrend <- cbind(lineartrend_bryo, lineartrend_marc)
+    logit_s2 <- posterior_linpred(model, newdata = nd, re_formula = NA)
+    logit_s2_minus_s1 <- logit_s2 - lineartrend 
+    pp_summary <- nd %>%  
+      mutate(
+        median = apply(logit_s2_minus_s1, 2, "median"),
+        lwr = apply(logit_s2_minus_s1, 2, "quantile", probs = 0.025),
+        upr = apply(logit_s2_minus_s1, 2, "quantile", probs = 0.975),
+      )
+    
+    from <- min(nd[,ellenberg])
+    to <- max(nd[,ellenberg])
+    
+    pp_summary %>%
+      mutate(x_ellenberg = ellenberg,
+             name_ellenberg = ellenberg_name) %>%
+      rename("ellenberg_values" = ellenberg)
+  }
 }
 ```
 
 
 ```{r data-fixed-effects-ellenberg}
-pp_light_or <- pp_ellenberg()
-pp_moisture_or <- pp_ellenberg(ellenberg = "ell_f", 
+pp_moisture_or <- pp_ellenberg(model = alt_telfer_2, 
+                               ellenberg = "ell_f", 
                             ellenberg_name = "Moisture")
-pp_nitrogen_or <- pp_ellenberg(ellenberg = "ell_n", 
-                             ellenberg_name = "Nitrogen")
-pp_temperature_or <- pp_ellenberg(ellenberg = "ell_t",
+pp_temperature_or <- pp_ellenberg(model = alt_telfer_2, ellenberg = "ell_t",
                                 ellenberg_name = "Temperature")
 
 pp_data_or <- bind_rows(
-  pp_light_or, pp_moisture_or, pp_nitrogen_or, pp_temperature_or)
+   pp_moisture_or, pp_temperature_or)
 
 
-pp_light_ld <- pp_ellenberg(odds_ratio = FALSE)
-pp_moisture_ld <- pp_ellenberg(ellenberg = "ell_f", 
+pp_moisture_ld <- pp_ellenberg(model = alt_telfer_2,
+                               ellenberg = "ell_f", 
                             ellenberg_name = "Moisture",
                             odds_ratio = FALSE)
-pp_nitrogen_ld <- pp_ellenberg(ellenberg = "ell_n", 
-                             ellenberg_name = "Nitrogen",
-                             odds_ratio = FALSE)
-pp_temperature_ld <- pp_ellenberg(ellenberg = "ell_t",
+pp_temperature_ld <- pp_ellenberg(model = alt_telfer_2,
+                                  ellenberg = "ell_t",
                                 ellenberg_name = "Temperature",
                                 odds_ratio = FALSE)
 
 pp_data_ld <- bind_rows(
-  pp_light_ld, pp_moisture_ld, pp_nitrogen_ld, pp_temperature_ld)
+  pp_moisture_ld, pp_temperature_ld)
 
 
 ```
@@ -866,49 +938,6 @@ pp_data_ld %>%
 
 ```
 
+# References
 
-
-# Text for methods section in paper
-
-## Trends
-
-To assess the changes in distribution of bryophyte species form 1980 until 2018 we divided the survey in two periods and compared the period 1980-1999 with the period 2000-2018. 
-To minimize the effect of badly prospected grid cells we only used grid cells (16km²) where minimal 40 species were found in both periods (Figure 1).
-This resulted in 224 grids prospected in both periods.
-In these selected grids 35648 bryophyte observations (expressed as unique species per year and per 16 km² grid) were done in the first period and 45236 in the second period.
-To correct for potential changes in survey effort within those grids we used a relative change index as proposed by (Telfer, Preston, & Rothery, 2002), with slight modifications.
-
-This method assumes that during the two surveys recorders attempted to observe as many species as possible in each grid cell.
-The size of the distribution area of individual species in a given period, i.e., the number of 16 km² grid cells where the species was observed, was expressed as a proportion of the total number of grid cells studied during that period.
-To summarise the changes in distribution area for all species, we performed a generalized linear regression of the logit transformed proportions  count of occupied 16 km² squares in the second survey (out of the total number of 16 km² squares considered, i.e. proportional data) as a function of the logit-transformed proportion in the first survey (baseline)  and covariates (phylum, substrate and Ellenberg values). 
-Because the counts were overdispersed (variance larger than Binomial distribution), a quasi-binomial distribution was used to correct for overdispersion.
-The proportions in the second survey are estimated using a logit-link and related to the Ellenberg values with the following model equation:
-
-
-
-$$
-g(\mu_{i,s2}) = (\beta_0 + \beta_1\log\frac{\mu_{i,s1}}{1-\mu_{i,s1}} + \beta_L\text{ell}_L + \dots)*\text{phylum}_k + \mathbf{b}_{o,j} + \mathbf{b}_{1,j}\text{phylum}_k
-$$
-where:
-
-$$
-\begin{aligned}
-\mu_{i,s2} \equiv \mathbf{E}(Y_{i,s2}|\text{trials},\mathbf{b})&& \text{expected value}\\
-g(\mu_{i,s2}) = \log\frac{\mu_{i,s2}}{1-\mu_{i,s2}} && \text{logit-link} \\
-Y_{i,s2} \sim \text{BetaBinomial}(\mu_{i,s2}, \phi_{i,s2}) && \text{Beta-Binomial distribution}\\
-\begin{bmatrix}\mathbf{b}_{o,j}\\ \mathbf{b}_{1,j}\end{bmatrix}\sim N(0,\Sigma) && \text{random intercept and slope}\\
-\Sigma = \begin{bmatrix}\sigma^2_{0,j}&\sigma_{01,j}\\\sigma_{01,j}&\sigma^2_{1,j}\end{bmatrix} && \text{variance-covariance matrix}
-\end{aligned}
-$$
-A separate model was used to relate the proportions to substrate:
-
-
-
-Species that occurred in less than five 16 km² grid cells in the first period were omitted form the analyses.
-We also used only species that were present in both periods. 
-All analyses were done using the R language for statistical computing (R Core Team 2020)
-
-
-
-## Model selection
 
