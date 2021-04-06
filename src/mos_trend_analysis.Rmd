@@ -10,7 +10,8 @@ bibliography: moss-change.bib
 library(knitr)
 opts_chunk$set(
   echo = FALSE,
-  dpi = 300)
+  dpi = 72,
+  dev = "png")
 
 #library(RODBC)
 library(ggplot2)
@@ -519,13 +520,11 @@ We also used only species that were present in both periods.
 
 A Bayesian hierarchical modeling procedure was used to calculate the posterior distribution for these parameters [@burkner2017] and we assumed non-informative priors.
 
-We focuses model selection on the Ellenberg terms only. 
+We focused model selection on the Ellenberg terms only. 
 All other effects were kept in the model.
 First, interaction terms for Ellenberg-values with phylum for which the 95% confidence interval contained 0 were removed.
-The simplified model was refit and compared to the full model using leave-one-out cross validation as explained in @Vehtari2017.
-The simplified model was preferred over the full model when 
-alt_telfer_2 is the better model 
-# the elpd_diff is more than 2 times larger than its standard erro 
+Next, main Ellenberg terms for which the 95% confidence interval contained 0 were removed.
+The simplest model with the highest predictive accuracy based on leave-one-out cross validation [@vehtari2017] was selected.
 
 After rearranging the model equation (for one phylum) and exponentiating the linear predictor, ignoring all random effects, we obtain the following odds-ratio:
 
@@ -535,13 +534,11 @@ $$
 which allows us to predict the effect of Ellenberg values on the relative increase or decrease of the Bryophytes.
 
 In a similar way, substrate random effects are calculated from the posterior linear predictor, conditional on Ellenberg values fixed at their median values.
-@Gelman2012 point out that no correction for multiple comparisons are necessary when substrate effects are calculated in this way.
+@gelman2012 point out that no correction for multiple comparisons are necessary when substrate effects are calculated in this way.
 
 All analyses were done using the R language for statistical computing [@rcoreteam2020].
 
-
-
-```{r full-model, eval=!file.exists(find_root_file("brmsfit_alt_telfer.rds", criterion=is_git_root))}
+```{r betabinom}
 beta_binomial2 <- custom_family(
   "beta_binomial2", dpars = c("mu", "phi"),
   links = c("logit", "log"), lb = c(NA, 0),
@@ -559,7 +556,10 @@ stan_funs <- "
   }
 "
 stanvars <- stanvar(scode = stan_funs, block = "functions")
+```
 
+
+```{r full-model}
 alt_telfer <- brm(n_hok_2000_2019 | vint(n_hok_tot_2000_2019) ~ 
                     qlogis(n_hok_1980_1999/n_hok_tot_1980_1999)
                   + phylum 
@@ -577,21 +577,10 @@ alt_telfer <- brm(n_hok_2000_2019 | vint(n_hok_tot_2000_2019) ~
     data = analyse_data_telfer_agg,
     file = "stanmodel_alt_telfer",
     file_refit = "on_change",
+    save_pars = save_pars(all = TRUE),
     silent = 2,
     cores = 4)
-
-
-
-saveRDS(alt_telfer, file = find_root_file("brmsfit_alt_telfer.rds", 
-                                          criterion=is_git_root))
 ```
-
-```{r eval=file.exists(find_root_file("brmsfit_alt_telfer.rds", criterion=is_git_root))}
-alt_telfer <- readRDS(file = find_root_file("brmsfit_alt_telfer.rds", 
-                                            criterion=is_git_root))
-```
-
-
 
 
 ```{r}
@@ -624,22 +613,53 @@ posterior_epred_beta_binomial2 <- function(prep) {
 ```{r model-selection}
 alt_telfer_2 <- update(alt_telfer, 
                        .~. 
+                       - ell_l:phylum 
+                       - ell_n:phylum
+                       - ell_f:phylum 
+                      , file = "stanmodel_alt_telfer_2"
+                      , file_refit = "on_change"
+                      , save_pars = save_pars(all = TRUE)
+                      , cores = 4)
+
+alt_telfer_3 <- update(alt_telfer, 
+                       .~. 
                        - ell_l 
                        - ell_l:phylum 
                        - ell_n 
                        - ell_n:phylum
                        - ell_f:phylum 
+                      , file = "stanmodel_alt_telfer_3"
+                      , file_refit = "on_change"
+                      , save_pars = save_pars(all = TRUE)
                        , cores = 4)
 
-loo1 <- loo(alt_telfer, alt_telfer_2, save_psis = TRUE) # alt_telfer_2 is the better model 
+loo1 <- loo(alt_telfer, alt_telfer_2, alt_telfer_3, 
+            save_psis = TRUE,
+            moment_match = TRUE) 
 # the elpd_diff is more than 2 times larger than its standard erro 
 ```
 
+
+# Results
+
+
+## Model selection
+
+```{r loo, warning=FALSE}
+loo1$diffs %>%
+  as.data.frame() %>%
+  kable(caption = "Results of model comparisons. First row contains the model with the highest predictive accuracy. The best model contained an effect for Ellenberg moisture and a phylum specific effect for Ellenberg temperature in addition to the effects dealing with sampling effort and substrate.",
+        digits = 2)
+```
+
+
+## Model diagnostics
+
 ```{r model-diagnostics, echo = TRUE}
 plot(loo1$loos$alt_telfer, label_points = TRUE)
-plot(loo1$loos$alt_telfer_2, label_points = TRUE)
+plot(loo1$loos$alt_telfer_3, label_points = TRUE)
 
-alt_telfer_2$data[745,]
+alt_telfer_3$data[745,]
 analyse_data_telfer_agg[745,]
 taxa[taxa$id == 760, ] 
 #Boomfranjemos looks like an outlying observation
@@ -650,11 +670,10 @@ analyse_data_telfer_agg %>%
 ```
 
 
-# Results
-
+## Model summary of best predictive model
 
 ```{r}
-broom.mixed::tidy(alt_telfer_2) %>%
+broom.mixed::tidy(alt_telfer_3) %>%
   kable()
 ```
 
@@ -663,6 +682,7 @@ From Telfer et al (2002) $\text{logit}(P_2k) = a + b \text{logit}(P_1k) + Z_k$:
 > The intercept _a_ measures change in recording probability(on a logit scale) and the slope _b_ measures the extent to which that change depends on the recording probability in the first survey. Parameters _a_ and _b_ may include the effects both of biological change and of change in recorder behaviour.
 -->
 
+## Model visualisation
 
 ```{r predictions-random-effects-substrate}
 pp_substrate <- function(model,
@@ -741,8 +761,8 @@ pp_substrate <- function(model,
 
 ```
 
-```{r plot-odds-ratio-random-effects-substrate}
-pp_substrate(model = alt_telfer_2, 
+```{r plot-odds-ratio-random-effects-substrate, out.width="100%"}
+pp_substrate(model = alt_telfer_3, 
            odds_ratio = TRUE) %>%
   group_by(phylum) %>%
   mutate(substrate = reorder(substrate, median)) %>%
@@ -761,8 +781,8 @@ pp_substrate(model = alt_telfer_2,
 ```
 
 
-```{r plot-lineardifference-random-effects-substrate}
-pp_substrate(model = alt_telfer_2, odds_ratio = FALSE) %>%
+```{r plot-lineardifference-random-effects-substrate, out.width="100%"}
+pp_substrate(model = alt_telfer_3, odds_ratio = FALSE) %>%
   group_by(phylum) %>%
   mutate(substrate = reorder(substrate, median)) %>%
   ggplot(aes(x = substrate, y = median, colour = phylum)) + 
@@ -873,21 +893,21 @@ pp_ellenberg <- function(data = analyse_data_telfer_agg,
 
 
 ```{r data-fixed-effects-ellenberg}
-pp_moisture_or <- pp_ellenberg(model = alt_telfer_2, 
+pp_moisture_or <- pp_ellenberg(model = alt_telfer_3, 
                                ellenberg = "ell_f", 
                             ellenberg_name = "Moisture")
-pp_temperature_or <- pp_ellenberg(model = alt_telfer_2, ellenberg = "ell_t",
+pp_temperature_or <- pp_ellenberg(model = alt_telfer_3, ellenberg = "ell_t",
                                 ellenberg_name = "Temperature")
 
 pp_data_or <- bind_rows(
    pp_moisture_or, pp_temperature_or)
 
 
-pp_moisture_ld <- pp_ellenberg(model = alt_telfer_2,
+pp_moisture_ld <- pp_ellenberg(model = alt_telfer_3,
                                ellenberg = "ell_f", 
                             ellenberg_name = "Moisture",
                             odds_ratio = FALSE)
-pp_temperature_ld <- pp_ellenberg(model = alt_telfer_2,
+pp_temperature_ld <- pp_ellenberg(model = alt_telfer_3,
                                   ellenberg = "ell_t",
                                 ellenberg_name = "Temperature",
                                 odds_ratio = FALSE)
@@ -899,7 +919,7 @@ pp_data_ld <- bind_rows(
 ```
 
 
-```{r plot-or-fixed-effects-ellenberg, out.width="100%", fig.height=150/25.4}
+```{r plot-or-fixed-effects-ellenberg, out.width="100%"}
 pp_data_or %>%
   ggplot(aes(x = ellenberg_values, y = median)) + 
   geom_hline(yintercept = 1) +
@@ -920,7 +940,7 @@ pp_data_or %>%
 
 ```
 
-```{r plot-ld-fixed-effects-ellenberg, out.width="100%", fig.height=150/25.4}
+```{r plot-ld-fixed-effects-ellenberg, out.width="100%"}
 pp_data_ld %>%
   ggplot(aes(x = ellenberg_values, y = median)) + 
   geom_hline(yintercept = 0) +
