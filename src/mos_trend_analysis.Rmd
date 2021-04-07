@@ -33,6 +33,8 @@ library(inbodb) #remotes::install_github("inbo/inbodb", build_vignettes = TRUE)
 source(find_root_file("src/functions.R",
                       criterion = is_git_root))
 library(brms)
+library(patchwork)
+
 ```
 
 ```{r}
@@ -911,108 +913,121 @@ create_conditions <- function (x, vars, ...) {
 }
 ```
 
-```{r}
+
+
+
+```{r conditions}
+conditions0 <- create_conditions(
+  x = alt_telfer,
+  vars = c("n_hok_1980_1999", "ell_f", "ell_t"))
+
 conditions1 <- create_conditions(
   x = alt_telfer_3,
   vars = c("ell_f", "ell_t")
 )
-```
 
-
-(ref:change-recording) Change in recording probability. The total number of occupied grid cells in both periods equals 228. Points: observed values. Lines with ribbons: expectations and 95% confidence bounds conditional on `r conditions1$cond__`. Black line: line of no change.
-
-
-Figure \@ref(fig:change-recording)
-
-```{r change-recording, fig.cap='(ref:change-recording)'}
-
-p1 <- conditional_effects(alt_telfer_3, 
-                    effects = "n_hok_1980_1999:phylum",
-                    conditions = conditions1)
-
-plot(p1, plot = FALSE, points = TRUE)[[1]] + 
-  geom_abline() +
-  labs(y = "Number of occupied grid cells (2000 - 2019)",
-       x = "Number of occupied grid cells (1980 - 1999)")
-
-```
-
-
-```{r}
 conditions2 <- create_conditions(
   x = alt_telfer_3,
   vars = c("n_hok_1980_1999", "ell_t")
 )
 
+conditions3 <- create_conditions(
+  x = alt_telfer_3,
+  vars = c("n_hok_1980_1999", "ell_f")
+)
+
+conditions4 <- create_conditions(
+  x = alt_telfer_3,
+  vars = c("n_hok_1980_1999", "ell_f", "ell_t")
+)
+
 ```
 
-(ref:plot-ell-f) Effect of Ellenberg moisture values on occurrence of mosses. Points: observed values. Line with ribbons: expectation and 95% confidence bounds conditional on `r conditions2$cond__`. No interaction effect was modeled.
 
-Figure \@ref(fig:plot-ell-f)
+(ref:plot-epred) Estimated total number of occupied cells. The total number of occupied grid cells in both periods equals 228. Expectations and 95% confidence bounds or intervals are given. These expectations are conditional on `r conditions0$cond__` for variables other than the one on the x-axis (held constant to mean value). The black point ranges represent the overall effect for both phylae conditional on all other variables and can be used as a reference across all figures. (a) Change in recording probability. Black line: line of no change. (b) Effect of substrate on occurrence of mosses. (c) Effect of Ellenberg moisture values on occurrence of mosses. No interaction effect was modeled. (d) Effect of Ellenberg temperature values on occurrence of mosses. 
 
-```{r plot-ell-f, fig.cap = '(ref:plot-ell-f)'}
+
+Figure \@ref(fig:plot-epred)
+
+```{r plot-epred, fig.cap='(ref:plot-epred)', fig.height = 175/25.4}
+
+p0 <- conditional_effects(alt_telfer_3, 
+                    effects = "phylum",
+                    conditions = conditions0)
+
+p1 <- conditional_effects(alt_telfer_3, 
+                    effects = "n_hok_1980_1999:phylum",
+                    conditions = conditions1)
+
+p1 <- plot(p1, plot = FALSE, points = TRUE)[[1]] + 
+  geom_abline() +
+  geom_pointrange(data = p0$phylum, 
+                  aes(x = n_hok_1980_1999, 
+                      y = estimate__,
+                      ymin = lower__,
+                      ymax = upper__), 
+                inherit.aes = FALSE) +
+  labs(y = "Number of occupied grid cells (2000 - 2019)",
+       x = "Number of occupied grid cells (1980 - 1999)")
+
 p2 <- conditional_effects(alt_telfer_3, 
                     effects = c("ell_f:phylum"),
                     conditions = conditions2)
 
-plot(p2, plot = FALSE, points = TRUE)[[1]] + 
+p2 <- plot(p2, plot = FALSE, points = FALSE)[[1]] +
+  geom_pointrange(data = p0$phylum, 
+                  aes(x = ell_f, 
+                      y = estimate__,
+                      ymin = lower__,
+                      ymax = upper__), 
+                inherit.aes = FALSE) +
   scale_x_continuous(
     breaks = function(x) 
       unique(floor(pretty(seq(0, (max(x) + 1) * 1.1))))) +
   labs(y = "Number of occupied grid cells (2000 - 2019)",
        x = "Ellenberg moisture values")
 
-```
-
-```{r}
-conditions3 <- create_conditions(
-  x = alt_telfer_3,
-  vars = c("n_hok_1980_1999", "ell_f")
-)
-
-```
-
-(ref:plot-ell-t) Effect of Ellenberg temperature values on occurrence of mosses. Points: observed values. Line with ribbons: expectation and 95% confidence bounds conditional on `r conditions3$cond__`.
-
-Figure \@ref(fig:plot-ell-t)
-
-```{r plot-ell-t, fig.cap = '(ref:plot-ell-t)'}
 p3 <- conditional_effects(alt_telfer_3, 
                     effects = c("ell_t:phylum"),
                     conditions = conditions3)
 
-plot(p3, plot = FALSE, points = TRUE)[[1]] + 
+p3 <- plot(p3, plot = FALSE, points = FALSE)[[1]] + 
+  geom_pointrange(data = p0$phylum, 
+                  aes(x = ell_t, 
+                      y = estimate__,
+                      ymin = lower__,
+                      ymax = upper__), 
+                inherit.aes = FALSE) +
   scale_x_continuous(
     breaks = function(x) 
       unique(floor(pretty(seq(0, (max(x) + 1) * 1.1))))) +
   labs(y = "Number of occupied grid cells (2000 - 2019)",
        x = "Ellenberg temperature values")
 
-```
-
-```{r}
-conditions4 <- create_conditions(
-  x = alt_telfer_3,
-  vars = c("n_hok_1980_1999", "ell_f", "ell_t")
-)
-```
-
-(ref:plot-substrate) Effect of substrate on occurrence of mosses. Points and ranges: expectation and 95% confidence interval conditional on `r conditions4$cond__`.
-
-Figure \@ref(fig:plot-substrate)
-
-```{r plot-substrate, fig.cap = '(ref:plot-substrate)'}
 p4 <- conditional_effects(alt_telfer_3, 
                           re_formula = NULL,
                           effects = c("substrate:phylum"),
                           conditions = conditions4)
 
-plot(p4, plot = FALSE, points = FALSE)[[1]] + 
+p4 <- plot(p4, plot = FALSE, points = FALSE)[[1]] + 
+  geom_pointrange(data = p0$phylum %>%
+                  mutate(substrate = "overall"), 
+                  aes(x = substrate, 
+                      y = estimate__,
+                      ymin = lower__,
+                      ymax = upper__), 
+                inherit.aes = FALSE) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
         axis.title.x = element_blank()) +
   labs(y = "Number of occupied grid cells (2000 - 2019)")
 
+(p1 + p4) / (p2 + p3) + 
+  plot_layout(guides = 'collect', tag_level = "keep") + 
+  plot_annotation(tag_levels = "a")
 ```
+
+
+
 
 
 
