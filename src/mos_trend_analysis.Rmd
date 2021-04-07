@@ -478,7 +478,7 @@ analyse_data_telfer_agg <- analyse_data_telfer_agg  %>%
 
 ## Trends
 
-To assess the changes in distribution of bryophyte species form 1980 until 2018 we divided the survey in two periods and compared the period 1980-1999 with the period 2000-2018. 
+To assess the changes in distribution of bryophyte species form 1980 until 2019 we divided the survey in two periods and compared the period 1980-1999 with the period 2000-2019. 
 To minimize the effect of badly prospected grid cells we only used grid cells (16km²) where at least 40 species were found in both periods (Figure \@ref(fig:fig1)).
 
 (ref:fig1) 16 km² grids of Flanders and the Brussels Capital Region with at least 40 species of Bryophytes recorded in both the period 1980-1999 and the period 2000-2019.
