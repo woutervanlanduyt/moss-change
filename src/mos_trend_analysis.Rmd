@@ -619,12 +619,23 @@ posterior_epred_beta_binomial2 <- function(prep) {
 
 
 ```{r model-selection, message=FALSE, warning=FALSE}
-alt_telfer_2 <- update(alt_telfer, 
+alt_telfer_2a <- update(alt_telfer, 
+                       .~. 
+                       - qlogis(n_hok_1980_1999/n_hok_tot_1980_1999):phylum 
+                      , file = "stanmodel_alt_telfer_2a"
+                      , file_refit = "on_change"
+                      , save_pars = save_pars(all = TRUE)
+                      , cores = 4)
+
+
+
+alt_telfer_2b <- update(alt_telfer, 
                        .~. 
                        - ell_l:phylum 
                        - ell_n:phylum
                        - ell_f:phylum 
-                      , file = "stanmodel_alt_telfer_2"
+                       - qlogis(n_hok_1980_1999/n_hok_tot_1980_1999):phylum 
+                      , file = "stanmodel_alt_telfer_2b"
                       , file_refit = "on_change"
                       , save_pars = save_pars(all = TRUE)
                       , cores = 4)
@@ -636,13 +647,14 @@ alt_telfer_3 <- update(alt_telfer,
                        - ell_n 
                        - ell_n:phylum
                        - ell_f:phylum 
+                       - qlogis(n_hok_1980_1999/n_hok_tot_1980_1999):phylum 
                       , file = "stanmodel_alt_telfer_3"
                       , file_refit = "on_change"
                       , save_pars = save_pars(all = TRUE)
                        , cores = 4)
 
 
-loo1 <- loo(alt_telfer, alt_telfer_2, alt_telfer_3, 
+loo1 <- loo(alt_telfer, alt_telfer_2a, alt_telfer_2b, alt_telfer_3, 
             save_psis = TRUE,
             moment_match = TRUE) 
 # the elpd_diff is more than 2 times larger than its standard erro 
