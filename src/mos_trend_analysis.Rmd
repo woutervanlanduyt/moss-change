@@ -499,13 +499,6 @@ analyse_data_telfer_agg %>%
 ```
 
 
-```{r}
-#Keeping only species that occur in both periods (much improves model validation).
-#(Alternative could be to include a factor with levels for lost, persisting, gained #in the model to explain lost and gained species, but maybe see this as a separate #model with the full dataset!)
-analyse_data_telfer_agg <- analyse_data_telfer_agg  %>%
-      filter(n_hok_2000_2019 > 0,
-             n_hok_1980_1999 > 0)  
-```
 
 
 
@@ -600,6 +593,8 @@ stanvars <- stanvar(scode = stan_funs, block = "functions")
 ```
 
 
+
+
 ```{r full-model}
 alt_telfer <- brm(n_hok_2000_2019 | vint(n_hok_tot_2000_2019) ~ 
                     qlogis(n_hok_1980_1999/n_hok_tot_1980_1999)
@@ -612,6 +607,7 @@ alt_telfer <- brm(n_hok_2000_2019 | vint(n_hok_tot_2000_2019) ~
                   + ell_f
                   + ell_t) * phylum 
                   + (1 + phylum || substrate) #no correlations modeled (if included, estimate was -1 to +1)
+                  + (1 | taxon_id_parent)
                   , 
     family = beta_binomial2,
     stanvars = stanvars,
