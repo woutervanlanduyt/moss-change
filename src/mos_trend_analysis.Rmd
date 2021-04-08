@@ -260,9 +260,7 @@ analyse_data_telfer_agg <- analyse_data_telfer %>%
   mutate(n_hok_tot = n_distinct(ifbl_4by4)) %>%
   count(periode, phylum, taxon_id_parent, n_hok_tot, 
         name = "n_hok") %>%
-  ungroup() %>%
-  # remove species that occur in less than 5 squares in period 1
-  filter(!(n_hok < 5 & periode == "1980-1999"))
+  ungroup() 
 ```
 
 
@@ -379,6 +377,8 @@ analyse_data_telfer_agg <- analyse_data_telfer_agg %>%
 analyse_data_telfer_agg %>%
   ungroup() %>%
   filter(phylum == "Bryophyta") %>%
+  select(taxon_id_parent, starts_with("ell")) %>%
+  distinct() %>%
   select(starts_with("ell")) %>%
   GGally::ggpairs(title = "Bryophyta")
 ```
@@ -387,6 +387,8 @@ analyse_data_telfer_agg %>%
 analyse_data_telfer_agg %>%
   ungroup() %>%
   filter(phylum != "Bryophyta") %>%
+  select(taxon_id_parent, starts_with("ell")) %>%
+  distinct() %>%
   select(starts_with("ell")) %>%
   GGally::ggpairs(title = "Marchantiophyta") 
 ```
@@ -424,6 +426,8 @@ p <- analyse_data_telfer_agg %>%
   left_join(taxa_gbif %>%
               select(id, naam_wetenschappelijk),
             by = c("taxon_id_parent" = "id")) %>%
+  select(-substrate) %>%
+  distinct() %>%
   ggplot() +
   geom_jitter(aes(x = prop_baseline,
                   y = prop_2000_2019,
@@ -442,6 +446,8 @@ p <- analyse_data_telfer_agg %>%
   left_join(taxa_gbif %>%
               select(id, naam_wetenschappelijk),
             by = c("taxon_id_parent" = "id")) %>%
+  select(-substrate) %>%
+  distinct() %>%
   ggplot() +
   geom_jitter(aes(x = qlogis(prop_baseline),
                   y = qlogis(prop_2000_2019),
@@ -458,10 +464,14 @@ p %>% plotly::ggplotly()
 
 ```{r}
 analyse_data_telfer_agg %>%
-  count(n_hok_1980_1999)
+  select(-substrate) %>%
+  distinct() %>%
+  count(n_hok_1980_1999, name = "Number of species")
 
 analyse_data_telfer_agg %>%
-  count(n_hok_2000_2019)
+  select(-substrate) %>%
+  distinct() %>%
+  count(n_hok_2000_2019, name = "Number of species")
 
 ```
 
