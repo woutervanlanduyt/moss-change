@@ -410,12 +410,11 @@ analyse_data_telfer_agg %>%
   kable()
 ```
 
-```{r eval=FALSE}
-# not every species has one substrate
+```{r}
 analyse_data_telfer_agg %>%
   count(phylum, taxon_id_parent) %>%
-  filter(n > 1)
-  
+  count(phylum, n, name = "Number of species associated with n substrates") %>%
+  kable()
 ```
 
 
@@ -607,7 +606,6 @@ alt_telfer <- brm(n_hok_2000_2019 | vint(n_hok_tot_2000_2019) ~
                   + ell_f
                   + ell_t) * phylum 
                   + (1 + phylum || substrate) #no correlations modeled (if included, estimate was -1 to +1)
-                  + (1 | taxon_id_parent)
                   , 
     family = beta_binomial2,
     stanvars = stanvars,
