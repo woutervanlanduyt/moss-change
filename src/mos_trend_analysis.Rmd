@@ -417,6 +417,33 @@ analyse_data_telfer_agg %>%
   kable()
 ```
 
+(ref:persisting-lost-gained) Number of species gained, lost or persisting per phylum without taking into account difference in recording activity or uncertainty in the data. Thus, numbers are based on raw data. 
+
+```{r persisting-lost-gained}
+analyse_data_telfer_agg %>%
+  select(-substrate) %>%
+  distinct() %>%
+  mutate(trajectory = case_when(
+    n_hok_1980_1999 == 0 & n_hok_2000_2019 > 0 ~ "gained",
+    n_hok_1980_1999 > 0 & n_hok_2000_2019 == 0 ~ "lost",
+    n_hok_1980_1999 > 0 & n_hok_2000_2019 > 0 &
+      n_hok_2000_2019 < n_hok_1980_1999 ~ "persisting, decreased",
+    n_hok_1980_1999 > 0 & n_hok_2000_2019 > 0 &
+      n_hok_2000_2019 > n_hok_1980_1999 ~ "persisting, increased",
+    n_hok_1980_1999 > 0 & n_hok_2000_2019 > 0 &
+      n_hok_2000_2019 == n_hok_1980_1999 ~ "persisting, stable"
+  )) %>%
+  count(phylum, trajectory, name = "Number of species") %>%
+  kable(caption = "(ref:persisting-lost-gained)")
+
+```
+
+Removed species without associated substrate.
+
+```{r}
+analyse_data_telfer_agg <- analyse_data_telfer_agg %>%
+  filter(!is.na(substrate))
+```
 
 
 
@@ -476,26 +503,6 @@ analyse_data_telfer_agg %>%
 
 ```
 
-(ref:persisting-lost-gained) Number of species gained, lost or persisting per phylum without taking into account difference in recording activity or uncertainty in the data. Thus, numbers are based on raw data. 
-
-```{r persisting-lost-gained}
-analyse_data_telfer_agg %>%
-  select(-substrate) %>%
-  distinct() %>%
-  mutate(trajectory = case_when(
-    n_hok_1980_1999 == 0 & n_hok_2000_2019 > 0 ~ "gained",
-    n_hok_1980_1999 > 0 & n_hok_2000_2019 == 0 ~ "lost",
-    n_hok_1980_1999 > 0 & n_hok_2000_2019 > 0 &
-      n_hok_2000_2019 < n_hok_1980_1999 ~ "persisting, decreased",
-    n_hok_1980_1999 > 0 & n_hok_2000_2019 > 0 &
-      n_hok_2000_2019 > n_hok_1980_1999 ~ "persisting, increased",
-    n_hok_1980_1999 > 0 & n_hok_2000_2019 > 0 &
-      n_hok_2000_2019 == n_hok_1980_1999 ~ "persisting, stable"
-  )) %>%
-  count(phylum, trajectory, name = "Number of species") %>%
-  kable(caption = "(ref:persisting-lost-gained)")
-
-```
 
 
 
