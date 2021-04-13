@@ -146,7 +146,7 @@ vertaling_substraat <- read_csv2(
 ```
 
 # Exploratory data analysis
-
+## General
 
 - Anthocerotophyta = hornworth = hauwmossen
 - Bryophyta = bryophytes = bladmossen
@@ -215,12 +215,15 @@ species_freqs %>%
 
 
 ```{r}
+beginjaar <- 1980
+cesuurjaar <- 2000
+eindjaar <- 2019
 analyse_data <- mosdata %>%
-  filter(jaar != max(jaar)) %>%
+  filter(between(jaar, beginjaar, eindjaar)) %>%
   filter(phylum %in% c("Bryophyta", "Marchantiophyta")) %>%
-  mutate(periode = ifelse(between(jaar, 1980, 1999),
-                          "1980-1999", 
-                          "2000-2019"))
+  mutate(periode = ifelse(between(jaar, beginjaar, cesuurjaar - 1),
+                          paste(beginjaar, cesuurjaar - 1, sep = "-"), 
+                          paste(cesuurjaar, eindjaar, sep = "-")))
 ```
 
 ```{r}
@@ -279,8 +282,8 @@ analyse_data_telfer_agg <- analyse_data_telfer_agg %>%
                                         max(n_hok_tot_1980_1999,
                                             na.rm = TRUE),
                                         n_hok_tot_1980_1999),
-         prop_baseline = (n_hok_1980_1999 + 1) / n_hok_tot_1980_1999,
-         prop_2000_2019 = (n_hok_2000_2019 + 1) / n_hok_tot_2000_2019
+         prop_baseline = (n_hok_1980_1999 + 0.5) / (n_hok_tot_1980_1999 + 1),
+         prop_2000_2019 = (n_hok_2000_2019 + 0.5) / (n_hok_tot_2000_2019 + 1)
          )
 ```
 
@@ -305,28 +308,28 @@ analyse_data_telfer_agg <- analyse_data_telfer_agg %>%
             by = c("taxon_id_parent" = "taxon_id")) %>%
   # warning! species can have more than one substrate -> Wouter already selected 
   # most important one, but this should be coded in the script?
+  # need to downweight species with more than one substrate in analyses
   left_join(substraat %>% 
               clean_names() %>%
               select(taxon_id, substraat = omschrijving) %>%
               inner_join(vertaling_substraat, 
                          ) %>%
-              select(-substraat),
+              select(-substraat) %>%
+              group_by(taxon_id) %>%
+              #weights to be used in analyses
+              mutate(wei = 1/n()) %>%
+              ungroup(),
             by = c("taxon_id_parent" = "taxon_id")
             )
 ```
 
+## Ellenberg
 
 ```{r}
 analyse_data_telfer_agg %>%
   filter(complete.cases(analyse_data_telfer_agg)) %>%
-  count(phylum, substrate, name = "number of species") %>%
-  kable()
-```
-
-
-```{r}
-analyse_data_telfer_agg %>%
-  filter(complete.cases(analyse_data_telfer_agg)) %>%
+  select(phylum, ell_l, taxon_id_parent) %>%
+  distinct() %>%
   count(phylum, ell_l, name = "number of species") %>%
   kable()
 ```
@@ -334,6 +337,8 @@ analyse_data_telfer_agg %>%
 ```{r}
 analyse_data_telfer_agg %>%
   filter(complete.cases(analyse_data_telfer_agg)) %>%
+  select(phylum, ell_r, taxon_id_parent) %>%
+  distinct() %>%
   count(phylum, ell_r, name = "number of species") %>%
   kable()
 ```
@@ -342,6 +347,8 @@ analyse_data_telfer_agg %>%
 ```{r}
 analyse_data_telfer_agg %>%
   filter(complete.cases(analyse_data_telfer_agg)) %>%
+  select(phylum, ell_f, taxon_id_parent) %>%
+  distinct() %>%
   count(phylum, ell_f, name = "number of species") %>%
   kable()
 ```
@@ -350,6 +357,8 @@ analyse_data_telfer_agg %>%
 ```{r}
 analyse_data_telfer_agg %>%
   filter(complete.cases(analyse_data_telfer_agg)) %>%
+  select(phylum, ell_n, taxon_id_parent) %>%
+  distinct() %>%
   count(phylum, ell_n, name = "number of species") %>%
   kable()
 ```
@@ -358,19 +367,12 @@ analyse_data_telfer_agg %>%
 ```{r}
 analyse_data_telfer_agg %>%
   filter(complete.cases(analyse_data_telfer_agg)) %>%
+  select(phylum, ell_t, taxon_id_parent) %>%
+  distinct() %>%
   count(phylum, ell_t, name = "number of species") %>%
   kable()
 ```
 
-Only remove substrate levels with less than 5 species (for Ellenberg variables this is not necessary because they are included as continuous covariate).
-
-```{r}
-analyse_data_telfer_agg <- analyse_data_telfer_agg %>%
-  filter(complete.cases(analyse_data_telfer_agg)) %>%
-  group_by(phylum, substrate) %>%
-  filter(n() > 5) %>%
-  ungroup()
-```
 
 
 ```{r}
@@ -393,6 +395,26 @@ analyse_data_telfer_agg %>%
   GGally::ggpairs(title = "Marchantiophyta") 
 ```
 
+## Substrate
+
+Only remove substrate levels with less than 5 species (for Ellenberg variables this is not necessary because they are included as continuous covariate).
+
+```{r}
+analyse_data_telfer_agg <- analyse_data_telfer_agg %>%
+  filter(complete.cases(analyse_data_telfer_agg)) %>%
+  group_by(phylum, substrate) %>%
+  filter(n() > 5) %>%
+  ungroup()
+```
+
+```{r}
+analyse_data_telfer_agg %>%
+  filter(complete.cases(analyse_data_telfer_agg)) %>%
+  select(phylum, substrate, taxon_id_parent) %>%
+  distinct() %>%
+  count(phylum, substrate, name = "number of species") %>%
+  kable()
+```
 
 
 ```{r}
@@ -406,16 +428,12 @@ analyse_data_telfer_agg %>%
 
 ```{r}
 analyse_data_telfer_agg %>%
-  count(phylum, substrate) %>%
-  kable()
-```
-
-```{r}
-analyse_data_telfer_agg %>%
   count(phylum, taxon_id_parent) %>%
   count(phylum, n, name = "Number of species associated with n substrates") %>%
   kable()
 ```
+
+## Persisting, lost, gained species
 
 (ref:persisting-lost-gained) Number of species gained, lost or persisting per phylum without taking into account difference in recording activity or uncertainty in the data. Thus, numbers are based on raw data. 
 
@@ -438,14 +456,8 @@ analyse_data_telfer_agg %>%
 
 ```
 
-Removed species without associated substrate.
 
-```{r}
-analyse_data_telfer_agg <- analyse_data_telfer_agg %>%
-  filter(!is.na(substrate))
-```
-
-
+## Period 1 vs period 2
 
 ```{r plotlyfig, out.width="100%", out.height="5in"}
 p <- analyse_data_telfer_agg %>%
@@ -490,17 +502,12 @@ p %>% plotly::ggplotly()
 
 ```{r}
 analyse_data_telfer_agg %>%
-  select(-substrate) %>%
+  select(phylum, taxon_id_parent, n_hok_1980_1999, n_hok_2000_2019) %>%
   distinct() %>%
-  count(n_hok_1980_1999, name = "Number of species")
-
-analyse_data_telfer_agg %>%
-  select(-substrate) %>%
-  distinct() %>%
-  count(n_hok_2000_2019, name = "Number of species")
-
-
-
+  pivot_longer(cols = starts_with("n_hok")) %>%
+  mutate(value_binned = cut_number(value, n = 5)) %>%
+  count(phylum, name, value_binned) %>%
+  kable()
 ```
 
 
