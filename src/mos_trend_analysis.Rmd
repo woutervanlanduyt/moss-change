@@ -606,34 +606,86 @@ stanvars <- stanvar(scode = stan_funs, block = "functions")
 ```
 
 
+```{r format-data-analysis}
+analyse_data_weights <- analyse_data_telfer_agg
+  
+analyse_data_long_weights <-  analyse_data_weights %>%
+  pivot_longer(cols = c(n_hok_1980_1999, n_hok_2000_2019), 
+               names_to = "periode",
+               names_prefix = "n_hok_",
+               values_to = "n_hok") %>%
+  select(-n_hok_tot_1980_1999, -starts_with("prop")) %>%
+  rename(n_hok_tot = n_hok_tot_2000_2019) %>%
+  relocate(periode, n_hok, .before = n_hok_tot) 
+  
 
+```
 
-```{r full-model}
-alt_telfer <- brm(n_hok_2000_2019 | vint(n_hok_tot_2000_2019) ~ 
-                    qlogis(n_hok_1980_1999/n_hok_tot_1980_1999)
-                  + phylum 
-                  + qlogis(n_hok_1980_1999/n_hok_tot_1980_1999):phylum 
-                  + (
-                  + ell_l
-                  #+ ell_r
-                  + ell_n
-                  + ell_f
-                  + ell_t) * phylum 
-                  + (1 + phylum || substrate) #no correlations modeled (if included, estimate was -1 to +1)
+```{r full-model-correct}
+m_full <- brm(n_hok | vint(n_hok_tot) + weights(wei) ~ 
+                periode
+              + phylum 
+              + periode:phylum 
+              + ell_l
+              + ell_n
+              + ell_f
+              + ell_t
+              + ell_l:periode
+              + ell_n:periode
+              + ell_f:periode
+              + ell_t:periode
+              + ell_l:phylum
+              + ell_n:phylum
+              + ell_f:phylum
+              + ell_t:phylum
+              + ell_l:phylum:periode
+              + ell_n:phylum:periode
+              + ell_f:phylum:periode
+              + ell_t:phylum:periode
+              + (1 + phylum + periode + phylum:periode || substrate)
+              + (1 | taxon_id_parent)
                   , 
     family = beta_binomial2,
     stanvars = stanvars,
-    data = analyse_data_telfer_agg,
-    file = "stanmodel_alt_telfer",
+    data = analyse_data_long_weights,
+    file = "stanmodel_m_full",
     file_refit = "on_change",
     save_pars = save_pars(all = TRUE),
     silent = 2,
     cores = 4)
+
+```
+
+
+
+```{r full-model}
+alt_telfer <- brm(n_hok_2000_2019 | vint(n_hok_tot_2000_2019) + weights(wei) ~ 
+                    qlogis((n_hok_1980_1999+0.5)/(n_hok_tot_1980_1999+1))
+                  + phylum 
+                  + qlogis((n_hok_1980_1999+0.5)/(n_hok_tot_1980_1999+1)):phylum 
+                  + ell_l
+                  + ell_n
+                  + ell_f
+                  + ell_t
+                  + ell_l:phylum
+                  + ell_n:phylum
+                  + ell_f:phylum
+                  + ell_t:phylum
+                  + (1 + phylum || substrate)
+                  , 
+                  family = beta_binomial2,
+                  stanvars = stanvars,
+                  data = analyse_data_long_weights,
+                  file = "stanmodel_alt_telfer",
+                  file_refit = "on_change",
+                  save_pars = save_pars(all = TRUE),
+                  silent = 2,
+                  cores = 4)
 ```
 
 
 ```{r}
-expose_functions(alt_telfer, vectorize = TRUE)
+expose_functions(m_full, vectorize = TRUE)
 
 log_lik_beta_binomial2 <- function(i, prep) {
   mu <- prep$dpars$mu[, i]
@@ -656,6 +708,81 @@ posterior_epred_beta_binomial2 <- function(prep) {
   trials <- matrix(trials, nrow = nrow(mu), ncol = ncol(mu), byrow = TRUE)
   mu * trials
 }
+```
+
+```{r create-conditions}
+create_conditions <- function(x, vars, ...) {
+    vars <- rev(as.character(vars))
+    if (!is.data.frame(x) && "data" %in% names(x)) {
+        x <- x$data
+    }
+    x <- as.data.frame(x)
+    out <- brms:::named_list(vars)
+    for (v in vars) {
+        tmp <- get(v, x)
+        if (brms:::is_like_factor(tmp)) {
+            tmp <- levels(as.factor(tmp))
+        }
+        else {
+            tmp <- mean(tmp, na.rm = TRUE)
+        }
+        out[[v]] <- tmp
+    }
+    out <- rev(expand.grid(out))
+    #out$n_hok_tot_2000_2019 <- 1
+    out$cond__ <- rows2labels(out, ...)
+    out
+}
+```
+
+
+```{r test-m-full-predictions}
+
+conditional_effects(m_full, "ell_l:periode", 
+                    conditions = make_conditions(m_full, "phylum"))
+
+conditional_effects(m_full, "ell_n:periode", 
+                    conditions = make_conditions(m_full, "phylum"))
+
+conditional_effects(m_full, "ell_f:periode", 
+                    conditions = make_conditions(m_full, "phylum"))
+
+conditional_effects(m_full, "ell_t:periode", 
+                    conditions = make_conditions(m_full, "phylum"))
+
+# posterior predictions period 1 and 2
+# period 1 / period 2
+
+nd_1 <- create_conditions(m_full,
+                        vars = c("ell_n", "ell_f", "ell_t")) %>%
+  select(-cond__) %>%
+  mutate(phylum = "Bryophyta",
+         periode = "1980_1999",
+         taxon_id_parent = NA,
+         substrate = NA,
+         n_hok_tot = 228 ) %>%
+  expand_grid(ell_l = c(1:9))
+
+nd_2 <- create_conditions(m_full,
+                        vars = c("ell_n", "ell_f", "ell_t")) %>%
+  select(-cond__) %>%
+  mutate(phylum = "Bryophyta",
+         periode = "2000_2019",
+         taxon_id_parent = NA,
+         substrate = NA,
+         n_hok_tot = 228 ) %>%
+  expand_grid(ell_l = c(1:9))
+
+nd <- bind_rows(nd_1, nd_2)
+
+pep_1 <- posterior_linpred(m_full, newdata = nd, re_formula = NULL)
+nd %>% 
+  bind_cols(as_tibble(t(pep_1))) %>% pivot_longer(starts_with("V")) %>%
+  pivot_wider(id_cols = NULL, names_from = periode, values_from = value) %>%
+  mutate(diff = `2000_2019` - `1980_1999`) %>%
+  group_by(ell_l) %>%
+  summarise(mean_cl_boot(exp(diff))) 
+
 ```
 
 
@@ -941,30 +1068,6 @@ pp_data_ld <- bind_rows(
 
 ### Y-scale = expected number of occurrences (out of 228 grid cells)
 
-```{r}
-create_conditions <- function (x, vars, ...) {
-    vars <- rev(as.character(vars))
-    if (!is.data.frame(x) && "data" %in% names(x)) {
-        x <- x$data
-    }
-    x <- as.data.frame(x)
-    out <- brms:::named_list(vars)
-    for (v in vars) {
-        tmp <- get(v, x)
-        if (brms:::is_like_factor(tmp)) {
-            tmp <- levels(as.factor(tmp))
-        }
-        else {
-            tmp <- mean(tmp, na.rm = TRUE)
-        }
-        out[[v]] <- tmp
-    }
-    out <- rev(expand.grid(out))
-    #out$n_hok_tot_2000_2019 <- 1
-    out$cond__ <- rows2labels(out, ...)
-    out
-}
-```
 
 
 
