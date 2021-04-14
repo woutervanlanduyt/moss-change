@@ -620,41 +620,6 @@ analyse_data_long_weights <-  analyse_data_telfer_agg %>%
 
 ```
 
-```{r full-model-correct}
-m_full <- brm(n_hok | vint(n_hok_tot) + weights(wei) ~ 
-                periode
-              + phylum 
-              + periode:phylum 
-              + ell_l
-              + ell_n
-              + ell_f
-              + ell_t
-              + ell_l:periode
-              + ell_n:periode
-              + ell_f:periode
-              + ell_t:periode
-              + ell_l:phylum
-              + ell_n:phylum
-              + ell_f:phylum
-              + ell_t:phylum
-              + ell_l:phylum:periode
-              + ell_n:phylum:periode
-              + ell_f:phylum:periode
-              + ell_t:phylum:periode
-              + (1 + phylum + periode + phylum:periode || substrate)
-              + (1 | taxon_id_parent)
-                  , 
-    family = beta_binomial2,
-    stanvars = stanvars,
-    data = analyse_data_long_weights,
-    file = "stanmodel_m_full",
-    file_refit = "on_change",
-    save_pars = save_pars(all = TRUE),
-    silent = 2,
-    cores = 4)
-
-```
-
 
 
 ```{r full-model}
@@ -737,6 +702,38 @@ create_conditions <- function(x, vars, ...) {
 ```
 
 
+```{r full-model-long-format, eval=FALSE}
+m_full <- brm(n_hok | vint(n_hok_tot) + weights(wei) ~ 
+              + ell_l
+              + ell_n
+              + ell_f
+              + ell_t
+              + ell_l:periode
+              + ell_n:periode
+              + ell_f:periode
+              + ell_t:periode
+              + ell_l:phylum
+              + ell_n:phylum
+              + ell_f:phylum
+              + ell_t:phylum
+              + ell_l:phylum:periode
+              + ell_n:phylum:periode
+              + ell_f:phylum:periode
+              + ell_t:phylum:periode
+              + (1 + phylum + periode + phylum:periode || substrate)
+              + (1 | taxon_id_parent)
+                  , 
+    family = beta_binomial2,
+    stanvars = stanvars,
+    data = analyse_data_long_weights,
+    file = "stanmodel_m_full",
+    file_refit = "on_change",
+    save_pars = save_pars(all = TRUE),
+    silent = 2,
+    cores = 4)
+
+```
+
 ```{r test-m-full-predictions}
 
 conditional_effects(m_full, "ell_l:periode", 
@@ -787,6 +784,12 @@ nd %>%
 ```
 
 
+
+# Results
+
+
+## Model selection
+
 ```{r model-selection, message=FALSE, warning=FALSE}
 alt_telfer_2a <- update(
   alt_telfer, 
@@ -826,10 +829,6 @@ loo1 <- loo(alt_telfer, alt_telfer_2a, alt_telfer_2b)
 ```
 
 
-# Results
-
-
-## Model selection
 
 ```{r loo, warning=FALSE}
 loo1$diffs %>%
