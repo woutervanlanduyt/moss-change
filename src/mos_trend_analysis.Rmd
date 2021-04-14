@@ -529,26 +529,30 @@ include_graphics("figure_1.jpg")
 ```
 
 
-This resulted in 224 grid cells prospected in both periods.
+This resulted in 227 grid cells prospected in both periods.
 In these selected grid cells 35648 bryophyte observations (expressed as unique species per year and per 16 km² grid) were done in the first period and 45236 in the second period.
-To correct for potential changes in survey effort within those grids we used a relative change index as proposed by @telfer2002, with slight modifications.
+To correct for potential changes in survey effort within those grids the number of occupied grid cells in the second period was modeled as a function of the number of occupied grid cells in the first period so that effects of other explanatory variables could be interpreted relative to the change in survey effort.
+The conceptual idea comes from @telfer2002, but the technical implementation that we followed is different from the original proposal.
 
-This method assumes that during the two surveys recorders attempted to observe as many species as possible in each grid cell.
+The method assumes that during the two surveys recorders attempted to observe as many species as possible in each grid cell.
+The surveyors in both periods looked for liverworths and mosses and we therefor did not consider survey effort to differ between both phyla. 
 The size of the distribution area of individual species in a given period, i.e., the number of 16 km² grid cells where the species was observed, was expressed as a proportion of the total number of grid cells studied during that period.
-To summarise the changes in distribution area for all species, we modeled the number of occupied 16 km² squares in the second survey (out of the total number of 16 km² squares considered, i.e. proportional data) as a function of the logit-transformed proportion in the first survey (baseline) and covariates (phylum, substrate and Ellenberg values).
-Substrate effects were modeled for each phylum separately as random effects coming from a normal distribution with mean zero and an estimated standard deviation.
+To summarise the changes in distribution area for all species, we modeled the number of occupied 16 km² squares in the second survey (out of the total number of 16 km² squares considered, i.e. proportional data) as a function of the logit-transformed proportion in the first survey (baseline) and covariates (phylum, substrate and Ellenberg values for light, moisture, nitrogen and temperature).
+Substrate effects (11 levels) were modeled for each phylum separately as random effects coming from a normal distribution with mean zero and an estimated standard deviation.
+A species could be associated with more than substrate type.
+If that was the case, a weighting factor (one divided by the number of substrate types) was used to ensure that each species in a given period has equal weight in the analysis (if this is not done, confidence interval would be too narrow and estimates could be biased).
 Because the counts were overdispersed (variance larger than Binomial distribution), a beta-binomial distribution was used to account for overdispersion and a logit-link was used to link the proportions to the linear predictor with the following model equation:
 
 
 
 $$
-g(\mu_{i,s2}) = (\beta_0 + \beta_1\log\frac{\mu_{i,s1}}{1-\mu_{i,s1}} + \beta_L\text{ell}_L + \dots)*\text{phylum}_k + \mathbf{b}_{o,j} + \mathbf{b}_{1,j}\text{phylum}_k
+g(\mu_{i,s2}) = \beta_0 + \beta_1\log\frac{\mu_{i,s1}}{1-\mu_{i,s1}} + (\beta_L\text{ell}_L + \beta_F\text{ell}_F + \beta_N\text{ell}_N + \beta_T\text{ell}_T)\text{phylum}_k + \mathbf{b}_{o,j} + \mathbf{b}_{1,j}\text{phylum}_k
 $$
 where:
 
 $$
 \begin{aligned}
-\mu_{i,s2} \equiv \mathbf{E}(Y_{i,s2}|\text{trials},\mathbf{b})&& \text{expected value}\\
+\mu_{i,s2} \equiv \mathbf{E}(Y_{i,s2}|\text{trials, weights},\mathbf{b})&& \text{expected value}\\
 g(\mu_{i,s2}) = \log\frac{\mu_{i,s2}}{1-\mu_{i,s2}} && \text{logit-link} \\
 Y_{i,s2} \sim \text{BetaBinomial}(\mu_{i,s2}, \phi_{i,s2}) && \text{Beta-Binomial distribution}\\
 \begin{bmatrix}\mathbf{b}_{o,j}\\ \mathbf{b}_{1,j}\end{bmatrix}\sim N(0,\Sigma) && \text{random intercept and slope}\\
@@ -558,9 +562,10 @@ $$
 
 
 
-Species that occurred in less than five 16 km² grid cells in the first period were omitted form the analyses.
-We also used only species that were present in both periods. 
-
+All species were included also those that occurred in less than five 16 km² grid cells in the first period.
+In @telfer2012, these species were removed, but our model diagnostics showed that they could be included.
+To avoid calculating the log of zero, the proportion of occupied grid cells in the first period, $\mu_{i,s1}$ was calculated as $(n_{i, s1}+0.5)/(n_{\text{tot}}+1)$.
+This transformation is not necessary for the response variable because the beta-binomial accommodates zeroes.
 
 A Bayesian hierarchical modeling procedure was used to calculate the posterior distribution for these parameters [@burkner2017] and we assumed non-informative priors.
 
@@ -573,15 +578,6 @@ The simplest model with the highest predictive accuracy based on leave-one-out c
 The Ellenberg terms are in principle ordinal values.
 In an exploratory phase, we modeled these terms as monotonic effects [@burkner2020], but the results reassured us that we could treat the Ellenberg values as continuous values.
 
-After rearranging the model equation (for one phylum) and exponentiating the linear predictor, ignoring all random effects, we obtain the following odds-ratio:
-
-$$
-\frac{Odds_{\mu_{i,s2}}}{Odds^{\beta_1}_{\mu_{i,s1}}} = \exp(\beta_0 + \beta_L\text{ell}_L + \dots)
-$$
-which allows us to predict the effect of Ellenberg values on the relative increase or decrease of the Bryophytes.
-
-In a similar way, substrate random effects are calculated from the posterior linear predictor, conditional on Ellenberg values fixed at their median values.
-@gelman2012 point out that no correction for multiple comparisons are necessary when substrate effects are calculated in this way.
 
 All analyses were done using the R language for statistical computing [@rcoreteam2020].
 
@@ -904,7 +900,11 @@ conditions3 <- create_conditions(
 (ref:plot-epred) Estimated total number of occupied cells. The total number of grid cells in both periods equals 228. Expectations and 95% confidence bounds or intervals are given. These expectations are conditional on `r conditions0$cond__` for variables other than the one on the x-axis (held constant to mean value). The black point ranges represent the overall effect for both phylae conditional on all other variables and can be used as a reference across all figures. (a) Change in recording probability. Black line: line of no change. (b) Effect of substrate on occurrence of mosses. (c) Effect of Ellenberg nitrogen values on occurrence of mosses. (d) Effect of Ellenberg moisture values on occurrence of mosses. 
 
 
-Figure \@ref(fig:plot-epred)
+Figure \@ref(fig:plot-epred):
+
+Substrate random effects are calculated from the posterior linear predictor, conditional on Ellenberg values and the number of occupied grid cells fixed at their mean values.
+@gelman2012 point out that no correction for multiple comparisons are necessary when substrate effects are calculated in this way.
+
 
 ```{r plot-epred, fig.cap='(ref:plot-epred)', fig.height = 175/25.4}
 
