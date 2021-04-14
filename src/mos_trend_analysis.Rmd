@@ -607,9 +607,8 @@ stanvars <- stanvar(scode = stan_funs, block = "functions")
 
 
 ```{r format-data-analysis}
-analyse_data_weights <- analyse_data_telfer_agg
-  
-analyse_data_long_weights <-  analyse_data_weights %>%
+
+analyse_data_long_weights <-  analyse_data_telfer_agg %>%
   pivot_longer(cols = c(n_hok_1980_1999, n_hok_2000_2019), 
                names_to = "periode",
                names_prefix = "n_hok_",
@@ -659,10 +658,12 @@ m_full <- brm(n_hok | vint(n_hok_tot) + weights(wei) ~
 
 
 ```{r full-model}
+# assuming change in recording effort is not different for phylums
+# thus no main effect for phylum and no interaction of phylum with baseline period
+# interactions of continuous covariates with phylum without main effect of phylum is possible
+options(contrasts = c('contr.sum', 'contr.poly'))
 alt_telfer <- brm(n_hok_2000_2019 | vint(n_hok_tot_2000_2019) + weights(wei) ~ 
                     qlogis((n_hok_1980_1999+0.5)/(n_hok_tot_1980_1999+1))
-                  + phylum 
-                  + qlogis((n_hok_1980_1999+0.5)/(n_hok_tot_1980_1999+1)):phylum 
                   + ell_l
                   + ell_n
                   + ell_f
@@ -675,7 +676,7 @@ alt_telfer <- brm(n_hok_2000_2019 | vint(n_hok_tot_2000_2019) + weights(wei) ~
                   , 
                   family = beta_binomial2,
                   stanvars = stanvars,
-                  data = analyse_data_long_weights,
+                  data = analyse_data_telfer_agg,
                   file = "stanmodel_alt_telfer",
                   file_refit = "on_change",
                   save_pars = save_pars(all = TRUE),
@@ -685,7 +686,7 @@ alt_telfer <- brm(n_hok_2000_2019 | vint(n_hok_tot_2000_2019) + weights(wei) ~
 
 
 ```{r}
-expose_functions(m_full, vectorize = TRUE)
+expose_functions(alt_telfer, vectorize = TRUE)
 
 log_lik_beta_binomial2 <- function(i, prep) {
   mu <- prep$dpars$mu[, i]
@@ -787,44 +788,40 @@ nd %>%
 
 
 ```{r model-selection, message=FALSE, warning=FALSE}
-alt_telfer_2a <- update(alt_telfer, 
+alt_telfer_2a <- update(
+  alt_telfer, 
+  .~.
+  - ell_t:phylum
+  - ell_l:phylum
+  , file = "stanmodel_alt_telfer_2a"
+  , file_refit = "on_change"
+  , save_pars = save_pars(all = TRUE)
+  , cores = 4)
+
+
+
+alt_telfer_2b <- update(alt_telfer_2a, 
                        .~. 
-                       - qlogis(n_hok_1980_1999/n_hok_tot_1980_1999):phylum 
-                      , file = "stanmodel_alt_telfer_2a"
-                      , file_refit = "on_change"
-                      , save_pars = save_pars(all = TRUE)
-                      , cores = 4)
-
-
-
-alt_telfer_2b <- update(alt_telfer, 
-                       .~. 
-                       - ell_l:phylum 
-                       - ell_n:phylum
-                       - ell_f:phylum 
-                       - qlogis(n_hok_1980_1999/n_hok_tot_1980_1999):phylum 
+                       - ell_t
+                       - ell_l
                       , file = "stanmodel_alt_telfer_2b"
                       , file_refit = "on_change"
                       , save_pars = save_pars(all = TRUE)
                       , cores = 4)
 
-alt_telfer_3 <- update(alt_telfer, 
-                       .~. 
-                       - ell_l 
-                       - ell_l:phylum 
-                       - ell_n 
-                       - ell_n:phylum
-                       - ell_f:phylum 
-                       - qlogis(n_hok_1980_1999/n_hok_tot_1980_1999):phylum 
-                      , file = "stanmodel_alt_telfer_3"
-                      , file_refit = "on_change"
-                      , save_pars = save_pars(all = TRUE)
-                       , cores = 4)
+
+alt_telfer <- add_criterion(alt_telfer, "loo", 
+                            moment_match = TRUE, overwrite = TRUE)
+
+alt_telfer_2a <- add_criterion(alt_telfer_2a, "loo", 
+                            moment_match = TRUE, overwrite = TRUE)
+
+alt_telfer_2b <- add_criterion(alt_telfer_2b, "loo", 
+                            moment_match = TRUE, overwrite = TRUE)
 
 
-loo1 <- loo(alt_telfer, alt_telfer_2a, alt_telfer_2b, alt_telfer_3, 
-            save_psis = TRUE,
-            moment_match = TRUE) 
+
+loo1 <- loo(alt_telfer, alt_telfer_2a, alt_telfer_2b) 
 # the elpd_diff is more than 2 times larger than its standard erro 
 ```
 
@@ -837,7 +834,7 @@ loo1 <- loo(alt_telfer, alt_telfer_2a, alt_telfer_2b, alt_telfer_3,
 ```{r loo, warning=FALSE}
 loo1$diffs %>%
   as.data.frame() %>%
-  kable(caption = "Results of model comparisons. First row contains the model with the highest predictive accuracy. The best model contained an effect for Ellenberg moisture and a phylum specific effect for Ellenberg temperature in addition to the effects dealing with sampling effort and substrate.",
+  kable(caption = "Results of model comparisons. First row contains the model with the highest predictive accuracy. The best model contained an effect for Ellenberg moisture and a phylum specific effect for Ellenberg nitrogen in addition to the effects dealing with sampling effort and substrate.",
         digits = 2)
 ```
 
@@ -845,20 +842,20 @@ loo1$diffs %>%
 ## Model diagnostics
 
 ```{r model-diagnostics, echo = TRUE}
-plot(loo1$loos$alt_telfer_3, label_points = TRUE)
+plot(loo1$loos$alt_telfer_2b, label_points = TRUE)
 
 ```
 
 
 ```{r}
-pp_check(alt_telfer_3, type = "dens_overlay")
+pp_check(alt_telfer_2b, type = "dens_overlay")
 ```
 
 
 ## Model summary of best predictive model
 
 ```{r}
-broom.mixed::tidy(alt_telfer_3) %>%
+broom.mixed::tidy(alt_telfer_2b) %>%
   kable()
 ```
 
@@ -1074,28 +1071,27 @@ pp_data_ld <- bind_rows(
 
 ```{r conditions}
 conditions0 <- create_conditions(
-  x = alt_telfer,
-  vars = c("n_hok_1980_1999", "ell_f", "ell_t"))
+  x = alt_telfer_2b,
+  vars = c("n_hok_1980_1999", "ell_f", "ell_n")) %>%
+  mutate(phylum = NA)
 
 conditions1 <- create_conditions(
-  x = alt_telfer_3,
-  vars = c("ell_f", "ell_t")
-)
+  x = alt_telfer_2b,
+  vars = c("ell_f", "ell_n")
+  ) %>%
+  mutate(phylum = NA)
+
 
 conditions2 <- create_conditions(
-  x = alt_telfer_3,
-  vars = c("n_hok_1980_1999", "ell_t")
-)
-
-conditions3 <- create_conditions(
-  x = alt_telfer_3,
+  x = alt_telfer_2b,
   vars = c("n_hok_1980_1999", "ell_f")
 )
 
-conditions4 <- create_conditions(
-  x = alt_telfer_3,
-  vars = c("n_hok_1980_1999", "ell_f", "ell_t")
+conditions3 <- create_conditions(
+  x = alt_telfer_2b,
+  vars = c("n_hok_1980_1999", "ell_n")
 )
+
 
 ```
 
@@ -1107,17 +1103,33 @@ Figure \@ref(fig:plot-epred)
 
 ```{r plot-epred, fig.cap='(ref:plot-epred)', fig.height = 175/25.4}
 
-p0 <- conditional_effects(alt_telfer_3, 
-                    effects = "phylum",
-                    conditions = conditions0)
+pep0 <- posterior_epred(alt_telfer_2b, 
+                        re_formula = NA,
+                        newdata = conditions0 %>% 
+                          mutate(substrate = NA,
+                                 n_hok_tot_2000_2019 = 227, 
+                                 n_hok_tot_1980_1999 = 227
+                          ))
+pep0_conditions0 <- conditions0 %>%
+  mutate(estimate__ = mean(pep0),
+         lower__ = quantile(pep0, probs = 0.025),
+         upper__  = quantile(pep0, probs = 0.975))
 
-p1 <- conditional_effects(alt_telfer_3, 
-                    effects = "n_hok_1980_1999:phylum",
+
+
+p1 <- conditional_effects(alt_telfer_2b, 
+                    effects = "n_hok_1980_1999",
                     conditions = conditions1)
 
-p1 <- plot(p1, plot = FALSE, points = TRUE)[[1]] + 
+p1 <- plot(p1, plot = FALSE, points = FALSE)[[1]] + 
+  geom_point(data = alt_telfer_2b$data,
+             aes(x = n_hok_1980_1999 + 0.5, 
+                 y = n_hok_2000_2019,
+                 colour = phylum),
+             alpha = 0.3,
+             inherit.aes = FALSE) +
   geom_abline() +
-  geom_pointrange(data = p0$phylum, 
+  geom_pointrange(data = pep0_conditions0, 
                   aes(x = n_hok_1980_1999, 
                       y = estimate__,
                       ymin = lower__,
@@ -1126,13 +1138,13 @@ p1 <- plot(p1, plot = FALSE, points = TRUE)[[1]] +
   labs(y = "Number of occupied grid cells\n(2000 - 2019)",
        x = "Number of occupied grid cells (1980 - 1999)")
 
-p2 <- conditional_effects(alt_telfer_3, 
-                    effects = c("ell_f:phylum"),
+p2 <- conditional_effects(alt_telfer_2b, 
+                    effects = c("ell_n:phylum"),
                     conditions = conditions2)
 
 p2 <- plot(p2, plot = FALSE, points = FALSE)[[1]] +
-  geom_pointrange(data = p0$phylum, 
-                  aes(x = ell_f, 
+  geom_pointrange(data = pep0_conditions0, 
+                  aes(x = ell_n, 
                       y = estimate__,
                       ymin = lower__,
                       ymax = upper__), 
@@ -1141,16 +1153,16 @@ p2 <- plot(p2, plot = FALSE, points = FALSE)[[1]] +
     breaks = function(x) 
       unique(floor(pretty(seq(0, (max(x) + 1) * 1.1))))) +
   labs(y = "Number of occupied grid cells\n(2000 - 2019)",
-       x = "Ellenberg moisture values") +
+       x = "Ellenberg nitrogen values") +
   theme(legend.position = "none")
 
-p3 <- conditional_effects(alt_telfer_3, 
-                    effects = c("ell_t:phylum"),
+p3 <- conditional_effects(alt_telfer_2b, 
+                    effects = c("ell_f:phylum"),
                     conditions = conditions3)
 
 p3 <- plot(p3, plot = FALSE, points = FALSE)[[1]] + 
-  geom_pointrange(data = p0$phylum, 
-                  aes(x = ell_t, 
+  geom_pointrange(data = pep0_conditions0, 
+                  aes(x = ell_f, 
                       y = estimate__,
                       ymin = lower__,
                       ymax = upper__), 
@@ -1159,17 +1171,18 @@ p3 <- plot(p3, plot = FALSE, points = FALSE)[[1]] +
     breaks = function(x) 
       unique(floor(pretty(seq(0, (max(x) + 1) * 1.1))))) +
   labs(y = "Number of occupied grid cells (2000 - 2019)",
-       x = "Ellenberg temperature values") +
+       x = "Ellenberg moisture values") +
   theme(axis.title.y = element_blank(),
         legend.position = "none")
 
-p4 <- conditional_effects(alt_telfer_3, 
+
+p4 <- conditional_effects(alt_telfer_2b, 
                           re_formula = NULL,
                           effects = c("substrate:phylum"),
-                          conditions = conditions4)
+                          conditions = conditions0)
 
 p4 <- plot(p4, plot = FALSE, points = FALSE)[[1]] + 
-  geom_pointrange(data = p0$phylum %>%
+  geom_pointrange(data = pep0_conditions0 %>%
                   mutate(substrate = "overall"), 
                   aes(x = substrate, 
                       y = estimate__,
