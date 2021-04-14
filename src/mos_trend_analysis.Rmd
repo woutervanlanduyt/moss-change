@@ -704,6 +704,8 @@ create_conditions <- function(x, vars, ...) {
 
 ```{r full-model-long-format, eval=FALSE}
 m_full <- brm(n_hok | vint(n_hok_tot) + weights(wei) ~ 
+                phylum
+              + periode
               + ell_l
               + ell_n
               + ell_f
@@ -734,7 +736,7 @@ m_full <- brm(n_hok | vint(n_hok_tot) + weights(wei) ~
 
 ```
 
-```{r test-m-full-predictions}
+```{r test-m-full-predictions, eval=FALSE}
 
 conditional_effects(m_full, "ell_l:periode", 
                     conditions = make_conditions(m_full, "phylum"))
@@ -899,7 +901,7 @@ conditions3 <- create_conditions(
 ```
 
 
-(ref:plot-epred) Estimated total number of occupied cells. The total number of grid cells in both periods equals 228. Expectations and 95% confidence bounds or intervals are given. These expectations are conditional on `r conditions0$cond__` for variables other than the one on the x-axis (held constant to mean value). The black point ranges represent the overall effect for both phylae conditional on all other variables and can be used as a reference across all figures. (a) Change in recording probability. Black line: line of no change. (b) Effect of substrate on occurrence of mosses. (c) Effect of Ellenberg moisture values on occurrence of mosses. No interaction effect was modeled. (d) Effect of Ellenberg temperature values on occurrence of mosses. 
+(ref:plot-epred) Estimated total number of occupied cells. The total number of grid cells in both periods equals 228. Expectations and 95% confidence bounds or intervals are given. These expectations are conditional on `r conditions0$cond__` for variables other than the one on the x-axis (held constant to mean value). The black point ranges represent the overall effect for both phylae conditional on all other variables and can be used as a reference across all figures. (a) Change in recording probability. Black line: line of no change. (b) Effect of substrate on occurrence of mosses. (c) Effect of Ellenberg nitrogen values on occurrence of mosses. (d) Effect of Ellenberg moisture values on occurrence of mosses. 
 
 
 Figure \@ref(fig:plot-epred)
