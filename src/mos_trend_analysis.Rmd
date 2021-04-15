@@ -563,7 +563,7 @@ $$
 
 
 All species were included also those that occurred in less than five 16 km² grid cells in the first period.
-In @telfer2012, these species were removed, but our model diagnostics showed that they could be included.
+In @telfer2002, these species were removed, but our model diagnostics showed that they could be included.
 To avoid calculating the log of zero, the proportion of occupied grid cells in the first period, $\mu_{i,s1}$ was calculated as $(n_{i, s1}+0.5)/(n_{\text{tot}}+1)$.
 This transformation is not necessary for the response variable because the beta-binomial accommodates zeroes.
 
@@ -812,13 +812,13 @@ alt_telfer_2b <- update(alt_telfer_2a,
 
 
 alt_telfer <- add_criterion(alt_telfer, "loo", 
-                            moment_match = TRUE, overwrite = TRUE)
+                            moment_match = TRUE, overwrite = FALSE)
 
 alt_telfer_2a <- add_criterion(alt_telfer_2a, "loo", 
-                            moment_match = TRUE, overwrite = TRUE)
+                            moment_match = TRUE, overwrite = FALSE)
 
 alt_telfer_2b <- add_criterion(alt_telfer_2b, "loo", 
-                            moment_match = TRUE, overwrite = TRUE)
+                            moment_match = TRUE, overwrite = FALSE)
 
 
 
@@ -897,7 +897,7 @@ conditions3 <- create_conditions(
 ```
 
 
-(ref:plot-epred) Estimated total number of occupied cells. The total number of grid cells in both periods equals 228. Expectations and 95% confidence bounds or intervals are given. These expectations are conditional on `r conditions0$cond__` for variables other than the one on the x-axis (held constant to mean value). The black point ranges represent the overall effect for both phylae conditional on all other variables and can be used as a reference across all figures. (a) Change in recording probability. Black line: line of no change. (b) Effect of substrate on occurrence of mosses. (c) Effect of Ellenberg nitrogen values on occurrence of mosses. (d) Effect of Ellenberg moisture values on occurrence of mosses. 
+(ref:plot-epred) Estimated total number of occupied cells. The total number of grid cells in both periods equals 228. Expectations and 95% confidence bounds or intervals are given. These expectations are conditional on `r conditions0$cond__` for variables other than the one on the x-axis (held constant to mean value). The black point with 95% confidence ranges represents the overall effect conditional on all other variables and can be used as a reference across all figures. (a) Change in recording probability. Black line: line of no change. (b) Effect of substrate on occurrence of mosses. (c) Effect of Ellenberg nitrogen values on occurrence of mosses. (d) Effect of Ellenberg moisture values on occurrence of mosses. 
 
 
 Figure \@ref(fig:plot-epred):
