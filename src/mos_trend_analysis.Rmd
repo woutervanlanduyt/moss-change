@@ -812,13 +812,16 @@ alt_telfer_2b <- update(alt_telfer_2a,
 
 
 alt_telfer <- add_criterion(alt_telfer, "loo", 
-                            moment_match = TRUE, overwrite = FALSE)
+                            moment_match = FALSE, 
+                            overwrite = FALSE)
 
 alt_telfer_2a <- add_criterion(alt_telfer_2a, "loo", 
-                            moment_match = TRUE, overwrite = FALSE)
+                            moment_match = FALSE,
+                            overwrite = FALSE)
 
 alt_telfer_2b <- add_criterion(alt_telfer_2b, "loo", 
-                            moment_match = TRUE, overwrite = FALSE)
+                            moment_match = FALSE,
+                            overwrite = FALSE)
 
 
 
@@ -964,6 +967,11 @@ p2 <- plot(p2, plot = FALSE, points = FALSE)[[1]] +
 p3 <- conditional_effects(alt_telfer_2b, 
                     effects = c("ell_f:phylum"),
                     conditions = conditions3)
+
+# restrict range ell_f for Marchantiophyta to 4:11
+p3$`ell_f:phylum` <- p3$`ell_f:phylum` %>%
+  filter(!(phylum == "Marchantiophyta" & 
+             (ell_f < 4 | ell_f > 11)))
 
 p3 <- plot(p3, plot = FALSE, points = FALSE)[[1]] + 
   geom_pointrange(data = pep0_conditions0, 
