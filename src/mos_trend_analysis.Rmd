@@ -900,7 +900,7 @@ conditions3 <- create_conditions(
 ```
 
 
-(ref:plot-epred) Estimated total number of occupied cells. The total number of grid cells in both periods equals 228. Expectations and 95% confidence bounds or intervals are given. These expectations are conditional on `r conditions0$cond__` for variables other than the one on the x-axis (held constant to mean value). The black point with 95% confidence ranges represents the overall effect conditional on all other variables and can be used as a reference across all figures. (a) Change in recording probability. Black line: line of no change. (b) Effect of substrate on occurrence of mosses. (c) Effect of Ellenberg nitrogen values on occurrence of mosses. (d) Effect of Ellenberg moisture values on occurrence of mosses. 
+(ref:plot-epred) Estimated total number of occupied cells. The total number of grid cells in both periods equals 228. Expectations and 95% confidence bounds or intervals are given. These expectations are conditional on `r conditions0$cond__` for variables other than the one on the x-axis (held constant to mean value). The black point with 95% confidence ranges in (a) represents the overall effect conditional on all other variables and is the reference against which change is calculated in (b, c and d). Black lines: line of no change. (a) Change in recording probability. (b) Effect of substrate on occurrence of mosses. (c) Effect of Ellenberg nitrogen values on occurrence of mosses. (d) Effect of Ellenberg moisture values on occurrence of mosses. 
 
 
 Figure \@ref(fig:plot-epred):
@@ -944,29 +944,35 @@ p1 <- plot(p1, plot = FALSE, points = FALSE)[[1]] +
                       ymax = upper__), 
                 inherit.aes = FALSE) +
   labs(y = "Number of occupied grid cells\n(2000 - 2019)",
-       x = "Number of occupied grid cells (1980 - 1999)")
+       x = "Number of occupied grid cells (1980 - 1999)") +
+  theme(legend.title = element_blank())
+
+dt <- function(x) x - pep0_conditions0$estimate__
+idt <- function(x) x + pep0_conditions0$estimate__
 
 p2 <- conditional_effects(alt_telfer_2b, 
                     effects = c("ell_n:phylum"),
                     conditions = conditions2)
+p2[[1]] <- p2[[1]] %>%
+  mutate(across(c(estimate__, lower__, upper__), dt))
 
 p2 <- plot(p2, plot = FALSE, points = FALSE)[[1]] +
-  geom_pointrange(data = pep0_conditions0, 
-                  aes(x = ell_n, 
-                      y = estimate__,
-                      ymin = lower__,
-                      ymax = upper__), 
-                inherit.aes = FALSE) +
-  scale_x_continuous(
+  geom_hline(data = pep0_conditions0 %>%
+                mutate(estimate__ = dt(estimate__)), 
+             aes(yintercept = estimate__), 
+             inherit.aes = FALSE) +
+ scale_x_continuous(
     breaks = function(x) 
       unique(floor(pretty(seq(0, (max(x) + 1) * 1.1))))) +
-  labs(y = "Number of occupied grid cells\n(2000 - 2019)",
+  labs(y = "Change in number of\noccupied grid cells",
        x = "Ellenberg nitrogen values") +
   theme(legend.position = "none")
 
 p3 <- conditional_effects(alt_telfer_2b, 
                     effects = c("ell_f:phylum"),
                     conditions = conditions3)
+p3[[1]] <- p3[[1]] %>%
+  mutate(across(c(estimate__, lower__, upper__), dt))
 
 # restrict range ell_f for Marchantiophyta to 4:11
 p3$`ell_f:phylum` <- p3$`ell_f:phylum` %>%
@@ -974,49 +980,39 @@ p3$`ell_f:phylum` <- p3$`ell_f:phylum` %>%
              (ell_f < 4 | ell_f > 11)))
 
 p3 <- plot(p3, plot = FALSE, points = FALSE)[[1]] + 
-  geom_pointrange(data = pep0_conditions0, 
-                  aes(x = ell_f, 
-                      y = estimate__,
-                      ymin = lower__,
-                      ymax = upper__), 
-                inherit.aes = FALSE) +
+  geom_hline(data = pep0_conditions0 %>%
+                mutate(estimate__ = dt(estimate__)), 
+             aes(yintercept = estimate__), 
+             inherit.aes = FALSE) +
   scale_x_continuous(
     breaks = function(x) 
       unique(floor(pretty(seq(0, (max(x) + 1) * 1.1))))) +
-  labs(y = "Number of occupied grid cells (2000 - 2019)",
+  labs(y = "Change in number of\noccupied grid cells",
        x = "Ellenberg moisture values") +
-  theme(axis.title.y = element_blank(),
-        legend.position = "none")
+  theme(legend.position = "none")
 
 
 p4 <- conditional_effects(alt_telfer_2b, 
                           re_formula = NULL,
                           effects = c("substrate:phylum"),
                           conditions = conditions0)
+p4[[1]] <- p4[[1]] %>%
+  mutate(across(c(estimate__, lower__, upper__), dt))
 
 p4 <- plot(p4, plot = FALSE, points = FALSE)[[1]] + 
-  geom_pointrange(data = pep0_conditions0 %>%
-                  mutate(substrate = "overall"), 
-                  aes(x = substrate, 
-                      y = estimate__,
-                      ymin = lower__,
-                      ymax = upper__), 
-                inherit.aes = FALSE) +
+  geom_hline(data = pep0_conditions0%>%
+                mutate(estimate__ = dt(estimate__)), 
+             aes(yintercept = estimate__), 
+             inherit.aes = FALSE) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
         axis.title.x = element_blank(),
-        axis.title.y = element_blank(),
         legend.position = "none") +
-  labs(y = "Number of occupied grid cells (2000 - 2019)")
-
-
-
+  labs(y = "Change in number of\noccupied grid cells")
 
 p1 + p4 + p2 + p3 +
   plot_layout(widths = c(1.1, 1), guides = "collect") + 
   plot_annotation(tag_levels = "a") &
   theme(text = element_text(size = 9))
-
-
 ```
 
 
