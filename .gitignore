@@ -43,6 +43,7 @@ vignettes/*.pdf
 src/**/*_files/
 src/**/*.html
 
+*.rds
 
 # temp folder
 temp/
