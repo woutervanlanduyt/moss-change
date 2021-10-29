@@ -530,7 +530,7 @@ include_graphics("figure_1.jpg")
 
 
 This resulted in 227 grid cells prospected in both periods.
-In these selected grid cells 35648 bryophyte observations (expressed as unique species per year and per 16 km² grid) were done in the first period and 45236 in the second period.
+In these selected grid cells 35648 bryophyte observations (expressed as unique species per year and per 1 km² grid) were done in the first period and 45236 in the second period.
 To correct for potential changes in survey effort within those grids the number of occupied grid cells in the second period was modeled as a function of the number of occupied grid cells in the first period so that effects of other explanatory variables could be interpreted relative to the change in survey effort.
 The conceptual idea comes from @telfer2002, but the technical implementation that we followed is different from the original proposal.
 
@@ -1000,7 +1000,7 @@ p4[[1]] <- p4[[1]] %>%
   mutate(across(c(estimate__, lower__, upper__), dt))
 
 p4 <- plot(p4, plot = FALSE, points = FALSE)[[1]] + 
-  geom_hline(data = pep0_conditions0%>%
+  geom_hline(data = pep0_conditions0 %>%
                 mutate(estimate__ = dt(estimate__)), 
              aes(yintercept = estimate__), 
              inherit.aes = FALSE) +
