@@ -1,0 +1,524 @@
+id,scientific_name,rank,order,phylum,kingdom,genus,class,family
+42,"Gyroweisia tenuis W.P.Schimper, 1876",SPECIES,Pottiales,Bryophyta,Plantae,Gyroweisia,Bryopsida,Pottiaceae
+44,"Habrodon perpusillus Lindberg, 1863",SPECIES,Hypnales,Bryophyta,Plantae,Habrodon,Bryopsida,Leskeaceae
+46,"Hamatocaulis vernicosus Hedenäs, 1989",SPECIES,Hypnales,Bryophyta,Plantae,Hamatocaulis,Bryopsida,Amblystegiaceae
+53,"Hedwigia ciliata Palisot de Beauvois, 1805",SPECIES,Leucodontales,Bryophyta,Plantae,Hedwigia,Bryopsida,Hedwigiaceae
+54,"Hedwigia stellata Hedenäs, 1994",SPECIES,Leucodontales,Bryophyta,Plantae,Hedwigia,Bryopsida,Hedwigiaceae
+58,"Hennediella heimii Zander, 1993",SPECIES,Pottiales,Bryophyta,Plantae,Hennediella,Bryopsida,Pottiaceae
+60,"Herzogiella seligeri Iwatsuki, 1970",SPECIES,Hypnales,Bryophyta,Plantae,Herzogiella,Bryopsida,Hypnaceae
+65,Homalia trichomanoides (Hedw.) Brid.,SPECIES,Leucodontales,Bryophyta,Plantae,Homalia,Bryopsida,Neckeraceae
+68,Pallavicinia lyellii (Hook.) Carruth.,SPECIES,Metzgeriales,Marchantiophyta,Plantae,Pallavicinia,Jungermanniopsida,Pallaviciniacea
+77,Pellia endiviifolia (Dicks.) Dumort.,SPECIES,Fossombroniales,Marchantiophyta,Plantae,Pellia,Jungermanniopsida,Pelliacaea
+78,Pellia epiphylla (L.) Corda,SPECIES,Pelliales,Marchantiophyta,Plantae,Pellia,Jungermanniopsida,Pelliaceae
+79,Pellia neesiana (Gottsche) Limpr.,SPECIES,Pelliales,Marchantiophyta,Plantae,Pellia,Jungermanniopsida,Pelliaceae
+81,Phaeoceros carolinianus (Michx.) Prosk.,SPECIES,Notothyladales,Anthocerotophyta,Plantae,Phaeoceros,Anthocerotopsida,Notothyladaceae
+84,"Philonotis arnellii Husnot, 1890",SPECIES,Bryales,Bryophyta,Plantae,Philonotis,Bryopsida,Bartramiaceae
+85,Philonotis caespitosa Jur.,SPECIES,Bryales,Bryophyta,Plantae,Philonotis,Bryopsida,Bartramiaceae
+86,"Philonotis calcarea W.P.Schimper, 1856",SPECIES,Bryales,Bryophyta,Plantae,Philonotis,Bryopsida,Bartramiaceae
+87,"Philonotis fontana Bridel, 1827",SPECIES,Bryales,Bryophyta,Plantae,Philonotis,Bryopsida,Bartramiaceae
+88,"Philonotis marchica Bridel, 1827",SPECIES,Bryales,Bryophyta,Plantae,Philonotis,Bryopsida,Bartramiaceae
+91,"Physcomitrium eurystomum Sendtner, 1841",SPECIES,Funariales,Bryophyta,Plantae,Physcomitrium,Bryopsida,Funariaceae
+93,Acaulon muticum (Hedw.) Müll.Hal.,SPECIES,Pottiales,Bryophyta,Plantae,Acaulon,Bryopsida,Pottiaceae
+96,"Aloina aloides Kindberg, 1883",SPECIES,Pottiales,Bryophyta,Plantae,Aloina,Bryopsida,Pottiaceae
+97,"Aloina rigida Limpricht, 1888",SPECIES,Pottiales,Bryophyta,Plantae,Aloina,Bryopsida,Pottiaceae
+99,Amblyodon dealbatus (Sw. ex Hedw.) P.Beauv.,SPECIES,Bryales,Bryophyta,Plantae,Amblyodon,Bryopsida,Meesiaceae
+103,Amblystegium radicale (P.Beauv.) Schimp.,SPECIES,Hypnales,Bryophyta,Plantae,Amblystegium,Bryopsida,Amblystegiaceae
+104,"Amblystegium serpens W.P.Schimper, 1853",SPECIES,Hypnales,Bryophyta,Plantae,Amblystegium,Bryopsida,Amblystegiaceae
+115,Aneura maxima (Schiffn.) Steph.,SPECIES,Metzgeriales,Marchantiophyta,Plantae,Aneura,Jungermanniopsida,Aneuraceae
+116,Aneura pinguis (L.) Dumort.,SPECIES,Metzgeriales,Marchantiophyta,Plantae,Aneura,Jungermanniopsida,Aneuraceae
+121,"Anomodon attenuatus Hübener, 1833",SPECIES,Hypnales,Bryophyta,Plantae,Anomodon,Bryopsida,Thuidiaceae
+124,"Anomodon viticulosus W.J.Hooker & Taylor, 1818",SPECIES,Hypnales,Bryophyta,Plantae,Anomodon,Bryopsida,Thuidiaceae
+126,Anthoceros agrestis Paton,SPECIES,Anthocerotales,Anthocerotophyta,Plantae,Anthoceros,Anthocerotopsida,Anthocerotaceae
+127,Anthoceros caucasicus Steph.,SPECIES,Anthocerotales,Anthocerotophyta,Plantae,Anthoceros,Anthocerotopsida,Anthocerotaceae
+128,Anthoceros punctatus L.,SPECIES,Anthocerotales,Anthocerotophyta,Plantae,Anthoceros,Anthocerotopsida,Anthocerotaceae
+130,"Antitrichia curtipendula Bridel, 1819",SPECIES,Leucodontales,Bryophyta,Plantae,Antitrichia,Bryopsida,Leucodontaceae
+136,"Archidium alternifolium Mitten, 1851",SPECIES,Archidiales,Bryophyta,Plantae,Archidium,Bryopsida,Archidiaceae
+138,"Atrichum angustatum Bruch & W.P.Schimper, 1844",SPECIES,Polytrichales,Bryophyta,Plantae,Atrichum,Bryopsida,Polytrichaceae
+139,"Atrichum tenellum Bruch & W.P.Schimper, 1844",SPECIES,Polytrichales,Bryophyta,Plantae,Atrichum,Bryopsida,Polytrichaceae
+140,"Atrichum undulatum Palisot de Beauvois, 1805",SPECIES,Polytrichales,Bryophyta,Plantae,Atrichum,Bryopsida,Polytrichaceae
+142,"Aulacomnium androgynum Schwaegrichen, 1827",SPECIES,Bryales,Bryophyta,Plantae,Aulacomnium,Bryopsida,Aulacomniaceae
+143,"Aulacomnium palustre Schwaegrichen, 1827",SPECIES,Bryales,Bryophyta,Plantae,Aulacomnium,Bryopsida,Aulacomniaceae
+145,Barbilophozia attenuata (Mart.) Loeske,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Neoorthocaulis,Jungermanniopsida,Anastrophyllaceae
+146,Barbilophozia barbata (Schmidel ex Schreb.) Loeske,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Barbilophozia,Jungermanniopsida,Anastrophyllaceae
+147,Barbilophozia floerkei (F.Weber & D.Mohr) Loeske,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Neoorthocaulis,Jungermanniopsida,Anastrophyllaceae
+148,Barbilophozia hatcheri (A.Evans) Loeske,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Barbilophozia,Jungermanniopsida,Anastrophyllaceae
+151,"Barbula convoluta Hedwig, 1801",SPECIES,Pottiales,Bryophyta,Plantae,Barbula,Bryopsida,Pottiaceae
+152,"Barbula unguiculata Hedwig, 1801",SPECIES,Pottiales,Bryophyta,Plantae,Barbula,Bryopsida,Pottiaceae
+156,"Bartramia pomiformis Hedwig, 1801",SPECIES,Bryales,Bryophyta,Plantae,Bartramia,Bryopsida,Bartramiaceae
+158,Bazzania trilobata (L.) Gray,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Bazzania,Jungermanniopsida,Lepidoziaceae
+161,Blasia pusilla L.,SPECIES,Blasiales,Marchantiophyta,Plantae,Blasia,Marchantiopsida,Blasiaceae
+165,"Brachythecium albicans W.P.Schimper, 1853",SPECIES,Hypnales,Bryophyta,Plantae,Brachythecium,Bryopsida,Brachytheciaceae
+167,"Brachythecium glareosum W.P.Schimper, 1853",SPECIES,Hypnales,Bryophyta,Plantae,Brachythecium,Bryopsida,Brachytheciaceae
+168,"Brachythecium mildeanum W.P.Schimper, 1862",SPECIES,Hypnales,Bryophyta,Plantae,Brachythecium,Bryopsida,Brachytheciaceae
+174,"Brachythecium rivulare W.P.Schimper, 1853",SPECIES,Hypnales,Bryophyta,Plantae,Brachythecium,Bryopsida,Brachytheciaceae
+175,"Brachythecium rutabulum W.P.Schimper, 1853",SPECIES,Hypnales,Bryophyta,Plantae,Brachythecium,Bryopsida,Brachytheciaceae
+176,"Brachythecium salebrosum W.P.Schimper, 1853",SPECIES,Hypnales,Bryophyta,Plantae,Brachythecium,Bryopsida,Brachytheciaceae
+181,"Bryoerythrophyllum ferruginascens Giacomini, 1947",SPECIES,Pottiales,Bryophyta,Plantae,Bryoerythrophyllum,Bryopsida,Pottiaceae
+182,Bryoerythrophyllum recurvirostrum (Hedw.) P.C.Chen,SPECIES,Pottiales,Bryophyta,Plantae,Bryoerythrophyllum,Bryopsida,Pottiaceae
+184,Bryum algovicum Sendtn. ex Müll.Hal.,SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+186,"Bryum argenteum Hedwig, 1801",SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+187,Bryum barnesii J.B.Wood ex Schimp.,SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+188,"Bryum bornholmense Winkelmann & Ruthe, 1899",SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+189,"Bryum caespiticium Hedwig, 1801",SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+191,Bryum capillare Hedw.,SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+192,"Bryum creberrimum Taylor, 1846",SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+193,"Bryum cyclophyllum Bruch & W.P.Schimper, 1839",SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+194,"Bryum demaretianum Arts, 1992",SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+195,"Bryum dichotomum Hedwig, 1801",SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+197,Bryum dyffrynense Holyoak,SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+198,"Bryum elegans Nees, 1827",SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+200,"Bryum gemmiferum R.Wilczek & Demaret, 1976",SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+201,"Bryum gemmilucens R.Wilczek & Demaret, 1976",SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+204,"Bryum intermedium Blandow, 1809",SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+205,"Bryum klinggraeffii W.P.Schimper, 1858",SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+206,"Bryum knowltonii Barnes, 1889",SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+208,Bryum moravicum Podp.,SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+211,Bryum pallens Sw. ex Anon.,SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+212,"Bryum pallescens Schleicher ex Schwaegrichen, 1816",SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+213,"Bryum pseudotriquetrum P.G.Gärtner, B.Meyer & Scherbius, 1802",SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+214,"Bryum radiculosum Bridel, 1817",SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+216,"Bryum ruderale Crundwell & Nyholm, 1963",SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+218,"Bryum sauteri Bruch & W.P.Schimper, 1846",SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+220,"Bryum subapiculatum Hampe, 1872",SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+222,"Bryum tenuisetum Limpricht, 1897",SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+227,"Bryum violaceum Crundwell & Nyholm, 1963",SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+228,"Bryum warneum Bridel, 1826",SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+229,"Bryum weigelii Sprengel, 1807",SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+231,"Buxbaumia aphylla Hedwig, 1801",SPECIES,Buxbaumiales,Bryophyta,Plantae,Buxbaumia,Bryopsida,Buxbaumiaceae
+233,"Calliergon cordifolium Kindberg, 1894",SPECIES,Hypnales,Bryophyta,Plantae,Calliergon,Bryopsida,Amblystegiaceae
+234,"Calliergon giganteum Kindberg, 1894",SPECIES,Hypnales,Bryophyta,Plantae,Calliergon,Bryopsida,Amblystegiaceae
+237,"Calliergonella cuspidata Loeske, 1911",SPECIES,Hypnales,Bryophyta,Plantae,Calliergonella,Bryopsida,Amblystegiaceae
+238,"Calliergonella lindbergii Hedenäs, 1990",SPECIES,Hypnales,Bryophyta,Plantae,Calliergonella,Bryopsida,Amblystegiaceae
+240,Calypogeia arguta Nees & Mont.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Calypogeia,Jungermanniopsida,Calypogeiaceae
+241,Calypogeia azurea Stotler & Crotz,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Calypogeia,Jungermanniopsida,Calypogeiaceae
+242,Calypogeia fissa (L.) Raddi,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Calypogeia,Jungermanniopsida,Calypogeiaceae
+243,Calypogeia integristipula Steph.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Calypogeia,Jungermanniopsida,Calypogeiaceae
+244,Calypogeia muelleriana (Schiffn.) Müll.Frib.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Calypogeia,Jungermanniopsida,Calypogeiaceae
+245,Calypogeia neesiana (C.Massal. & Carestia) Müll.Frib.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Calypogeia,Jungermanniopsida,Calypogeiaceae
+246,Calypogeia sphagnicola (Arnell & J.Perss.) Warnst. & Loeske,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Calypogeia,Jungermanniopsida,Calypogeiaceae
+249,Campyliadelphus chrysophyllus (Brid.) R.S.Chopra,SPECIES,Hypnales,Bryophyta,Plantae,Campyliadelphus,Bryopsida,Amblystegiaceae
+250,"Campyliadelphus elodes Kanda, 1975",SPECIES,Hypnales,Bryophyta,Plantae,Campyliadelphus,Bryopsida,Amblystegiaceae
+252,Campylium stellatum (Hedw.) C.E.O.Jensen,SPECIES,Hypnales,Bryophyta,Plantae,Campylium,Bryopsida,Amblystegiaceae
+254,Campylophyllum calcareum (Crundw. & Nyholm) Hedenäs,SPECIES,Hypnales,Bryophyta,Plantae,Campylium,Bryopsida,Amblystegiaceae
+257,"Campylopus flexuosus Bridel, 1819",SPECIES,Dicranales,Bryophyta,Plantae,Campylopus,Bryopsida,Dicranaceae
+259,"Campylopus introflexus Bridel, 1819",SPECIES,Dicranales,Bryophyta,Plantae,Campylopus,Bryopsida,Dicranaceae
+261,"Campylopus pyriformis Bridel, 1826",SPECIES,Dicranales,Bryophyta,Plantae,Campylopus,Bryopsida,Dicranaceae
+268,Cephalozia bicuspidata (L.) Dumort.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Cephalozia,Jungermanniopsida,Cephaloziaceae
+270,Cephalozia connivens (Dicks.) Lindb.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Fuscocephaloziopsis,Jungermanniopsida,Cephaloziaceae
+271,Cephalozia lunulifolia (Dumort.) Dumort.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Fuscocephaloziopsis,Jungermanniopsida,Cephaloziaceae
+272,Cephalozia macrostachya Kaal.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Fuscocephaloziopsis,Jungermanniopsida,Cephaloziaceae
+273,Cephalozia pleniceps (Austin) Lindb.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Fuscocephaloziopsis,Jungermanniopsida,Cephaloziaceae
+276,Cephaloziella divaricata (Sm.) Schiffn.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Cephaloziella,Jungermanniopsida,Cephaloziellaceae
+277,Cephaloziella elachista (J.B.Jack ex Gottsche & Rabenh.) Schiffn.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Cephaloziella,Jungermanniopsida,Cephaloziellaceae
+278,Cephaloziella hampeana (Nees) Schiffn.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Cephaloziella,Jungermanniopsida,Cephaloziellaceae
+279,Cephaloziella rubella (Nees) Warnst.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Cephaloziella,Jungermanniopsida,Cephaloziellaceae
+280,Cephaloziella stellulifera (Taylor ex Spruce) Schiffn.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Cephaloziella,Jungermanniopsida,Cephaloziellaceae
+283,"Ceratodon purpureus Bridel, 1826",SPECIES,Dicranales,Bryophyta,Plantae,Ceratodon,Bryopsida,Ditrichaceae
+285,Chiloscyphus pallescens (Ehrh. ex Hoffm.) Dumort.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Chiloscyphus,Jungermanniopsida,Lophocoleaceae
+291,"Cinclidotus danubicus Schiffner & Baumgartner, 1906",SPECIES,Pottiales,Bryophyta,Plantae,Cinclidotus,Bryopsida,Cinclidotaceae
+292,"Cinclidotus fontinaloides Palisot de Beauvois, 1805",SPECIES,Pottiales,Bryophyta,Plantae,Cinclidotus,Bryopsida,Cinclidotaceae
+293,"Cinclidotus riparius Arnott, 1827",SPECIES,Pottiales,Bryophyta,Plantae,Cinclidotus,Bryopsida,Cinclidotaceae
+295,"Cirriphyllum piliferum Grout, 1898",SPECIES,Hypnales,Bryophyta,Plantae,Cirriphyllum,Bryopsida,Brachytheciaceae
+298,Cladopodiella fluitans (Nees) H.Buch,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Odontoschisma,Jungermanniopsida,Cephaloziaceae
+299,Cladopodiella francisci (Hook.) Jörg.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Odontoschisma,Jungermanniopsida,Cephaloziaceae
+301,"Climacium dendroides Weber & D.Mohr, 1804",SPECIES,Leucodontales,Bryophyta,Plantae,Climacium,Bryopsida,Climaciaceae
+304,Cololejeunea minutissima (Sm.) Schiffn.,SPECIES,Porellales,Marchantiophyta,Plantae,Myriocoleopsis,Jungermanniopsida,Lejeuneaceae
+314,"Cratoneuron filicinum Spruce, 1867",SPECIES,Hypnales,Bryophyta,Plantae,Cratoneuron,Bryopsida,Amblystegiaceae
+318,"Cryphaea heteromalla D.Mohr, 1814",SPECIES,Leucodontales,Bryophyta,Plantae,Cryphaea,Bryopsida,Cryphaeaceae
+320,"Ctenidium molluscum Mitten, 1869",SPECIES,Hypnales,Bryophyta,Plantae,Ctenidium,Bryopsida,Hypnaceae
+327,"Dialytrichia mucronata Brotherus, 1902",SPECIES,Pottiales,Bryophyta,Plantae,Dialytrichia,Bryopsida,Pottiaceae
+330,"Dichodontium pellucidum W.P.Schimper, 1856",SPECIES,Dicranales,Bryophyta,Plantae,Dichodontium,Bryopsida,Dicranaceae
+332,"Dicranella cerviculata W.P.Schimper, 1856",SPECIES,Dicranales,Bryophyta,Plantae,Dicranella,Bryopsida,Dicranaceae
+333,"Dicranella heteromalla W.P.Schimper, 1856",SPECIES,Dicranales,Bryophyta,Plantae,Dicranella,Bryopsida,Dicranaceae
+335,Dicranella rufescens (Dicks.) Schimp.,SPECIES,Dicranales,Bryophyta,Plantae,Dicranella,Bryopsida,Dicranaceae
+336,Dicranella schreberiana (Hedw.) Dixon,SPECIES,Dicranales,Bryophyta,Plantae,Dicranella,Bryopsida,Dicranaceae
+337,Dicranella staphylina H.Whitehouse,SPECIES,Dicranales,Bryophyta,Plantae,Dicranella,Bryopsida,Dicranaceae
+339,Dicranella varia (Hedw.) Schimp.,SPECIES,Dicranales,Bryophyta,Plantae,Dicranella,Bryopsida,Dicranaceae
+341,"Dicranodontium denudatum Britton, 1913",SPECIES,Dicranales,Bryophyta,Plantae,Dicranodontium,Bryopsida,Dicranaceae
+342,"Dicranoweisia cirrata Lindberg, 1869",SPECIES,Dicranales,Bryophyta,Plantae,Dicranoweisia,Bryopsida,Dicranaceae
+346,"Dicranum bonjeanii De Notaris, 1837",SPECIES,Dicranales,Bryophyta,Plantae,Dicranum,Bryopsida,Dicranaceae
+347,"Dicranum flagellare Hedwig, 1801",SPECIES,Dicranales,Bryophyta,Plantae,Dicranum,Bryopsida,Dicranaceae
+350,Dicranum majus Sm.,SPECIES,Dicranales,Bryophyta,Plantae,Dicranum,Bryopsida,Dicranaceae
+351,"Dicranum montanum Hedwig, 1801",SPECIES,Dicranales,Bryophyta,Plantae,Dicranum,Bryopsida,Dicranaceae
+352,Dicranum polysetum Sw. ex Anon.,SPECIES,Dicranales,Bryophyta,Plantae,Dicranum,Bryopsida,Dicranaceae
+353,"Dicranum scoparium Hedwig, 1801",SPECIES,Dicranales,Bryophyta,Plantae,Dicranum,Bryopsida,Dicranaceae
+354,"Dicranum spurium Hedwig, 1801",SPECIES,Dicranales,Bryophyta,Plantae,Dicranum,Bryopsida,Dicranaceae
+355,Dicranum tauricum Sapjegin,SPECIES,Dicranales,Bryophyta,Plantae,Dicranum,Bryopsida,Dicranaceae
+358,Didymodon acutus (Brid.) K.Saito,SPECIES,Pottiales,Bryophyta,Plantae,Didymodon,Bryopsida,Pottiaceae
+360,"Didymodon fallax Zander, 1978",SPECIES,Pottiales,Bryophyta,Plantae,Didymodon,Bryopsida,Pottiaceae
+362,Didymodon luridus Hornsch.,SPECIES,Pottiales,Bryophyta,Plantae,Didymodon,Bryopsida,Pottiaceae
+363,"Didymodon nicholsonii Culmann, 1907",SPECIES,Pottiales,Bryophyta,Plantae,Didymodon,Bryopsida,Pottiaceae
+364,"Didymodon rigidulus Hedwig, 1801",SPECIES,Pottiales,Bryophyta,Plantae,Didymodon,Bryopsida,Pottiaceae
+365,"Didymodon sinuosus Delogne, 1873",SPECIES,Pottiales,Bryophyta,Plantae,Didymodon,Bryopsida,Pottiaceae
+366,"Didymodon spadiceus Limpricht, 1888",SPECIES,Pottiales,Bryophyta,Plantae,Didymodon,Bryopsida,Pottiaceae
+367,"Didymodon tophaceus Lisa, 1837",SPECIES,Pottiales,Bryophyta,Plantae,Didymodon,Bryopsida,Pottiaceae
+368,"Didymodon vinealis Zander, 1978",SPECIES,Pottiales,Bryophyta,Plantae,Didymodon,Bryopsida,Pottiaceae
+372,Diplophyllum albicans (L.) Dumort.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Diplophyllum,Jungermanniopsida,Scapaniaceae
+373,Diplophyllum obtusifolium (Hook.) Dumort.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Diplophyllum,Jungermanniopsida,Scapaniaceae
+381,"Ditrichum flexicaule Hampe, 1867",SPECIES,Dicranales,Bryophyta,Plantae,Ditrichum,Bryopsida,Ditrichaceae
+382,"Ditrichum gracile Kuntze, 1891",SPECIES,Dicranales,Bryophyta,Plantae,Ditrichum,Bryopsida,Ditrichaceae
+383,"Ditrichum heteromallum Britton, 1913",SPECIES,Dicranales,Bryophyta,Plantae,Ditrichum,Bryopsida,Ditrichaceae
+384,"Ditrichum lineare Lindberg, 1871",SPECIES,Dicranales,Bryophyta,Plantae,Ditrichum,Bryopsida,Ditrichaceae
+385,"Ditrichum pallidum Hampe, 1867",SPECIES,Dicranales,Bryophyta,Plantae,Ditrichum,Bryopsida,Ditrichaceae
+386,"Ditrichum pusillum Hampe, 1867",SPECIES,Dicranales,Bryophyta,Plantae,Ditrichum,Bryopsida,Ditrichaceae
+390,"Drepanocladus aduncus Warnstorf, 1903",SPECIES,Hypnales,Bryophyta,Plantae,Drepanocladus,Bryopsida,Amblystegiaceae
+391,Drepanocladus polygamus (Schimp.) Hedenäs,SPECIES,Hypnales,Bryophyta,Plantae,Drepanocladus,Bryopsida,Amblystegiaceae
+395,"Encalypta streptocarpa Hedwig, 1801",SPECIES,Pottiales,Bryophyta,Plantae,Encalypta,Bryopsida,Encalyptaceae
+396,"Encalypta vulgaris Hedwig, 1801",SPECIES,Pottiales,Bryophyta,Plantae,Encalypta,Bryopsida,Encalyptaceae
+398,"Entodon concinnus Paris, 1904",SPECIES,Hypnales,Bryophyta,Plantae,Entodon,Bryopsida,Entodontaceae
+400,Entosthodon fascicularis (Hedw.) Müll.Hal.,SPECIES,Funariales,Bryophyta,Plantae,Entosthodon,Bryopsida,Funariaceae
+401,"Entosthodon obtusus Lindberg, 1865",SPECIES,Funariales,Bryophyta,Plantae,Entosthodon,Bryopsida,Funariaceae
+405,"Ephemerum serratum Hampe, 1837",SPECIES,Funariales,Bryophyta,Plantae,Ephemerum,Bryopsida,Ephemeraceae
+409,"Eucladium verticillatum Bruch & W.P.Schimper, 1846",SPECIES,Pottiales,Bryophyta,Plantae,Eucladium,Bryopsida,Pottiaceae
+421,"Eurhynchium striatum W.P.Schimper, 1856",SPECIES,Hypnales,Bryophyta,Plantae,Eurhynchium,Bryopsida,Brachytheciaceae
+423,"Fissidens adianthoides Hedwig, 1801",SPECIES,Fissidentales,Bryophyta,Plantae,Fissidens,Bryopsida,Fissidentaceae
+425,"Fissidens bryoides Hedwig, 1801",SPECIES,Fissidentales,Bryophyta,Plantae,Fissidens,Bryopsida,Fissidentaceae
+427,"Fissidens crassipes Wilson ex Bruch & W.P.Schimper, 1849",SPECIES,Fissidentales,Bryophyta,Plantae,Fissidens,Bryopsida,Fissidentaceae
+429,"Fissidens dubius Palisot de Beauvois, 1805",SPECIES,Fissidentales,Bryophyta,Plantae,Fissidens,Bryopsida,Fissidentaceae
+430,"Fissidens exilis Hedwig, 1801",SPECIES,Fissidentales,Bryophyta,Plantae,Fissidens,Bryopsida,Fissidentaceae
+431,"Fissidens gracilifolius Bruggeman-Nannenga & Nyholm, 1986",SPECIES,Fissidentales,Bryophyta,Plantae,Fissidens,Bryopsida,Fissidentaceae
+433,Fissidens limbatus Sull.,SPECIES,Fissidentales,Bryophyta,Plantae,Fissidens,Bryopsida,Fissidentaceae
+434,"Fissidens monguillonii Thériot, 1899",SPECIES,Fissidentales,Bryophyta,Plantae,Fissidens,Bryopsida,Fissidentaceae
+435,"Fissidens osmundoides Hedwig, 1801",SPECIES,Fissidentales,Bryophyta,Plantae,Fissidens,Bryopsida,Fissidentaceae
+436,Fissidens pusillus (Wilson) Milde,SPECIES,Fissidentales,Bryophyta,Plantae,Fissidens,Bryopsida,Fissidentaceae
+439,"Fissidens taxifolius Hedwig, 1801",SPECIES,Fissidentales,Bryophyta,Plantae,Fissidens,Bryopsida,Fissidentaceae
+440,Fissidens viridulus (Sw. ex Anon.) Wahlenb.,SPECIES,Fissidentales,Bryophyta,Plantae,Fissidens,Bryopsida,Fissidentaceae
+442,"Fontinalis antipyretica Hedwig, 1801",SPECIES,Isobryales,Bryophyta,Plantae,Fontinalis,Bryopsida,Fontinalaceae
+445,Fossombronia foveolata Lindb.,SPECIES,Fossombroniales,Marchantiophyta,Plantae,Fossombronia,Jungermanniopsida,Fossombroniaceae
+446,Fossombronia incurva Lindb.,SPECIES,Fossombroniales,Marchantiophyta,Plantae,Fossombronia,Jungermanniopsida,Fossombroniaceae
+447,Fossombronia pusilla (L.) Nees,SPECIES,Fossombroniales,Marchantiophyta,Plantae,Fossombronia,Jungermanniopsida,Fossombroniaceae
+448,Fossombronia wondraczekii (Corda) Dumort. ex Lindb.,SPECIES,Fossombroniales,Marchantiophyta,Plantae,Fossombronia,Jungermanniopsida,Fossombroniaceae
+450,Frullania dilatata (L.) Dumort.,SPECIES,Porellales,Marchantiophyta,Plantae,Frullania,Jungermanniopsida,Frullaniaceae
+451,"Frullania fragilifolia (Taylor) Gottsche, Lindenb. & Nees",SPECIES,Porellales,Marchantiophyta,Plantae,Frullania,Jungermanniopsida,Frullaniaceae
+452,Frullania tamarisci (L.) Dumort.,SPECIES,Porellales,Marchantiophyta,Plantae,Frullania,Jungermanniopsida,Frullaniaceae
+454,"Funaria hygrometrica Hedwig, 1801",SPECIES,Funariales,Bryophyta,Plantae,Funaria,Bryopsida,Funariaceae
+462,"Grimmia dissimulata E.Maier, 2002",SPECIES,Grimmiales,Bryophyta,Plantae,Grimmia,Bryopsida,Grimmiaceae
+465,"Grimmia laevigata Bridel, 1826",SPECIES,Grimmiales,Bryophyta,Plantae,Grimmia,Bryopsida,Grimmiaceae
+470,Grimmia orbicularis Bruch ex Wilson,SPECIES,Grimmiales,Bryophyta,Plantae,Grimmia,Bryopsida,Grimmiaceae
+471,"Grimmia ovalis Lindberg, 1871",SPECIES,Grimmiales,Bryophyta,Plantae,Grimmia,Bryopsida,Grimmiaceae
+472,"Grimmia pulvinata Smith, 1807",SPECIES,Grimmiales,Bryophyta,Plantae,Grimmia,Bryopsida,Grimmiaceae
+474,Grimmia tergestina Tomm. ex Bruch & Schimp.,SPECIES,Grimmiales,Bryophyta,Plantae,Grimmia,Bryopsida,Grimmiaceae
+476,"Grimmia trichophylla Greville, 1824",SPECIES,Grimmiales,Bryophyta,Plantae,Grimmia,Bryopsida,Grimmiaceae
+478,Gymnocolea inflata (Huds.) Dumort.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Gymnocolea,Jungermanniopsida,Anastrophyllaceae
+480,"Homalothecium lutescens H.Robinson, 1962",SPECIES,Hypnales,Bryophyta,Plantae,Homalothecium,Bryopsida,Brachytheciaceae
+481,"Homalothecium sericeum W.P.Schimper, 1851",SPECIES,Hypnales,Bryophyta,Plantae,Homalothecium,Bryopsida,Brachytheciaceae
+485,"Hookeria lucens Smith, 1808",SPECIES,Hookeriales,Bryophyta,Plantae,Hookeria,Bryopsida,Hookeriaceae
+488,"Hygrohypnum luridum Jennings, 1913",SPECIES,Hypnales,Bryophyta,Plantae,Hygrohypnum,Bryopsida,Amblystegiaceae
+493,"Hylocomium splendens W.P.Schimper, 1852",SPECIES,Hypnales,Bryophyta,Plantae,Hylocomium,Bryopsida,Hylocomiaceae
+500,"Hypnum andoi A.J.E.Smith, 1981",SPECIES,Hypnales,Bryophyta,Plantae,Hypnum,Bryopsida,Hypnaceae
+501,"Hypnum cupressiforme Hedwig, 1801",SPECIES,Hypnales,Bryophyta,Plantae,Hypnum,Bryopsida,Hypnaceae
+502,"Hypnum imponens Hedwig, 1801",SPECIES,Hypnales,Bryophyta,Plantae,Hypnum,Bryopsida,Hypnaceae
+503,"Hypnum jutlandicum Holmen & Warncke, 1969",SPECIES,Hypnales,Bryophyta,Plantae,Hypnum,Bryopsida,Hypnaceae
+504,Hypnum lacunosum (Brid.) Hoffm. ex Brid.,SPECIES,Hypnales,Bryophyta,Plantae,Hypnum,Bryopsida,Hypnaceae
+505,"Hypnum pallescens Palisot de Beauvois, 1805",SPECIES,Hypnales,Bryophyta,Plantae,Hypnum,Bryopsida,Hypnaceae
+509,"Isothecium alopecuroides Isoviita, 1981",SPECIES,Hypnales,Bryophyta,Plantae,Isothecium,Bryopsida,Brachytheciaceae
+511,"Isothecium myosuroides Bridel, 1827",SPECIES,Hypnales,Bryophyta,Plantae,Isothecium,Bryopsida,Brachytheciaceae
+516,Jungermannia caespiticia Lindenb.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Jungermannia,Jungermanniopsida,Jungermanniaceae
+518,Jungermannia gracillima Sm.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Jungermannia,Jungermanniopsida,Jungermanniaceae
+519,Jungermannia hyalina Lyell,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Jungermannia,Jungermanniopsida,Jungermanniaceae
+527,Kurzia pauciflora (Dicks.) Grolle,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Kurzia,Jungermanniopsida,Lepidoziaceae
+528,Kurzia sylvatica (A.Evans) Grolle,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Kurzia,Jungermanniopsida,Lepidoziaceae
+531,Leiocolea badensis (Gottsche) Jörg.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Leiocolea,Jungermanniopsida,Jungermanniaceae
+536,Lejeunea cavifolia (Ehrh.) Lindb.,SPECIES,Porellales,Marchantiophyta,Plantae,Lejeunea,Jungermanniopsida,Lejeuneaceae
+539,Lepidozia reptans (L.) Dumort.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Lepidozia,Jungermanniopsida,Lepidoziaceae
+541,"Leptobarbula berica W.P.Schimper, 1876",SPECIES,Pottiales,Bryophyta,Plantae,Leptobarbula,Bryopsida,Pottiaceae
+543,"Leptobryum pyriforme Wilson, 1855",SPECIES,Bryales,Bryophyta,Plantae,Leptobryum,Bryopsida,Bryaceae
+545,"Leptodictyum riparium Warnstorf, 1906",SPECIES,Hypnales,Bryophyta,Plantae,Leptodictyum,Bryopsida,Amblystegiaceae
+547,"Leptodontium flexifolium Hampe, 1864",SPECIES,Pottiales,Bryophyta,Plantae,Leptodontium,Bryopsida,Pottiaceae
+548,"Leptodontium gemmascens Braithwaite, 1887",SPECIES,Pottiales,Bryophyta,Plantae,Leptodontium,Bryopsida,Pottiaceae
+550,"Leskea polycarpa Ehrhart ex Hedwig, 1801",SPECIES,Hypnales,Bryophyta,Plantae,Leskea,Bryopsida,Leskeaceae
+552,"Leucobryum glaucum Ångström, 1845",SPECIES,Dicranales,Bryophyta,Plantae,Leucobryum,Bryopsida,Dicranaceae
+555,"Leucodon sciuroides Schwaegrichen, 1816",SPECIES,Leucodontales,Bryophyta,Plantae,Leucodon,Bryopsida,Leucodontaceae
+558,Lophocolea bidentata (L.) Dumort.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Lophocolea,Jungermanniopsida,Lophocoleaceae
+559,Lophocolea heterophylla (Schrad.) Dumort.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Lophocolea,Jungermanniopsida,Lophocoleaceae
+561,Lophocolea semiteres (Lehm.) Mitt.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Lophocolea,Jungermanniopsida,Lophocoleaceae
+563,Lophozia bicrenata (Schmidel ex Hoffm.) Dumort.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Lophozia,Jungermanniopsida,Lophoziaceae
+564,Lophozia capitata (Hook.) Macoun,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Heterogemma,Jungermanniopsida,Lophoziaceae
+565,Lophozia excisa (Dicks.) Dumort.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Lophoziopsis,Jungermanniopsida,Lophoziaceae
+571,Lophozia perssonii H.Buch & S.W.Arnell,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Lophozia,Jungermanniopsida,Lophoziaceae
+573,Lophozia ventricosa (Dicks.) Dumort.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Lophozia,Jungermanniopsida,Lophoziaceae
+576,Lunularia cruciata (L.) Dumort. ex Lindb.,SPECIES,Lunulariales,Marchantiophyta,Plantae,Lunularia,Marchantiopsida,Lunulariaceae
+578,Marchantia polymorpha L.,SPECIES,Marchantiales,Marchantiophyta,Plantae,Marchantia,Marchantiopsida,Marchantiaceae
+589,Metzgeria conjugata Lindb.,SPECIES,Metzgeriales,Marchantiophyta,Plantae,Metzgeria,Jungermanniopsida,Metzgeriaceae
+591,Metzgeria furcata (L.) Dumort.,SPECIES,Metzgeriales,Marchantiophyta,Plantae,Metzgeria,Jungermanniopsida,Metzgeriaceae
+592,Metzgeria temperata Kuwah.,SPECIES,Metzgeriales,Marchantiophyta,Plantae,Metzgeria,Jungermanniopsida,Metzgeriaceae
+594,Microbryum curvicollum (Hedw.) R.H.Zander,SPECIES,Pottiales,Bryophyta,Plantae,Microbryum,Bryopsida,Pottiaceae
+595,"Microbryum davallianum Zander, 1993",SPECIES,Pottiales,Bryophyta,Plantae,Microbryum,Bryopsida,Pottiaceae
+596,"Microbryum floerkeanum W.P.Schimper, 1860",SPECIES,Pottiales,Bryophyta,Plantae,Microbryum,Bryopsida,Pottiaceae
+600,Microlejeunea ulicina (Taylor) A.Evans,SPECIES,Porellales,Marchantiophyta,Plantae,Microlejeunea,Jungermanniopsida,Lejeuneaceae
+602,"Micromitrium tenerum Crosby, 1968",SPECIES,Funariales,Bryophyta,Plantae,Micromitrium,Bryopsida,Ephemeraceae
+606,"Mnium hornum Hedwig, 1801",SPECIES,Bryales,Bryophyta,Plantae,Mnium,Bryopsida,Mniaceae
+607,"Mnium marginatum Palisot de Beauvois, 1805",SPECIES,Bryales,Bryophyta,Plantae,Mnium,Bryopsida,Mniaceae
+608,"Mnium stellare Reichard ex Hedwig, 1801",SPECIES,Bryales,Bryophyta,Plantae,Mnium,Bryopsida,Mniaceae
+612,Mylia anomala (Hook.) Gray,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Mylia,Jungermanniopsida,Myliaceae
+616,Nardia geoscyphus (De Not.) Lindb.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Nardia,Jungermanniopsida,Gymnomitriaceae
+618,Nardia scalaris Gray,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Nardia,Jungermanniopsida,Gymnomitriaceae
+620,"Neckera complanata Hübener, 1833",SPECIES,Leucodontales,Bryophyta,Plantae,Neckera,Bryopsida,Neckeraceae
+621,"Neckera crispa Hedwig, 1801",SPECIES,Leucodontales,Bryophyta,Plantae,Neckera,Bryopsida,Neckeraceae
+622,"Neckera pumila Hedwig, 1801",SPECIES,Leucodontales,Bryophyta,Plantae,Neckera,Bryopsida,Neckeraceae
+624,Nowellia curvifolia (Dicks.) Mitt.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Nowellia,Jungermanniopsida,Cephaloziaceae
+628,Odontoschisma denudatum (Mart.) Dumort.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Odontoschisma,Jungermanniopsida,Cephaloziaceae
+629,Odontoschisma sphagni (Dicks.) Dumort.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Odontoschisma,Jungermanniopsida,Cephaloziaceae
+631,"Oligotrichum hercynicum Lamarck & A.P.de Candolle, 1805",SPECIES,Polytrichales,Bryophyta,Plantae,Oligotrichum,Bryopsida,Polytrichaceae
+633,"Orthodontium lineare Schwaegrichen, 1827",SPECIES,Bryales,Bryophyta,Plantae,Orthodontium,Bryopsida,Bryaceae
+638,"Orthotrichum affine Schrader ex Bridel, 1801",SPECIES,Orthotrichales,Bryophyta,Plantae,Orthotrichum,Bryopsida,Orthotrichaceae
+639,"Orthotrichum anomalum Hedwig, 1801",SPECIES,Orthotrichales,Bryophyta,Plantae,Orthotrichum,Bryopsida,Orthotrichaceae
+640,"Orthotrichum consimile Mitten, 1864",SPECIES,Orthotrichales,Bryophyta,Plantae,Orthotrichum,Bryopsida,Orthotrichaceae
+641,"Orthotrichum cupulatum G.F.Hoffmann ex Bridel, 1801",SPECIES,Orthotrichales,Bryophyta,Plantae,Orthotrichum,Bryopsida,Orthotrichaceae
+642,"Orthotrichum diaphanum Schrader ex Bridel, 1801",SPECIES,Orthotrichales,Bryophyta,Plantae,Orthotrichum,Bryopsida,Orthotrichaceae
+643,"Orthotrichum ibericum F.Lara & Mazimpaka, 1993",SPECIES,Orthotrichales,Bryophyta,Plantae,Orthotrichum,Bryopsida,Orthotrichaceae
+644,"Orthotrichum lyellii W.J.Hooker & Taylor, 1818",SPECIES,Orthotrichales,Bryophyta,Plantae,Orthotrichum,Bryopsida,Orthotrichaceae
+645,"Orthotrichum obtusifolium Bridel, 1801",SPECIES,Orthotrichales,Bryophyta,Plantae,Orthotrichum,Bryopsida,Orthotrichaceae
+646,"Orthotrichum pallens Bruch ex Bridel, 1827",SPECIES,Orthotrichales,Bryophyta,Plantae,Orthotrichum,Bryopsida,Orthotrichaceae
+647,"Orthotrichum patens Bruch & Bridel, 1827",SPECIES,Orthotrichales,Bryophyta,Plantae,Orthotrichum,Bryopsida,Orthotrichaceae
+648,"Orthotrichum pulchellum Brunton, 1807",SPECIES,Orthotrichales,Bryophyta,Plantae,Orthotrichum,Bryopsida,Orthotrichaceae
+649,Orthotrichum pumilum Sw. ex Anon.,SPECIES,Orthotrichales,Bryophyta,Plantae,Orthotrichum,Bryopsida,Orthotrichaceae
+651,"Orthotrichum rogeri Bridel, 1812",SPECIES,Orthotrichales,Bryophyta,Plantae,Orthotrichum,Bryopsida,Orthotrichaceae
+652,"Orthotrichum rupestre Schleicher ex Schwaegrichen, 1816",SPECIES,Orthotrichales,Bryophyta,Plantae,Orthotrichum,Bryopsida,Orthotrichaceae
+653,"Orthotrichum scanicum Grönvall, 1885",SPECIES,Orthotrichales,Bryophyta,Plantae,Orthotrichum,Bryopsida,Orthotrichaceae
+654,Orthotrichum schimperi Hammar,SPECIES,Orthotrichales,Bryophyta,Plantae,Orthotrichum,Bryopsida,Orthotrichaceae
+656,"Orthotrichum speciosum Nees, 1819",SPECIES,Orthotrichales,Bryophyta,Plantae,Orthotrichum,Bryopsida,Orthotrichaceae
+657,"Orthotrichum sprucei Montagne, 1845",SPECIES,Orthotrichales,Bryophyta,Plantae,Orthotrichum,Bryopsida,Orthotrichaceae
+658,"Orthotrichum stramineum Hornschuch, 1827",SPECIES,Orthotrichales,Bryophyta,Plantae,Orthotrichum,Bryopsida,Orthotrichaceae
+659,"Orthotrichum striatum Hedwig, 1801",SPECIES,Orthotrichales,Bryophyta,Plantae,Orthotrichum,Bryopsida,Orthotrichaceae
+660,"Orthotrichum tenellum Bruch ex Bridel, 1827",SPECIES,Orthotrichales,Bryophyta,Plantae,Orthotrichum,Bryopsida,Orthotrichaceae
+662,Physcomitrium pyriforme (Hedw.) Bruch & Schimp.,SPECIES,Funariales,Bryophyta,Plantae,Physcomitrium,Bryopsida,Funariaceae
+663,Physcomitrium sphaericum (C.F.Ludw. ex Schkuhr) Brid.,SPECIES,Funariales,Bryophyta,Plantae,Physcomitrium,Bryopsida,Funariaceae
+667,Plagiochila asplenioides (L.) Dumort.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Plagiochila,Jungermanniopsida,Plagiochilaceae
+669,Plagiochila porelloides (Torr. ex Nees) Lindenb.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Plagiochila,Jungermanniopsida,Plagiochilaceae
+672,"Plagiomnium affine T.Koponen, 1968",SPECIES,Bryales,Bryophyta,Plantae,Plagiomnium,Bryopsida,Mniaceae
+673,"Plagiomnium cuspidatum T.Koponen, 1968",SPECIES,Bryales,Bryophyta,Plantae,Plagiomnium,Bryopsida,Mniaceae
+674,"Plagiomnium elatum T.Koponen, 1968",SPECIES,Bryales,Bryophyta,Plantae,Plagiomnium,Bryopsida,Mniaceae
+675,"Plagiomnium ellipticum T.Koponen, 1971",SPECIES,Bryales,Bryophyta,Plantae,Plagiomnium,Bryopsida,Mniaceae
+677,"Plagiomnium rostratum T.Koponen, 1968",SPECIES,Bryales,Bryophyta,Plantae,Plagiomnium,Bryopsida,Mniaceae
+678,"Plagiomnium undulatum T.Koponen, 1968",SPECIES,Bryales,Bryophyta,Plantae,Plagiomnium,Bryopsida,Mniaceae
+682,"Plagiothecium cavifolium Iwatsuki, 1970",SPECIES,Hypnales,Bryophyta,Plantae,Plagiothecium,Bryopsida,Plagiotheciaceae
+683,"Plagiothecium curvifolium Schliephacke ex Limpricht, 1897",SPECIES,Hypnales,Bryophyta,Plantae,Plagiothecium,Bryopsida,Plagiotheciaceae
+684,"Plagiothecium denticulatum W.P.Schimper, 1851",SPECIES,Hypnales,Bryophyta,Plantae,Plagiothecium,Bryopsida,Plagiotheciaceae
+685,"Plagiothecium laetum W.P.Schimper, 1851",SPECIES,Hypnales,Bryophyta,Plantae,Plagiothecium,Bryopsida,Plagiotheciaceae
+686,"Plagiothecium latebricola W.P.Schimper, 1851",SPECIES,Hypnales,Bryophyta,Plantae,Plagiothecium,Bryopsida,Plagiotheciaceae
+687,"Plagiothecium nemorale Jaeger, 1878",SPECIES,Hypnales,Bryophyta,Plantae,Plagiothecium,Bryopsida,Plagiotheciaceae
+688,Plagiothecium undulatum (Hedw.) Schimp.,SPECIES,Hypnales,Bryophyta,Plantae,Plagiothecium,Bryopsida,Plagiotheciaceae
+692,"Platygyrium repens W.P.Schimper, 1851",SPECIES,Hypnales,Bryophyta,Plantae,Platygyrium,Bryopsida,Hypnaceae
+694,"Platyhypnidium riparioides Dixon, 1934",SPECIES,Hypnales,Bryophyta,Plantae,Platyhypnidium,Bryopsida,Brachytheciaceae
+696,"Pleuridium acuminatum Lindberg, 1863",SPECIES,Dicranales,Bryophyta,Plantae,Pleuridium,Bryopsida,Ditrichaceae
+698,"Pleuridium subulatum Rabenhorst, 1848",SPECIES,Dicranales,Bryophyta,Plantae,Pleuridium,Bryopsida,Ditrichaceae
+700,"Pleurochaete squarrosa Lindberg, 1864",SPECIES,Pottiales,Bryophyta,Plantae,Pleurochaete,Bryopsida,Pottiaceae
+702,"Pleurozium schreberi Mitten, 1869",SPECIES,Hypnales,Bryophyta,Plantae,Pleurozium,Bryopsida,Hylocomiaceae
+704,"Pogonatum aloides Palisot de Beauvois, 1805",SPECIES,Polytrichales,Bryophyta,Plantae,Pogonatum,Bryopsida,Polytrichaceae
+705,"Pogonatum nanum Palisot de Beauvois, 1805",SPECIES,Polytrichales,Bryophyta,Plantae,Pogonatum,Bryopsida,Polytrichaceae
+706,"Pogonatum urnigerum Palisot de Beauvois, 1805",SPECIES,Polytrichales,Bryophyta,Plantae,Pogonatum,Bryopsida,Polytrichaceae
+709,"Pohlia annotina Lindberg, 1879",SPECIES,Bryales,Bryophyta,Plantae,Pohlia,Bryopsida,Bryaceae
+710,"Pohlia bulbifera Warnstorf, 1904",SPECIES,Bryales,Bryophyta,Plantae,Pohlia,Bryopsida,Bryaceae
+711,"Pohlia camptotrachela Brotherus, 1903",SPECIES,Bryales,Bryophyta,Plantae,Pohlia,Bryopsida,Bryaceae
+715,"Pohlia flexuosa W.J.Hooker, 1836",SPECIES,Bryales,Bryophyta,Plantae,Pohlia,Bryopsida,Bryaceae
+716,"Pohlia lescuriana Ochi, 1968",SPECIES,Bryales,Bryophyta,Plantae,Pohlia,Bryopsida,Bryaceae
+717,"Pohlia lutescens H.Lindberg, 1899",SPECIES,Bryales,Bryophyta,Plantae,Pohlia,Bryopsida,Bryaceae
+718,"Pohlia melanodon A.J.Shaw, 1981",SPECIES,Bryales,Bryophyta,Plantae,Pohlia,Bryopsida,Bryaceae
+719,"Pohlia nutans Lindberg, 1879",SPECIES,Bryales,Bryophyta,Plantae,Pohlia,Bryopsida,Bryaceae
+720,"Pohlia wahlenbergii Andrews, 1935",SPECIES,Bryales,Bryophyta,Plantae,Pohlia,Bryopsida,Bryaceae
+721,"Polytrichastrum alpinum G.L.Smith, 1971",SPECIES,Polytrichales,Bryophyta,Plantae,Polytrichastrum,Bryopsida,Polytrichaceae
+723,"Polytrichum commune Hedwig, 1801",SPECIES,Polytrichales,Bryophyta,Plantae,Polytrichum,Bryopsida,Polytrichaceae
+725,"Polytrichum juniperinum Hedwig, 1801",SPECIES,Polytrichales,Bryophyta,Plantae,Polytrichum,Bryopsida,Polytrichaceae
+727,"Polytrichum piliferum Hedwig, 1801",SPECIES,Polytrichales,Bryophyta,Plantae,Polytrichum,Bryopsida,Polytrichaceae
+728,"Polytrichum strictum Menzies ex Bridel, 1801",SPECIES,Polytrichales,Bryophyta,Plantae,Polytrichum,Bryopsida,Polytrichaceae
+734,Porella platyphylla (L.) Pfeiff.,SPECIES,Porellales,Marchantiophyta,Plantae,Porella,Jungermanniopsida,Porellaceae
+736,Preissia quadrata (Scop.) Nees,SPECIES,Marchantiales,Marchantiophyta,Plantae,Marchantia,Marchantiopsida,Marchantiaceae
+738,Pseudephemerum nitidum (Hedw.) Loeske,SPECIES,Dicranales,Bryophyta,Plantae,Pseudephemerum,Bryopsida,Dicranaceae
+740,"Pseudobryum cinclidioides T.Koponen, 1968",SPECIES,Bryales,Bryophyta,Plantae,Pseudobryum,Bryopsida,Mniaceae
+742,"Pseudocalliergon lycopodioides Hedenäs, 1990",SPECIES,Hypnales,Bryophyta,Plantae,Pseudocalliergon,Bryopsida,Amblystegiaceae
+744,"Pseudocrossidium hornschuchianum Zander, 1979",SPECIES,Pottiales,Bryophyta,Plantae,Pseudocrossidium,Bryopsida,Pottiaceae
+745,"Pseudocrossidium revolutum Zander, 1979",SPECIES,Pottiales,Bryophyta,Plantae,Pseudocrossidium,Bryopsida,Pottiaceae
+750,"Pseudotaxiphyllum elegans Iwatsuki, 1987",SPECIES,Hypnales,Bryophyta,Plantae,Pseudotaxiphyllum,Bryopsida,Plagiotheciaceae
+753,"Pterigynandrum filiforme Hedwig, 1801",SPECIES,Hypnales,Bryophyta,Plantae,Pterigynandrum,Bryopsida,Pterigynandraceae
+757,"Pterygoneurum ovatum Dixon, 1934",SPECIES,Pottiales,Bryophyta,Plantae,Pterygoneurum,Bryopsida,Pottiaceae
+759,Ptilidium ciliare (L.) Hampe,SPECIES,Ptilidiales,Marchantiophyta,Plantae,Ptilidium,Jungermanniopsida,Ptilidiaceae
+760,Ptilidium pulcherrimum (Weber) Vain.,SPECIES,Ptilidiales,Marchantiophyta,Plantae,Ptilidium,Jungermanniopsida,Ptilidiaceae
+762,"Ptilium crista-castrensis De Notaris, 1867",SPECIES,Hypnales,Bryophyta,Plantae,Ptilium,Bryopsida,Hypnaceae
+766,"Pylaisia polyantha W.P.Schimper, 1851",SPECIES,Hypnales,Bryophyta,Plantae,Pylaisia,Bryopsida,Hypnaceae
+768,"Racomitrium aciculare Bridel, 1819",SPECIES,Grimmiales,Bryophyta,Plantae,Racomitrium,Bryopsida,Grimmiaceae
+772,"Racomitrium ericoides Bridel, 1819",SPECIES,Grimmiales,Bryophyta,Plantae,Racomitrium,Bryopsida,Grimmiaceae
+774,"Racomitrium heterostichum Bridel, 1819",SPECIES,Grimmiales,Bryophyta,Plantae,Racomitrium,Bryopsida,Grimmiaceae
+775,"Racomitrium lanuginosum Bridel, 1819",SPECIES,Grimmiales,Bryophyta,Plantae,Racomitrium,Bryopsida,Grimmiaceae
+778,Radula complanata (L.) Dumort.,SPECIES,Porellales,Marchantiophyta,Plantae,Radula,Jungermanniopsida,Radulaceae
+781,Reboulia hemisphaerica (L.) Raddi,SPECIES,Marchantiales,Marchantiophyta,Plantae,Reboulia,Marchantiopsida,Aytoniaceae
+788,"Rhizomnium punctatum T.Koponen, 1968",SPECIES,Bryales,Bryophyta,Plantae,Rhizomnium,Bryopsida,Mniaceae
+791,"Rhodobryum roseum Limpricht, 1892",SPECIES,Bryales,Bryophyta,Plantae,Rhodobryum,Bryopsida,Bryaceae
+793,"Rhynchostegiella curviseta Limpricht, 1896",SPECIES,Hypnales,Bryophyta,Plantae,Rhynchostegiella,Bryopsida,Brachytheciaceae
+794,"Rhynchostegiella tenella Limpricht, 1890",SPECIES,Hypnales,Bryophyta,Plantae,Rhynchostegiella,Bryopsida,Brachytheciaceae
+795,Rhynchostegiella teneriffae (Mont.) Dirkse & Bouman,SPECIES,Hypnales,Bryophyta,Plantae,Rhynchostegiella,Bryopsida,Brachytheciaceae
+798,"Rhynchostegium confertum W.P.Schimper, 1852",SPECIES,Hypnales,Bryophyta,Plantae,Rhynchostegium,Bryopsida,Brachytheciaceae
+799,"Rhynchostegium megapolitanum W.P.Schimper, 1852",SPECIES,Hypnales,Bryophyta,Plantae,Rhynchostegium,Bryopsida,Brachytheciaceae
+800,"Rhynchostegium murale W.P.Schimper, 1852",SPECIES,Hypnales,Bryophyta,Plantae,Rhynchostegium,Bryopsida,Brachytheciaceae
+803,"Rhytidiadelphus loreus Warnstorf, 1906",SPECIES,Hypnales,Bryophyta,Plantae,Rhytidiadelphus,Bryopsida,Hylocomiaceae
+804,"Rhytidiadelphus squarrosus Warnstorf, 1906",SPECIES,Hypnales,Bryophyta,Plantae,Rhytidiadelphus,Bryopsida,Hylocomiaceae
+806,"Rhytidiadelphus triquetrus Warnstorf, 1906",SPECIES,Hypnales,Bryophyta,Plantae,Rhytidiadelphus,Bryopsida,Hylocomiaceae
+808,"Rhytidium rugosum Kindberg, 1883",SPECIES,Hypnales,Bryophyta,Plantae,Rhytidium,Bryopsida,Hylocomiaceae
+810,Riccardia chamedryfolia (With.) Grolle,SPECIES,Metzgeriales,Marchantiophyta,Plantae,Riccardia,Jungermanniopsida,Aneuraceae
+811,Riccardia incurvata Lindb.,SPECIES,Metzgeriales,Marchantiophyta,Plantae,Riccardia,Jungermanniopsida,Aneuraceae
+812,Riccardia latifrons (Lindb.) Lindb.,SPECIES,Metzgeriales,Marchantiophyta,Plantae,Riccardia,Jungermanniopsida,Aneuraceae
+813,Riccardia multifida (L.) Gray,SPECIES,Metzgeriales,Marchantiophyta,Plantae,Riccardia,Jungermanniopsida,Aneuraceae
+815,Riccia beyrichiana Hampe ex Lehm.,SPECIES,Marchantiales,Marchantiophyta,Plantae,Riccia,Marchantiopsida,Ricciaceae
+816,Riccia bifurca Hoffm.,SPECIES,Marchantiales,Marchantiophyta,Plantae,Riccia,Marchantiopsida,Ricciaceae
+817,Riccia canaliculata Hoffm.,SPECIES,Marchantiales,Marchantiophyta,Plantae,Riccia,Marchantiopsida,Ricciaceae
+818,Riccia cavernosa Hoffm.,SPECIES,Marchantiales,Marchantiophyta,Plantae,Riccia,Marchantiopsida,Ricciaceae
+821,Riccia fluitans L.,SPECIES,Marchantiales,Marchantiophyta,Plantae,Riccia,Marchantiopsida,Ricciaceae
+822,Riccia glauca L.,SPECIES,Marchantiales,Marchantiophyta,Plantae,Riccia,Marchantiopsida,Ricciaceae
+823,Riccia huebeneriana Lindenb.,SPECIES,Marchantiales,Marchantiophyta,Plantae,Riccia,Marchantiopsida,Ricciaceae
+825,Riccia sorocarpa Bisch.,SPECIES,Marchantiales,Marchantiophyta,Plantae,Riccia,Marchantiopsida,Ricciaceae
+826,Riccia subbifurca Warnst. ex Croz.,SPECIES,Marchantiales,Marchantiophyta,Plantae,Riccia,Marchantiopsida,Ricciaceae
+827,Riccia warnstorfii Limpr. ex Warnst.,SPECIES,Marchantiales,Marchantiophyta,Plantae,Riccia,Marchantiopsida,Ricciaceae
+829,Ricciocarpos natans (L.) Corda,SPECIES,Marchantiales,Marchantiophyta,Plantae,Ricciocarpos,Marchantiopsida,Ricciaceae
+831,"Sanionia uncinata Loeske, 1907",SPECIES,Hypnales,Bryophyta,Plantae,Sanionia,Bryopsida,Amblystegiaceae
+837,Scapania curta (Mart.) Dumort.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Scapania,Jungermanniopsida,Scapaniaceae
+839,Scapania irrigua (Nees) Nees,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Scapania,Jungermanniopsida,Scapaniaceae
+842,Scapania nemorea (L.) Grolle,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Scapania,Jungermanniopsida,Scapaniaceae
+845,Scapania undulata (L.) Dumort.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Scapania,Jungermanniopsida,Scapaniaceae
+854,"Schistidium rivulare (Brid.) Podp., 1911",SPECIES,Grimmiales,Bryophyta,Plantae,Schistidium,Bryopsida,Grimmiaceae
+860,"Scleropodium cespitans L.F.Koch, 1950",SPECIES,Hypnales,Bryophyta,Plantae,Scleropodium,Bryopsida,Brachytheciaceae
+864,"Scopelophila cataractae Brotherus, 1902",SPECIES,Pottiales,Bryophyta,Plantae,Scopelophila,Bryopsida,Pottiaceae
+867,"Scorpidium cossonii Hedenäs, 1989",SPECIES,Hypnales,Bryophyta,Plantae,Scorpidium,Bryopsida,Amblystegiaceae
+868,"Scorpidium revolvens Rubers, 1989",SPECIES,Hypnales,Bryophyta,Plantae,Scorpidium,Bryopsida,Amblystegiaceae
+869,"Scorpidium scorpioides Limpricht, 1899",SPECIES,Hypnales,Bryophyta,Plantae,Scorpidium,Bryopsida,Amblystegiaceae
+872,"Seligeria calcarea Bruch & W.P.Schimper, 1849",SPECIES,Seligerales,Bryophyta,Plantae,Seligeria,Bryopsida,Seligeriaceae
+881,"Sematophyllum substrumulosum Britton, 1902",SPECIES,Hypnales,Bryophyta,Plantae,Sematophyllum,Bryopsida,Sematophyllaceae
+887,Sphaerocarpos michelii Bellardi,SPECIES,Sphaerocarpales,Marchantiophyta,Plantae,Sphaerocarpos,Marchantiopsida,Sphaerocarpaceae
+888,Sphaerocarpos texanus Austin,SPECIES,Sphaerocarpales,Marchantiophyta,Plantae,Sphaerocarpos,Marchantiopsida,Sphaerocarpaceae
+891,"Sphagnum angustifolium C.E.O.Jensen, 1896",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+892,"Sphagnum capillifolium Hedwig, 1782",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+894,"Sphagnum compactum Lamarck & A.P.de Candolle, 1805",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+895,"Sphagnum contortum Schultz, 1819",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+896,"Sphagnum cuspidatum Ehrhart ex G.F.Hoffmann, 1796",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+898,"Sphagnum fallax Klinggräff, 1881",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+899,"Sphagnum fimbriatum Wilson, 1847",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+900,"Sphagnum flexuosum Dozy & Molkenboer, 1851",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+902,"Sphagnum girgensohnii Russow, 1865",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+903,"Sphagnum inundatum Russow, 1894",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+904,"Sphagnum magellanicum Bridel, 1798",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+905,"Sphagnum majus C.E.O.Jensen, 1890",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+906,"Sphagnum molle Sullivant, 1846",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+907,"Sphagnum obtusum Warnstorf, 1877",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+908,"Sphagnum palustre L., 1753",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+909,"Sphagnum papillosum Lindberg, 1872",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+910,"Sphagnum platyphyllum Warnstorf, 1884",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+911,"Sphagnum quinquefarium Warnstorf, 1886",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+912,"Sphagnum riparium Ångström, 1864",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+913,"Sphagnum rubellum Wilson, 1855",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+914,"Sphagnum russowii Warnstorf, 1886",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+915,"Sphagnum squarrosum Crome, 1803",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+916,"Sphagnum subnitens Russow & Warnstorf, 1888",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+917,"Sphagnum subsecundum Nees, 1819",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+918,"Sphagnum tenellum Bridel, 1819",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+919,"Sphagnum teres Ångström, 1861",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+925,"Straminergon stramineum Hedenäs, 1993",SPECIES,Hypnales,Bryophyta,Plantae,Straminergon,Bryopsida,Amblystegiaceae
+927,"Syntrichia calcicola Amann, 1918",SPECIES,Pottiales,Bryophyta,Plantae,Syntrichia,Bryopsida,Pottiaceae
+930,"Syntrichia laevipila Bridel, 1819",SPECIES,Pottiales,Bryophyta,Plantae,Syntrichia,Bryopsida,Pottiaceae
+931,"Syntrichia latifolia Hübener, 1833",SPECIES,Pottiales,Bryophyta,Plantae,Syntrichia,Bryopsida,Pottiaceae
+932,"Syntrichia papillosa Juratzka, 1882",SPECIES,Pottiales,Bryophyta,Plantae,Syntrichia,Bryopsida,Pottiaceae
+934,Syntrichia ruraliformis (Besch.) Cardot,SPECIES,Pottiales,Bryophyta,Plantae,Syntrichia,Bryopsida,Pottiaceae
+935,"Syntrichia ruralis Weber & D.Mohr, 1803",SPECIES,Pottiales,Bryophyta,Plantae,Syntrichia,Bryopsida,Pottiaceae
+936,"Syntrichia virescens Ochyra, 1992",SPECIES,Pottiales,Bryophyta,Plantae,Syntrichia,Bryopsida,Pottiaceae
+940,"Taxiphyllum wissgrillii Wijk & Margadant, 1960",SPECIES,Hypnales,Bryophyta,Plantae,Taxiphyllum,Bryopsida,Hypnaceae
+946,"Tetraphis pellucida Hedwig, 1801",SPECIES,Tetraphidales,Bryophyta,Plantae,Tetraphis,Bryopsida,Tetraphidaceae
+952,"Thamnobryum alopecurum Nieuwland ex Gangulee, 1976",SPECIES,Leucodontales,Bryophyta,Plantae,Thamnobryum,Bryopsida,Neckeraceae
+955,"Thuidium delicatulum W.P.Schimper, 1852",SPECIES,Hypnales,Bryophyta,Plantae,Thuidium,Bryopsida,Thuidiaceae
+958,"Thuidium tamariscinum W.P.Schimper, 1852",SPECIES,Hypnales,Bryophyta,Plantae,Thuidium,Bryopsida,Thuidiaceae
+963,"Tortella flavovirens Brotherus, 1902",SPECIES,Pottiales,Bryophyta,Plantae,Tortella,Bryopsida,Pottiaceae
+964,"Tortella inclinata Limpricht, 1888",SPECIES,Pottiales,Bryophyta,Plantae,Tortella,Bryopsida,Pottiaceae
+967,"Tortella tortuosa Limpricht, 1888",SPECIES,Pottiales,Bryophyta,Plantae,Tortella,Bryopsida,Pottiaceae
+974,"Tortula lanceola Zander, 1993",SPECIES,Pottiales,Bryophyta,Plantae,Tortula,Bryopsida,Pottiaceae
+975,"Tortula marginata Spruce, 1845",SPECIES,Pottiales,Bryophyta,Plantae,Tortula,Bryopsida,Pottiaceae
+976,"Tortula modica Zander, 1993",SPECIES,Pottiales,Bryophyta,Plantae,Tortula,Bryopsida,Pottiaceae
+978,"Tortula muralis Hedwig, 1801",SPECIES,Pottiales,Bryophyta,Plantae,Tortula,Bryopsida,Pottiaceae
+981,"Tortula subulata Hedwig, 1801",SPECIES,Pottiales,Bryophyta,Plantae,Tortula,Bryopsida,Pottiaceae
+982,"Tortula truncata Mitten, 1870",SPECIES,Pottiales,Bryophyta,Plantae,Tortula,Bryopsida,Pottiaceae
+983,"Tortula vahliana Montagne, 1850",SPECIES,Pottiales,Bryophyta,Plantae,Tortula,Bryopsida,Pottiaceae
+985,"Trematodon ambiguus Hornschuch, 1819",SPECIES,Dicranales,Bryophyta,Plantae,Trematodon,Bryopsida,Bruchiaceae
+987,Trichocolea tomentella (Ehrh.) Dumort.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Trichocolea,Jungermanniopsida,Trichocoleaceae
+992,"Trichostomum crispulum Bruch, 1829",SPECIES,Pottiales,Bryophyta,Plantae,Trichostomum,Bryopsida,Pottiaceae
+998,Ulota bruchii Hornsch. ex Brid.,SPECIES,Orthotrichales,Bryophyta,Plantae,Ulota,Bryopsida,Orthotrichaceae
+999,"Ulota coarctata Hammar, 1852",SPECIES,Orthotrichales,Bryophyta,Plantae,Ulota,Bryopsida,Orthotrichaceae
+1000,"Ulota crispa Bridel, 1819",SPECIES,Orthotrichales,Bryophyta,Plantae,Ulota,Bryopsida,Orthotrichaceae
+1002,"Ulota phyllantha Bridel, 1819",SPECIES,Orthotrichales,Bryophyta,Plantae,Ulota,Bryopsida,Orthotrichaceae
+1005,"Warnstorfia exannulata Loeske, 1907",SPECIES,Hypnales,Bryophyta,Plantae,Warnstorfia,Bryopsida,Amblystegiaceae
+1006,"Warnstorfia fluitans Loeske, 1907",SPECIES,Hypnales,Bryophyta,Plantae,Warnstorfia,Bryopsida,Amblystegiaceae
+1007,"Warnstorfia pseudostraminea Tuomikoski & T.Koponen, 1979",SPECIES,Hypnales,Bryophyta,Plantae,Warnstorfia,Bryopsida,Amblystegiaceae
+1009,"Weissia brachycarpa Juratzka, 1882",SPECIES,Pottiales,Bryophyta,Plantae,Weissia,Bryopsida,Pottiaceae
+1011,"Weissia controversa Hedwig, 1801",SPECIES,Pottiales,Bryophyta,Plantae,Weissia,Bryopsida,Pottiaceae
+1012,"Weissia longifolia Mitten, 1851",SPECIES,Pottiales,Bryophyta,Plantae,Weissia,Bryopsida,Pottiaceae
+1013,"Weissia rostellata Lindberg, 1864",SPECIES,Pottiales,Bryophyta,Plantae,Weissia,Bryopsida,Pottiaceae
+1014,"Weissia rutilans Lindberg, 1863",SPECIES,Pottiales,Bryophyta,Plantae,Weissia,Bryopsida,Pottiaceae
+1015,Weissia squarrosa (Nees & Hornsch.) Müll.Hal.,SPECIES,Pottiales,Bryophyta,Plantae,Weissia,Bryopsida,Pottiaceae
+1017,"Zygodon conoideus W.J.Hooker & Taylor, 1818",SPECIES,Orthotrichales,Bryophyta,Plantae,Zygodon,Bryopsida,Orthotrichaceae
+1019,"Zygodon rupestris W.P.Schimper ex Lorentz, 1865",SPECIES,Orthotrichales,Bryophyta,Plantae,Zygodon,Bryopsida,Orthotrichaceae
+1020,"Zygodon viridissimus Bridel, 1826",SPECIES,Orthotrichales,Bryophyta,Plantae,Zygodon,Bryopsida,Orthotrichaceae
+1021,Zygodon viridissimus var. stirtonii (Stirt.) I.Hagen,VARIETY,Orthotrichales,Bryophyta,Plantae,Zygodon,Bryopsida,Orthotrichaceae
+8304,"Abietinella abietina Fleischer, 1923",SPECIES,Hypnales,Bryophyta,Plantae,Abietinella,Bryopsida,Thuidiaceae
+8311,Brachytheciastrum velutinum (Hedw.) Ignatov & Huttunen,SPECIES,Hypnales,Bryophyta,Plantae,Brachytheciastrum,Bryopsida,Brachytheciaceae
+8318,"Bryum archangelicum Bruch & W.P.Schimper, 1846",SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+8320,Cirriphyllum crassinervium (Taylor) Loeske & M.Fleisch.,SPECIES,Hypnales,Bryophyta,Plantae,Cirriphyllum,Bryopsida,Brachytheciaceae
+8321,"Cleistocarpidium palustre Ochyra & Bednarek-Ochyra, 1996",SPECIES,Dicranales,Bryophyta,Plantae,Cleistocarpidium,Bryopsida,Ditrichaceae
+8324,"Didymodon australasiae Zander, 1978",SPECIES,Pottiales,Bryophyta,Plantae,Didymodon,Bryopsida,Pottiaceae
+8328,"Fissidens fontanus Steudel, 1824",SPECIES,Fissidentales,Bryophyta,Plantae,Fissidens,Bryopsida,Fissidentaceae
+8330,"Hygroamblystegium fluviatile Loeske, 1903",SPECIES,Hypnales,Bryophyta,Plantae,Hygroamblystegium,Bryopsida,Amblystegiaceae
+8331,"Hygroamblystegium humile (P.Beauv.) Vanderp., Goffinet & Hedenäs",SPECIES,Hypnales,Bryophyta,Plantae,Hygroamblystegium,Bryopsida,Amblystegiaceae
+8332,"Hygroamblystegium tenax Jennings, 1913",SPECIES,Hypnales,Bryophyta,Plantae,Hygroamblystegium,Bryopsida,Amblystegiaceae
+8333,Hygroamblystegium varium (Hedw.) Mönk.,SPECIES,Hypnales,Bryophyta,Plantae,Hygroamblystegium,Bryopsida,Amblystegiaceae
+8336,Kindbergia praelonga (Hedw.) Ochyra,SPECIES,Hypnales,Bryophyta,Plantae,Kindbergia,Bryopsida,Brachytheciaceae
+8337,Leiocolea collaris (Nees) Schljakov,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Mesoptychia,Jungermanniopsida,Jungermanniaceae
+8338,"Loeskeobryum brevirostre Fleischer, 1925",SPECIES,Hypnales,Bryophyta,Plantae,Loeskeobryum,Bryopsida,Hylocomiaceae
+8339,Metzgeria violacea (Ach.) Dumort.,SPECIES,Metzgeriales,Marchantiophyta,Plantae,Metzgeria,Jungermanniopsida,Metzgeriaceae
+8340,Oxyrrhynchium hians (Hedw.) Loeske,SPECIES,Hypnales,Bryophyta,Plantae,Oxyrrhynchium,Bryopsida,Brachytheciaceae
+8341,Oxyrrhynchium pumilum (Wilson) Loeske,SPECIES,Hypnales,Bryophyta,Plantae,Oxyrrhynchium,Bryopsida,Brachytheciaceae
+8342,Oxyrrhynchium schleicheri (R.Hedw.) Röll,SPECIES,Hypnales,Bryophyta,Plantae,Oxyrrhynchium,Bryopsida,Brachytheciaceae
+8343,Oxyrrhynchium speciosum (Brid.) Warnst.,SPECIES,Hypnales,Bryophyta,Plantae,Oxyrrhynchium,Bryopsida,Brachytheciaceae
+8344,Phascum cuspidatum Hedw.,SPECIES,Pottiales,Bryophyta,Plantae,Phascum,Bryopsida,Pottiaceae
+8345,"Physcomitrella patens Bruch & W.P.Schimper, 1849",SPECIES,Funariales,Bryophyta,Plantae,Physcomitrella,Bryopsida,Funariaceae
+8346,Plasteurhynchium striatulum (Spruce) M.Fleisch.,SPECIES,Hypnales,Bryophyta,Plantae,Plasteurhynchium,Bryopsida,Brachytheciaceae
+8347,"Polytrichastrum formosum G.L.Smith, 1971",SPECIES,Polytrichales,Bryophyta,Plantae,Polytrichastrum,Bryopsida,Polytrichaceae
+8348,"Polytrichastrum longisetum G.L.Smith, 1971",SPECIES,Polytrichales,Bryophyta,Plantae,Polytrichastrum,Bryopsida,Polytrichaceae
+8349,Protobryum bryoides (Dicks.) J.Guerra & M.J.Cano,SPECIES,Pottiales,Bryophyta,Plantae,Protobryum,Bryopsida,Pottiaceae
+8350,"Pseudoscleropodium purum Fleischer, 1925",SPECIES,Hypnales,Bryophyta,Plantae,Pseudoscleropodium,Bryopsida,Entodontaceae
+8353,Sciuro-hypnum oedipodium (Mitt.) Ignatov & Huttunen,SPECIES,Hypnales,Bryophyta,Plantae,Sciuro-hypnum,Bryopsida,Brachytheciaceae
+8354,Sciuro-hypnum plumosum (Hedw.) Ignatov & Huttunen,SPECIES,Hypnales,Bryophyta,Plantae,Sciuro-hypnum,Bryopsida,Brachytheciaceae
+8355,Sciuro-hypnum populeum (Hedw.) Ignatov & Huttunen,SPECIES,Hypnales,Bryophyta,Plantae,Sciuro-hypnum,Bryopsida,Brachytheciaceae
+8356,Sciuro-hypnum reflexum (Starke) Ignatov & Huttunen,SPECIES,Hypnales,Bryophyta,Plantae,Sciuro-hypnum,Bryopsida,Brachytheciaceae
+8359,Syntrichia montana Nees,SPECIES,Pottiales,Bryophyta,Plantae,Syntrichia,Bryopsida,Pottiaceae
+8360,"Thuidium assimile Jaeger, 1878",SPECIES,Hypnales,Bryophyta,Plantae,Thuidium,Bryopsida,Thuidiaceae
+8362,"Trichodon cylindricus W.P.Schimper, 1856",SPECIES,Dicranales,Bryophyta,Plantae,Trichodon,Bryopsida,Ditrichaceae
+8364,"Aloina ambigua (Bruch & W.P.Schimper) Limpricht, 1888",SPECIES,Pottiales,Bryophyta,Plantae,Aloina,Bryopsida,Pottiaceae
+8366,Campylium protensum (Brid.) Kindb.,SPECIES,Hypnales,Bryophyta,Plantae,Campylium,Bryopsida,Amblystegiaceae
+8367,Didymodon insulanus (De Not.) M.O.Hill,SPECIES,Pottiales,Bryophyta,Plantae,Didymodon,Bryopsida,Pottiaceae
+8368,Ephemerum minutissimum Lindb.,SPECIES,Pottiales,Bryophyta,Plantae,Ephemerum,Bryopsida,Pottiaceae
+8370,Sphagnum auriculatum Schimp.,SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+8371,Zygodon stirtonii Schimp. ex Stirt.,SPECIES,Orthotrichales,Bryophyta,Plantae,Zygodon,Bryopsida,Orthotrichaceae
+8392,Fissidens gymnandrus Büse,SPECIES,Fissidentales,Bryophyta,Plantae,Fissidens,Bryopsida,Fissidentaceae
+8394,"Grimmia anodon Bruch & W.P.Schimper, 1845",SPECIES,Grimmiales,Bryophyta,Plantae,Grimmia,Bryopsida,Grimmiaceae
+8433,"Zygodon dentatus Karttunen, 1984",SPECIES,Orthotrichales,Bryophyta,Plantae,Zygodon,Bryopsida,Orthotrichaceae
+8438,Conocephalum conicum (L.) Dumort.,SPECIES,Marchantiales,Marchantiophyta,Plantae,Conocephalum,Marchantiopsida,Conocephalaceae
+8439,Chiloscyphus polyanthos (L.) Corda,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Chiloscyphus,Jungermanniopsida,Lophocoleaceae
+8440,"Schistidium apocarpum Bruch & W.P.Schimper, 1845",SPECIES,Grimmiales,Bryophyta,Plantae,Schistidium,Bryopsida,Grimmiaceae
+8441,"Palustriella commutata Ochyra, 1989",SPECIES,Hypnales,Bryophyta,Plantae,Palustriella,Bryopsida,Amblystegiaceae
+8445,"Syntrichia ruralis Weber & D.Mohr, 1803",SPECIES,Pottiales,Bryophyta,Plantae,Syntrichia,Bryopsida,Pottiaceae
+8446,Syntrichia montana var. calva (Durieu & Sagot) J.J.Amann,VARIETY,Pottiales,Bryophyta,Plantae,Syntrichia,Bryopsida,Pottiaceae
+8451,"Racomitrium canescens Bridel, 1819",SPECIES,Grimmiales,Bryophyta,Plantae,Racomitrium,Bryopsida,Grimmiaceae
+8460,"Bryum rubens Mitten, 1856",SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+8472,"Sphagnum recurvum Palisot de Beauvois, 1805",SPECIES,Sphagnales,Bryophyta,Plantae,Sphagnum,Sphagnopsida,Sphagnaceae
+8518,"Plagiothecium denticulatum W.P.Schimper, 1851",SPECIES,Hypnales,Bryophyta,Plantae,Plagiothecium,Bryopsida,Plagiotheciaceae
+8551,"Bryum erythrocarpum G.Roth, 1905",SPECIES,Bryales,Bryophyta,Plantae,Bryum,Bryopsida,Bryaceae
+8636,Schistidium platyphyllum (Mitt.) H.Perss.,SPECIES,Grimmiales,Bryophyta,Plantae,Schistidium,Bryopsida,Grimmiaceae
+8637,Riccardia palmata (Hedw.) Carruth.,SPECIES,Metzgeriales,Marchantiophyta,Plantae,Riccardia,Jungermanniopsida,Aneuraceae
+8656,"Leptodon smithii Weber & D.Mohr, 1803",SPECIES,Leucodontales,Bryophyta,Plantae,Leptodon,Bryopsida,Leptodontaceae
+8705,Barbula sardoa (Bruch & Schimp.) J.-P.Frahm,SPECIES,Pottiales,Bryophyta,Plantae,Barbula,Bryopsida,Pottiaceae
+8707,"Orthotrichum acuminatum Philibert, 1881",SPECIES,Orthotrichales,Bryophyta,Plantae,Orthotrichum,Bryopsida,Orthotrichaceae
+8731,Fossombronia caespitiformis (Raddi) De Not. ex Rabenh.,SPECIES,Fossombroniales,Marchantiophyta,Plantae,Fossombronia,Jungermanniopsida,Fossombroniaceae
+8839,Riccia crozalsii Levier,SPECIES,Marchantiales,Marchantiophyta,Plantae,Riccia,Marchantiopsida,Ricciaceae
+8873,Tortella fasciculata (Culm.) Culm,SPECIES,Pottiales,Bryophyta,Plantae,Tortella,Bryopsida,Pottiaceae
+8884,Cephaloziella spinigera (Lindb.) Warnst.,SPECIES,Jungermanniales,Marchantiophyta,Plantae,Cephaloziella,Jungermanniopsida,Cephaloziellaceae
+8893,Drepanocladus kneiffii (Schimp.) Warnst.,SPECIES,Hypnales,Bryophyta,Plantae,Drepanocladus,Bryopsida,Amblystegiaceae
+8895,"Drepanocladus (C.Müller Hal.) G.Roth, 1899",GENUS,Hypnales,Bryophyta,Plantae,Drepanocladus,Bryopsida,Amblystegiaceae
+8896,"Drepanocladus (C.Müller Hal.) G.Roth, 1899",GENUS,Hypnales,Bryophyta,Plantae,Drepanocladus,Bryopsida,Amblystegiaceae
+8897,Drepanocladus polygamus (Schimp.) Hedenäs,SPECIES,Hypnales,Bryophyta,Plantae,Drepanocladus,Bryopsida,Amblystegiaceae
+8900,Warnstorfia Loeske,GENUS,Hypnales,Bryophyta,Plantae,Warnstorfia,Bryopsida,Amblystegiaceae
+8903,"Ulota crispa Bridel, 1819",SPECIES,Orthotrichales,Bryophyta,Plantae,Ulota,Bryopsida,Orthotrichaceae
+8904,Ulota crispula Bruch,SPECIES,Orthotrichales,Bryophyta,Plantae,Ulota,Bryopsida,Orthotrichaceae
