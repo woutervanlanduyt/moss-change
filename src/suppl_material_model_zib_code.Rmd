@@ -5,6 +5,9 @@ author: "Hans Van Calster, Wouter Van Landuyt"
 date: "2021-10-29"
 output: bookdown::html_document2
 bibliography: references.bib
+editor_options: 
+  markdown: 
+    wrap: sentence
 ---
 
 ```{r setup, include=FALSE}
@@ -46,7 +49,48 @@ write(x =
   journal = {Journal of Research on Educational Effectiveness},
   keywords = {bayesian inference,bmkANA_MixedModels,hierarchical modeling,multiple comparisons,statis-,type s error},
   number = {2}
-}",
+}
+
+@article{vehtari2017,
+	title = {Practical {Bayesian} model evaluation using leave-one-out cross-validation and {WAIC}},
+	volume = {27},
+	issn = {0960-3174},
+	url = {http://link.springer.com/10.1007/s11222-016-9696-4},
+	doi = {10.1007/s11222-016-9696-4},
+	number = {5},
+	urldate = {2018-10-02},
+	journal = {Statistics and Computing},
+	author = {Vehtari, Aki and Gelman, Andrew and Gabry, Jonah},
+	month = sep,
+	year = {2017},
+	note = {Publisher: Springer US},
+	pages = {1413--1432}}
+
+@article{debeer2019,
+	title = {Aanvullingen en correcties bij de {Vlaamse} checklist mossen (hauwmossen, levermossen, bladmossen)},
+	volume = {115},
+	url = {https://zenodo.org/record/3553636},
+	doi = {10.5281/zenodo.3553636},
+	language = {nld},
+	urldate = {2021-11-10},
+	journal = {Dumortiera},
+	author = {De Beer, Dirk and Van Landuyt, Wouter},
+	month = dec,
+	year = {2019},
+	pages = {3--27}}
+@article{telfer2002,
+	title = {A general method for measuring relative change in range size from biological atlas data},
+	volume = {107},
+	issn = {00063207},
+	url = {https://www.sciencedirect.com/science/article/abs/pii/S0006320702000502},
+	doi = {10.1016/S0006-3207(02)00050-2},
+	number = {1},
+	journal = {Biological Conservation},
+	author = {Telfer, Mark G and Preston, C.D. and Rothery, Peter},
+	month = sep,
+	year = {2002},
+	pages = {99--109}}
+",
 file = "references.bib",
 append = TRUE)
 ```
@@ -58,7 +102,6 @@ This R Markdown file (or the rendered html version) contains R code to reproduce
 All analyses were done using the R software language for statistical computing [@R-base].
 The main R packages that are needed to run the code in this file are: `dplyr` [@R-dplyr], `ggplot2` [@R-ggplot2], `readr` [@R-readr], `brms` [@R-brms], `patchwork` [@R-patchwork], `here` [@R-here] and `broom.mixed` [@R-broom.mixed].
 A full list of version and dependencies can be found at the end of the document in section [Session info](#-session-info).
-
 
 # Read the data
 
@@ -75,33 +118,86 @@ glimpse(bryophyte_data)
 
 Explanation of variables:
 
-- `phylum`: Character vector indicating to which phylum the species belongs.
-- `taxon_id_parent`: Numeric identifier of a species. Can be used to join the table to `taxon_names` (join on `taxon_names$id`)
-- `n_hok_1980_1999`: Number of occupied 16 km² squares in period 1980 - 1999.
-- `n_hok_2000_2019`: Number of occupied 16 km² squares in period 2000 - 2019.
-- `n_hok_tot_1980_1999`: Total number of eligible 16 km² squares in period 1980 - 1999.
-- `n_hok_tot_2000_2019`: Total number of eligible 16 km² squares in period 2000 - 2019.
-- `ell_l`: Ellenberg values for light.
-- `ell_n`: Ellenberg values for nitrogen.
-- `ell_f`: Ellenberg values for moisture.
-- `ell_r`: Ellenberg values for reaction number.
-- `ell_t`: Ellenberg values for temperature.
-- `substrate`: Character vector indicating the substrate(s) where the species lives upon.
-- `wei`: Weights used in the analysis to downweight species which have occur on more than one substrate.
+-   `phylum`: Character vector indicating to which phylum the species belongs.
+-   `taxon_id_parent`: Numeric identifier of a species. Can be used to join the table to `taxon_names` (join on `taxon_names$id`)
+-   `n_hok_1980_1999`: Number of occupied 16 km² squares in period 1980 - 1999.
+-   `n_hok_2000_2019`: Number of occupied 16 km² squares in period 2000 - 2019.
+-   `n_hok_tot_1980_1999`: Total number of eligible 16 km² squares in period 1980 - 1999.
+-   `n_hok_tot_2000_2019`: Total number of eligible 16 km² squares in period 2000 - 2019.
+-   `ell_l`: Ellenberg values for light.
+-   `ell_n`: Ellenberg values for nitrogen.
+-   `ell_f`: Ellenberg values for moisture.
+-   `ell_r`: Ellenberg values for reaction number.
+-   `ell_t`: Ellenberg values for temperature.
+-   `substrate`: Character vector indicating the substrate(s) where the species lives upon.
+-   `wei`: Weights used in the analysis to downweight species which have occur on more than one substrate.
 
 ```{r glimpse-taxa}
 glimpse(taxon_names)
 ```
 
-
 # Model fitting
 
-We refer the reader to the methods section of the main paper for a full model description.
+## Model description
+
+The method assumes that during the two survey periods ($s1$ and $s2$), recorders attempted to observe as many species as possible in each grid cell.
+The surveyors in both periods looked for liverworts and mosses and we, therefore, did not consider survey effort to differ between both phyla.
+Hornworts were omitted from the analysis because they are only represented by 4 species [@debeer2019].
+The size of the distribution area of individual species in each period, i.e., the number of 16 km² grid cells in which the species was observed ($Y_{i,s1}$), was expressed as a proportion of the total number of grid cells studied ($n$) during that period ($p_{i,s1} = Y_{i,s1}/n$).
+To summarise the changes in occupancy for all species, we modelled the number of occupied 16 km² squares in the second survey period ($Y_{i,s2}$ out of $n$, the total number of 16 km² squares considered, i.e. proportional data) as a function of the logit-transformed proportion in the first survey (baseline) and other covariates.
+Ellenberg values for light ($\text{ell}_L$), moisture ($\text{ell}_F$), nitrogen ($\text{ell}_N$) and temperature ($\text{ell}_T$) were included in interaction with phylum (liverworts or mosses; $\text{phylum}_k$).
+Ellenberg values for reaction (Ellenberg R: acid substrates versus calcareous substrates) were not used because they were highly correlated with Ellenberg nitrogen values, especially for liverworts but also for mosses.
+Substrate effects (11 levels) were modelled for each phylum separately as random effects ($\mathbf{b}_{o,j}$ and $\mathbf{b}_{1,j}$).
+The substrate level means were drawn from a normal distribution with a mean of zero and variance estimated from the data.
+A species could be associated with more than one substrate type.
+Therefore, a weighting factor (one divided by the number of substrate types) was used to ensure that each species in a given period has equal weight in the analysis (if this is not done, confidence interval would be too narrow and estimates could be biased).
+Because the proportional counts had excess zeroes compared to the binomial distribution, we used a zero-inflated binomial distribution.
+A logit-link was used to link the probability parameter of the binomial part ($\theta_{i,s2}$) and the probability of zero-inflation ($zi_{i,s2}$) to the linear predictor with the following model equations:
+
+$$
+g(\theta_{i,s2}) = \beta_0 + 
+   \beta_1\log\frac{\text{p}_{i,s1}}{1-\text{p}_{i,s1}} + 
+   (\beta_L\text{ell}_L + 
+   \beta_F\text{ell}_F + 
+   \beta_N\text{ell}_N + 
+   \beta_T\text{ell}_T)\text{phylum}_k + 
+   \mathbf{b}_{o,j} + 
+   \mathbf{b}_{1,j}\text{phylum}_k \\
+g(zi_{i,s2}) = \beta_{0, zi} + 
+   \beta_{1, zi}\log\frac{\text{p}_{i,s1}}{1-\text{p}_{i,s1}} + 
+   (\beta_{L, zi}\text{ell}_L + 
+   \beta_{F, zi}\text{ell}_F + 
+   \beta_{N, zi}\text{ell}_N + 
+   \beta_{T, zi}\text{ell}_T)\text{phylum}_{k, zi} + 
+   \mathbf{b}_{o,j, zi} + 
+   \mathbf{b}_{1,j, zi}\text{phylum}_{k, zi}
+$$
+
+where:
+
+$$
+\begin{aligned}
+Y_{i,s2} \sim
+  \begin{cases}
+    0       & \quad \text{with probability } zi_{i,s2}\\
+    \text{Binomial}(\text{n}, \theta_{i,s2})  & \quad \text{with probability } 1 - zi_{i,s2}
+  \end{cases} && \text{Zero-inflated binomial}\\
+\mathbf{E}(Y_{i,s2}|\mathbf{b}, \text{n}) = (1-zi_{i,s2})\text{n}\theta_{i,s2} && \text{expected value}\\
+g(\theta_{i,s2}) = \log\frac{\theta_{i,s2}}{1-\theta_{i,s2}} \text{ and } g(zi_{i,s2}) = \log\frac{zi_{i,s2}}{1-zi_{i,s2}} && \text{logit-link} \\
+\begin{bmatrix}\mathbf{b}_{o,j}\\ \mathbf{b}_{1,j}\end{bmatrix}\sim N(0,\Sigma) && \text{random intercept and slope}\\
+\Sigma = \begin{bmatrix}\sigma^2_{0,j}&0\\0&\sigma^2_{1,j}\end{bmatrix} && \text{variance-covariance matrix}
+\end{aligned}
+$$
+
+All species were included also those that occurred in less than five 16 km² grid cells in the first period.
+In @telfer2002, these species were removed, but our model diagnostics showed that they could be included.
+To avoid calculating the log of zero, the proportion of occupied grid cells in the first period, $p_{i,s1}$ was calculated as $(Y_{i, s1}+0.5)/(n+1)$.
+This transformation is not necessary for the response variable because the zero-inflated binomial accommodates zeroes.
+
 A Bayesian hierarchical modeling procedure was used to calculate the posterior distribution for the parameters of the model [@R-brms; @brms2017; @brms2018] and we assumed non-informative priors.
-The `brms` package is an interface to the `Stan` programming language for statistical computation [@stan2021]. 
+The `brms` package is an interface to the `Stan` programming language for statistical computation [@stan2021].
 
 ## Full model
-
 
 Run the full model:
 
@@ -118,7 +214,8 @@ full_model_zib <- brm(bf(n_hok_2000_2019 | trials(n_hok_tot_2000_2019) + weights
                   + ell_f:phylum
                   + ell_t:phylum
                   + (1 + phylum || substrate),
-                  zi ~ ell_l
+                  zi ~   qlogis((n_hok_1980_1999+0.5)/(n_hok_tot_1980_1999+1))
+                  + ell_l
                   + ell_n
                   + ell_f
                   + ell_t
@@ -128,6 +225,7 @@ full_model_zib <- brm(bf(n_hok_2000_2019 | trials(n_hok_tot_2000_2019) + weights
                   + ell_t:phylum
                   + (1 + phylum || substrate)), 
                   family = zero_inflated_binomial(),
+                  backend  = "cmdstanr",
                   data = bryophyte_data,
                   file = "full_model_zib",
                   file_refit = "on_change",
@@ -137,6 +235,14 @@ full_model_zib <- brm(bf(n_hok_2000_2019 | trials(n_hok_tot_2000_2019) + weights
 ```
 
 ## Model selection
+
+We focused model selection on the Ellenberg terms only.
+All other effects were kept in the model.
+First, interaction terms for Ellenberg-values with phylum for which the 95% confidence interval contained 0 were removed.
+Next, main Ellenberg terms for which the 95% confidence interval contained 0 were removed.
+The simplest model with the highest predictive accuracy based on leave-one-out cross validation [@vehtari2017] was selected.
+This resulted in all Ellenberg terms being removed from the zero-inflated part of the model.
+All terms were kept in the binomial part of the model.
 
 ```{r}
 model_zib_1 <- update(
@@ -152,7 +258,8 @@ model_zib_1 <- update(
      + ell_f:phylum
      + ell_t:phylum
      + (1 + phylum || substrate),
-     zi ~ ell_l
+     zi ~        qlogis((n_hok_1980_1999+0.5)/(n_hok_tot_1980_1999+1))
+     + ell_l
      + ell_n
      + ell_f
      + ell_t
@@ -176,7 +283,8 @@ model_zib_2 <- update(
      + ell_f:phylum
      + ell_t:phylum
      + (1 + phylum || substrate),
-     zi ~ ell_n
+     zi ~ 
+       qlogis((n_hok_1980_1999+0.5)/(n_hok_tot_1980_1999+1))
      + (1 + phylum || substrate))
   , file = "model_zib_2"
   , file_refit = "on_change"
@@ -199,33 +307,28 @@ model_zib_2 <- add_criterion(model_zib_2, "loo",
 loo1 <- loo(full_model_zib, model_zib_1, model_zib_2) 
 ```
 
-
-
 ```{r loo, warning=FALSE}
 loo1$diffs %>%
   as.data.frame() %>%
-  kable(caption = "Results of model comparisons. First row contains the model with the highest predictive accuracy. The best model contained an effect for Ellenberg moisture and a phylum specific effect for Ellenberg nitrogen in addition to the effects dealing with sampling effort and substrate.",
+  kable(caption = "Results of model comparisons. First row contains the model with the highest predictive accuracy.",
         digits = 2)
 ```
 
-## Model diagnostics
+## Model validation
 
+Figure \@ref(fig:pp-check) shows that overall the model is able to generate the observed data.
+There is some evidence that the model is not able to generate the high observed frequency of Bryophyta which were counted in only one or two grid squares.
 
-```{r model-diagnostics}
-plot(loo1$loos$full_model_zib, label_points = TRUE)
+```{r pp-check, out.width="100%", fig.height=6, fig.cap="Posterior predictive check for the best predictive model. The x-axis corresponds to the number of grid squares in which a species is observed. The bars represent the observed frequency of these counst. The dark blue point and line represent the mean and 90% interval for data generated from the model based on 100 draws from the posterior predictive distribution."}
+pp_check(model_zib_2, type = "bars_grouped", ndraws = 100, group = "phylum",
+         facet_args = list(ncol = 1))
 ```
-
-
-```{r pp-check}
-pp_check(full_model_zib, type = "bars", ndraws = 100)
-```
-
 
 ## Model summary of best predictive model
 
 ```{r summary}
-broom.mixed::tidy(full_model_zib) %>%
-  kable()
+broom.mixed::tidy(model_zib_2) %>%
+  kable(digits = 2, caption = "Parameter estimates for the zero-inflated (component = zi) and binomial part (component = cond) of the final model.")
 ```
 
 # Model visualisation
@@ -256,24 +359,22 @@ create_conditions <- function(x, vars, ...) {
 }
 ```
 
-
-
 ```{r conditions}
 conditions0 <- create_conditions(
-  x = full_model_zib,
+  x = model_zib_2,
   vars = c("n_hok_1980_1999", "ell_f", "ell_n", "ell_l", "ell_t")) %>%
   mutate(phylum = NA,
          n_hok_tot_2000_2019 = 227)
 
 conditions1 <- create_conditions(
-  x = full_model_zib,
+  x = model_zib_2,
   vars = c("ell_f", "ell_n", "ell_l", "ell_t")
   ) %>%
   mutate(phylum = NA,
          n_hok_tot_2000_2019 = 227)
 
 conditions2 <- create_conditions(
-  x = full_model_zib,
+  x = model_zib_2,
   vars = c("n_hok_1980_1999", "ell_f", "ell_l", "ell_t")
 ) %>%
   mutate(phylum = NA,
@@ -281,21 +382,21 @@ conditions2 <- create_conditions(
 
 
 conditions3 <- create_conditions(
-  x = full_model_zib,
+  x = model_zib_2,
   vars = c("n_hok_1980_1999", "ell_n", "ell_l", "ell_t")
 ) %>%
   mutate(phylum = NA,
          n_hok_tot_2000_2019 = 227)
 
 conditions4 <- create_conditions(
-  x = full_model_zib,
+  x = model_zib_2,
   vars = c("n_hok_1980_1999", "ell_n", "ell_f", "ell_t")
 ) %>%
   mutate(phylum = NA,
          n_hok_tot_2000_2019 = 227)
 
 conditions5 <- create_conditions(
-  x = full_model_zib,
+  x = model_zib_2,
   vars = c("n_hok_1980_1999", "ell_n", "ell_f", "ell_l")
 ) %>%
   mutate(phylum = NA,
@@ -303,37 +404,33 @@ conditions5 <- create_conditions(
 
 ```
 
+(ref:plot-epred) Estimated total number of occupied cells. The total number of grid cells in both periods equals 228. Expectations and 95% confidence bounds or intervals are given. These expectations are conditional on `r conditions0$cond__` for variables other than the one on the x-axis (held constant to mean value). The black point with 95% confidence ranges in (a) represents the overall effect conditional on all other variables and is the reference against which change is calculated in (b, c and d). Black lines: line of no change. (a) Change in recording probability. (b) Effect of substrate on occurrence of mosses. (c) Effect of Ellenberg nitrogen values on occurrence of mosses. (d) Effect of Ellenberg moisture values on occurrence of mosses.
 
-(ref:plot-epred) Estimated total number of occupied cells. The total number of grid cells in both periods equals 228. Expectations and 95% confidence bounds or intervals are given. These expectations are conditional on `r conditions0$cond__` for variables other than the one on the x-axis (held constant to mean value). The black point with 95% confidence ranges in (a) represents the overall effect conditional on all other variables and is the reference against which change is calculated in (b, c and d). Black lines: line of no change. (a) Change in recording probability. (b) Effect of substrate on occurrence of mosses. (c) Effect of Ellenberg nitrogen values on occurrence of mosses. (d) Effect of Ellenberg moisture values on occurrence of mosses. 
-
-
-The code chunk named `plot-epred` reproduces the Figure \@ref(fig:plot-epred) from the paper.
+The code chunk named `plot-epred` reproduces the figure from the paper.
 
 Substrate random effects are calculated from the posterior linear predictor, conditional on Ellenberg values and the number of occupied grid cells fixed at their mean values.
 @gelman2012 point out that no correction for multiple comparisons are necessary when substrate effects are calculated in this way.
 
-
 ```{r plot-epred, fig.cap='(ref:plot-epred)', fig.height = 220/25.4, warning=FALSE}
-pep0 <- posterior_epred(full_model_zib, 
+pep0 <- posterior_epred(model_zib_2, 
                         re_formula = NA,
                         newdata = conditions0 %>% 
                           mutate(substrate = NA,
                                  n_hok_tot_2000_2019 = 227, 
                                  n_hok_tot_1980_1999 = 227
                           ))
+
 pep0_conditions0 <- conditions0 %>%
   mutate(estimate__ = mean(pep0),
          lower__ = quantile(pep0, probs = 0.025),
          upper__  = quantile(pep0, probs = 0.975))
 
-
-
-p1 <- conditional_effects(full_model_zib, 
+p1 <- conditional_effects(model_zib_2, 
                     effects = "n_hok_1980_1999",
                     conditions = conditions1)
 
 p1 <- plot(p1, plot = FALSE, points = FALSE)[[1]] + 
-  geom_point(data = full_model_zib$data,
+  geom_point(data = model_zib_2$data,
              aes(x = n_hok_1980_1999 + 0.5, 
                  y = n_hok_2000_2019,
                  colour = phylum),
@@ -347,13 +444,13 @@ p1 <- plot(p1, plot = FALSE, points = FALSE)[[1]] +
                       ymax = upper__), 
                 inherit.aes = FALSE) +
   labs(y = "Number of occupied grid cells\n(2000 - 2019)",
-       x = "Number of occupied grid cells (1980 - 1999)") +
+       x = "Number of occupied grid cells\n(1980 - 1999)") +
   theme(legend.title = element_blank())
 
 dt <- function(x) x - pep0_conditions0$estimate__
 idt <- function(x) x + pep0_conditions0$estimate__
 
-p2 <- conditional_effects(full_model_zib, 
+p2 <- conditional_effects(model_zib_2, 
                     effects = c("ell_n:phylum"),
                     conditions = conditions2)
 p2[[1]] <- p2[[1]] %>%
@@ -371,7 +468,7 @@ p2 <- plot(p2, plot = FALSE, points = FALSE)[[1]] +
        x = "Ellenberg nitrogen values") +
   theme(legend.position = "none")
 
-p3 <- conditional_effects(full_model_zib, 
+p3 <- conditional_effects(model_zib_2, 
                     effects = c("ell_f:phylum"),
                     conditions = conditions3)
 p3[[1]] <- p3[[1]] %>%
@@ -395,14 +492,19 @@ p3 <- plot(p3, plot = FALSE, points = FALSE)[[1]] +
   theme(legend.position = "none")
 
 
-p4 <- conditional_effects(full_model_zib, 
+p4 <- conditional_effects(model_zib_2, 
                           re_formula = NULL,
                           effects = c("substrate:phylum"),
                           conditions = conditions0)
 p4[[1]] <- p4[[1]] %>%
   mutate(across(c(estimate__, lower__, upper__), dt))
 
-p4 <- plot(p4, plot = FALSE, points = FALSE)[[1]] + 
+p4 <- p4$`substrate:phylum` %>%
+  ggplot() +
+  geom_pointrange(aes(x = substrate, colour = phylum, y = estimate__,
+                    ymin = lower__, ymax = upper__),
+                fatten = 2,
+                position = position_dodge(width = 0.5)) +
   geom_hline(data = pep0_conditions0%>%
                 mutate(estimate__ = dt(estimate__)), 
              aes(yintercept = estimate__), 
@@ -412,7 +514,7 @@ p4 <- plot(p4, plot = FALSE, points = FALSE)[[1]] +
         legend.position = "none") +
   labs(y = "Change in number of\noccupied grid cells")
 
-p5 <- conditional_effects(full_model_zib, 
+p5 <- conditional_effects(model_zib_2, 
                     effects = c("ell_l:phylum"),
                     conditions = conditions4)
 p5[[1]] <- p5[[1]] %>%
@@ -430,7 +532,7 @@ p5 <- plot(p5, plot = FALSE, points = FALSE)[[1]] +
        x = "Ellenberg light values") +
   theme(legend.position = "none")
 
-p6 <- conditional_effects(full_model_zib, 
+p6 <- conditional_effects(model_zib_2, 
                     effects = c("ell_t:phylum"),
                     conditions = conditions5)
 p6[[1]] <- p6[[1]] %>%
@@ -450,11 +552,12 @@ p6 <- plot(p6, plot = FALSE, points = FALSE)[[1]] +
 
 
 p1 + p4 + p2 + p3 + p5 + p6 +
-  plot_layout(widths = c(1.1, 1), guides = "collect") + 
+  plot_layout(guides = "collect",
+              ncol = 2,
+              widths = c(1.1, 1)) + 
   plot_annotation(tag_levels = "a") &
   theme(text = element_text(size = 9))
 ```
-
 
 # Session info
 
